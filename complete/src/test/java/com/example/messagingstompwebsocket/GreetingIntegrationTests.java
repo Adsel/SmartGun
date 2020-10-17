@@ -60,7 +60,7 @@ public class GreetingIntegrationTests {
 
 			@Override
 			public void afterConnected(final StompSession session, StompHeaders connectedHeaders) {
-				session.subscribe("/topic/greetings", new StompFrameHandler() {
+				session.subscribe("/topic/simulation", new StompFrameHandler() {
 					@Override
 					public Type getPayloadType(StompHeaders headers) {
 						return Greeting.class;
