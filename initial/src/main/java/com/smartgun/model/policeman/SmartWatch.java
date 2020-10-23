@@ -28,8 +28,8 @@ public class SmartWatch {
     }
 
     // GETS DATA ABOUT FIRES FROM Gun (GN)
-    public void getFired() {
-        System.out.println("Pistolet wystrzelił!");
+    public boolean getFired() {
+        return true;
     }
 
     // 'SENDS' DATA TO Navigation (NV)

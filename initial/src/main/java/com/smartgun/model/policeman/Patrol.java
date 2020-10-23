@@ -17,7 +17,7 @@ public class Patrol {
 
     // TODO: posiadać pistolety
     public enum State {
-        PATROL,
+        OBSERVE,
         INTERVENTION,
         BACK_TO_PATROL,
         BACKUP
