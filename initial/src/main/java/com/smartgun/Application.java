@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import java.awt.Point;
 
 import com.smartgun.model.policeman.*;
+import com.smartgun.shared.TheShortestPath;
 
 @EnableScheduling
 @SpringBootApplication
@@ -29,6 +30,26 @@ public class Application {
 				new Policeman(false)
 				// TODO WHEN X WILL BE ADDED: X connector;
 		);
+
+
+		// THE SHORTEST PATH IN MAZE
+
+		// 1 - available entries
+		// 0 - collisions
+		int maze[][] = {
+				{ 1, 0, 0, 0 },
+				{ 1, 1, 0, 1 },
+				{ 0, 1, 0, 0 },
+				{ 1, 1, 1, 1 }
+		};
+
+		TheShortestPath rat = new TheShortestPath(maze.length);
+		boolean isSolution = rat.solveMaze(maze);
+		if (isSolution) {
+			// solution exists we can move our patrol
+		} else {
+			// solution doesn't exist, patrol can't reach destination
+		}
 	}
 
 }
