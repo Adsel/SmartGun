@@ -1,8 +1,8 @@
-package policeman;
+package com.smartgun.model.policeman;
 
 import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.policeman.SmartWatch;
-import policeman.interfaces.IMainAgent;
+import com.smartgun.model.policeman.interfaces.IMainAgent;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -23,9 +23,8 @@ public class MainAgent implements IMainAgent {
         return monitoringAgent.smartWatchesShootData();
     }
 
-
     @Override
-    public Patrol choosePatrolToIntervence() {
+    public Patrol choosePatrolToInterence() {
         List<Patrol> patrolsWhoObserve = new ArrayList<>();
         Random randomize = new Random();
 
