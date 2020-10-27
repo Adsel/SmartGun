@@ -1,4 +1,4 @@
-package policeman.interfaces;
+package com.smartgun.model.policeman.interfaces;
 
 import com.smartgun.model.policeman.SmartWatch;
 

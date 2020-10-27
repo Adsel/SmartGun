@@ -1,4 +1,4 @@
-package policeman.interfaces;
+package com.smartgun.model.policeman.interfaces;
 
 import java.awt.*;
 import java.util.List;
@@ -7,6 +7,6 @@ import com.smartgun.model.policeman.Patrol;
 
 public interface IMainAgent {
     List<SmartWatch> smartWatchesWhichNeedsBackup();
-    Patrol choosePatrolToIntervence();
+    Patrol choosePatrolToInterence();
     Point coordinatesToSendAmbulance();
 }

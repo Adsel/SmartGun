@@ -15,6 +15,7 @@ public class Patrol {
     private Policeman headPoliceman;
     private Policeman youngerPoliceman;
 
+
     // TODO: posiadać pistolety
     public enum State {
         OBSERVE,

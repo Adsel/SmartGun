@@ -1,10 +1,10 @@
-package policeman;
+package com.smartgun.model.policeman;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import policeman.interfaces.IMonitoringAgent;
+import com.smartgun.model.policeman.interfaces.IMonitoringAgent;
 import com.smartgun.model.policeman.SmartWatch;
 
 public class MonitoringAgent  implements IMonitoringAgent{
