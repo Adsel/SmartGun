@@ -2,6 +2,7 @@ package com.smartgun.model.policeman;
 
 import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.policeman.SmartWatch;
+import com.smartgun.model.policeman.MonitoringAgent;
 import com.smartgun.model.policeman.interfaces.IMainAgent;
 
 import java.awt.*;
@@ -12,18 +13,13 @@ import java.util.Random;
 public class MainAgent implements IMainAgent {
     private MonitoringAgent monitoringAgent;
     private List<Patrol> policePatrols;
-    private Point ambulanceBasePosition;
+//    private Point ambulanceBasePosition;
 
     // INPUT PARAM: countOfPatrols
     // INPUT PARAM: ambulanceBasePosition
-    public MainAgent(
-            MonitoringAgent monitoringAgent,
-            Integer countOfPatrols,
-            Point ambulanceBasePosition
-        ) {
+    public MainAgent(MonitoringAgent monitoringAgent, Integer countOfPatrols) {
         this.monitoringAgent = monitoringAgent;
-        this.ambulanceBasePosition = ambulanceBasePosition;
-        this.policePatrols = generatePatrols(countOfPatrols);
+//        this.policePatrols = generatePatrols(countOfPatrols);
     }
 
     @Override
@@ -57,34 +53,34 @@ public class MainAgent implements IMainAgent {
         return monitoringAgent.coordinatesData();
     }
 
-    @Override
-    public List<Patrol> generatePatrols(Integer countOfPatrols){
-        List<Patrol> generatedPatrols = new ArrayList<>();
-            if (countOfPatrols != null) {
-            for (int i = 0; i < countOfPatrols; i++) {
-                Navigation navigation = new Navigation();
-                SmartWatch smartWatch = new SmartWatch(
-                        new Point(
-                                (int)this.ambulanceBasePosition.getX(),
-                                (int)this.ambulanceBasePosition.getY()
-                        ),
-                        navigation
-                );
-
-                this.monitoringAgent.addSmartWatch(smartWatch);
-
-                generatedPatrols.add(
-                        new Patrol(
-                                smartWatch,
-                                navigation,
-                                new Policeman(true),
-                                new Policeman(false)
-                                // TODO WHEN X WILL BE ADDED: X connector;
-                        )
-                );
-            }
-        }
-
-        return generatedPatrols;
-    }
+//    @Override
+//    public List<Patrol> generatePatrols(Integer countOfPatrols){
+//        List<Patrol> generatedPatrols = new ArrayList<>();
+//            if (countOfPatrols != null) {
+//            for (int i = 0; i < countOfPatrols; i++) {
+//                Navigation navigation = new Navigation();
+//                SmartWatch smartWatch = new SmartWatch(
+//                        new Point(
+//                                (int)this.ambulanceBasePosition.getX(),
+//                                (int)this.ambulanceBasePosition.getY()
+//                        ),
+//                        navigation
+//                );
+//
+//                this.monitoringAgent.addSmartWatch(smartWatch);
+//
+//                generatedPatrols.add(
+//                        new Patrol(
+//                                smartWatch,
+//                                navigation,
+//                                new Policeman(true),
+//                                new Policeman(false)
+//
+//                        )
+//                );
+//            }
+//        }
+//
+//        return generatedPatrols;
+//    }
 }

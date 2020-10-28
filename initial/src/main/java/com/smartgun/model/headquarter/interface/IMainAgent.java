@@ -9,5 +9,5 @@ public interface IMainAgent {
     List<SmartWatch> smartWatchesWhichNeedsBackup();
     Patrol choosePatrolToInterence();
     Point coordinatesToSendAmbulance();
-    List<Patrol> generatePatrols(Integer countOfPatrols);
+//    List<Patrol> generatePatrols(Integer countOfPatrols);
 }
