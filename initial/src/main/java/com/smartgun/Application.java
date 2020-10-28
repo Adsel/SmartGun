@@ -16,19 +16,20 @@ public class Application {
 
 		// TESTS
 		// TODO IN FUTURE: MAKE METHOD TO GENERATING NEW PATROLS (maybe with random names, like Mietek)
-		Navigation navigation1 = new Navigation();
-		SmartWatch smartWatch1 = new SmartWatch(
-				new Point(0, 0),
-				navigation1
-		);
+//		Navigation navigation1 = new Navigation();
+//		SmartWatch smartWatch1 = new SmartWatch(
+//				new Point(0, 0),
+//				navigation1
+//		);
+//
+//		Patrol patrol1 = new Patrol(
+//				smartWatch1,
+//				navigation1,
+//				new Policeman(true),
+//				new Policeman(false)
+//				// TODO WHEN X WILL BE ADDED: X connector;
+//		);
 
-		Patrol patrol1 = new Patrol(
-				smartWatch1,
-				navigation1,
-				new Policeman(true),
-				new Policeman(false)
-				// TODO WHEN X WILL BE ADDED: X connector;
-		);
 	}
 
 }
