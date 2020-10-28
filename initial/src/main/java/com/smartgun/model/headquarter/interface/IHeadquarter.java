@@ -1,6 +1,8 @@
 package com.smartgun.model.policeman.interfaces;
 
 import java.awt.*;
+import java.util.List;
+import com.smartgun.model.policeman.Patrol;
 
 public interface IHeadquarter{
 
@@ -9,4 +11,6 @@ public interface IHeadquarter{
     void changeAmbulancePerDistrict(int districtId, int ambulances);
 
     void sendPatrolTo(Point point);
+
+    List<Patrol> generatePatrols(Integer countOfPatrols);
 }
