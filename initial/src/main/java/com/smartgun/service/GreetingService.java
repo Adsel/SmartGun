@@ -46,6 +46,16 @@ public class GreetingService {
         );
     }
 
+    public void checkIncidents(int currentTime) {
+        for (int i = 0; i < this.incidents.size(); i++) {
+            Incident incident = this.incidents.get(i);
+            if (incident.getEndTime() < currentTime) {
+                this.incidents.remove(incident);
+                System.out.println("ENDED AN INCIDENT");
+            }
+        }
+    }
+
     public void addIncident(Incident incident) {
         this.incidents.add(incident);
     }
