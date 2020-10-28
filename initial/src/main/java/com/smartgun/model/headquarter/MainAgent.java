@@ -12,10 +12,18 @@ import java.util.Random;
 public class MainAgent implements IMainAgent {
     private MonitoringAgent monitoringAgent;
     private List<Patrol> policePatrols;
+    private Point ambulanceBasePosition;
 
-    public MainAgent(MonitoringAgent monitoringAgent, List<Patrol> policePatrols) {
+    // INPUT PARAM: countOfPatrols
+    // INPUT PARAM: ambulanceBasePosition
+    public MainAgent(
+            MonitoringAgent monitoringAgent,
+            Integer countOfPatrols,
+            Point ambulanceBasePosition
+        ) {
         this.monitoringAgent = monitoringAgent;
-        this.policePatrols = policePatrols;
+        this.ambulanceBasePosition = ambulanceBasePosition;
+        this.policePatrols = generatePatrols(countOfPatrols);
     }
 
     @Override
@@ -47,5 +55,36 @@ public class MainAgent implements IMainAgent {
     @Override
     public Point coordinatesToSendAmbulance() {
         return monitoringAgent.coordinatesData();
+    }
+
+    @Override
+    public List<Patrol> generatePatrols(Integer countOfPatrols){
+        List<Patrol> generatedPatrols = new ArrayList<>();
+            if (countOfPatrols != null) {
+            for (int i = 0; i < countOfPatrols; i++) {
+                Navigation navigation = new Navigation();
+                SmartWatch smartWatch = new SmartWatch(
+                        new Point(
+                                (int)this.ambulanceBasePosition.getX(),
+                                (int)this.ambulanceBasePosition.getY()
+                        ),
+                        navigation
+                );
+
+                this.monitoringAgent.addSmartWatch(smartWatch);
+
+                generatedPatrols.add(
+                        new Patrol(
+                                smartWatch,
+                                navigation,
+                                new Policeman(true),
+                                new Policeman(false)
+                                // TODO WHEN X WILL BE ADDED: X connector;
+                        )
+                );
+            }
+        }
+
+        return generatedPatrols;
     }
 }

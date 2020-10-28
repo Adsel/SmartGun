@@ -7,11 +7,15 @@ import java.util.List;
 import com.smartgun.model.policeman.interfaces.IMonitoringAgent;
 import com.smartgun.model.policeman.SmartWatch;
 
-public class MonitoringAgent  implements IMonitoringAgent{
+public class MonitoringAgent implements IMonitoringAgent{
     private List<SmartWatch> smartWatches;
 
-    public MonitoringAgent(List<SmartWatch> smartWatches) {
-        this.smartWatches = smartWatches;
+    public MonitoringAgent() {
+        this.smartWatches = new ArrayList<>();
+    }
+
+    public void addSmartWatch(SmartWatch smartWatch) {
+        this.smartWatches.add(smartWatch);
     }
 
     //we'd see if its works, if not i would check equals method
