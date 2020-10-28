@@ -34,8 +34,10 @@ public class GreetingService {
         Point AMBULANCE_STARTING_POSITION = new Point(0, 0);
 
         // START SIMULATION
+
         MonitoringAgent agent = new MonitoringAgent();
-        MainAgent coreAgent = new MainAgent(agent, COUNT_OF_PATROLS, AMBULANCE_STARTING_POSITION);
+        HeadQuarter headQuarter = new HeadQuarter(5, agent);
+        MainAgent coreAgent = new MainAgent(agent, headQuarter.getPatrols());
 
     }
 

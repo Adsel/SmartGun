@@ -2,6 +2,7 @@ package com.smartgun.model.policeman;
 
 import com.smartgun.model.policeman.interfaces.IHeadquarter;
 
+import java.awt.Point;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import com.smartgun.model.policeman.Policeman;
 import com.smartgun.model.policeman.MainAgent;
 import com.smartgun.model.policeman.MonitoringAgent;
 
-public class Headquarter implements IHeadquarter {
+public class HeadQuarter implements IHeadquarter {
 
     private double patrolRadius;    //promień patrolowanego obszaru jeśli uniwersalny to przechowywany tutaj, jeśli nie to w "Patrol"
     private Map<Integer, Integer>  patrolsPerDistrict;  //ilość patroli na danej dzielnicy
@@ -21,9 +22,16 @@ public class Headquarter implements IHeadquarter {
     private MainAgent mainAgent;
     private Point ambulanceBasePosition;
     private MonitoringAgent monitoringAgent;
+    private List<Patrol> patrols;
 
+    // TEMPORARY
+    public HeadQuarter(Integer countOfPatrols, MonitoringAgent monitoringAgent) {
+        this.ambulanceBasePosition = new Point(1, 1);
+        this.monitoringAgent = monitoringAgent;
+        this.patrols = generatePatrols(countOfPatrols);
+    }
 
-    public Headquarter(double patrolRadius, Map<Integer, Integer> patrolsPerDistrict, Map<Integer,
+    public HeadQuarter(double patrolRadius, Map<Integer, Integer> patrolsPerDistrict, Map<Integer,
             Integer> ambulancesPerDistrict, MainAgent mainAgent, Point ambulanceBasePosition) {
         this.patrolRadius = patrolRadius;
         this.patrolsPerDistrict = patrolsPerDistrict;
@@ -32,6 +40,10 @@ public class Headquarter implements IHeadquarter {
         this.ambulanceBasePosition = ambulanceBasePosition;
     }
 
+    // TEMPORARY
+    public List<Patrol> getPatrols() {
+        return this.patrols;
+    }
 
     @Override
     public void changePatrolRadius(int patrolId) {

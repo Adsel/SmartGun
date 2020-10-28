@@ -13,25 +13,6 @@ public class Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
-
-		// THE SHORTEST PATH IN MAZE
-
-		// 1 - available entries
-		// 0 - collisions
-		int maze[][] = {
-				{ 1, 0, 0, 0 },
-				{ 1, 1, 0, 1 },
-				{ 0, 1, 0, 0 },
-				{ 1, 1, 1, 1 }
-		};
-
-		TheShortestPath rat = new TheShortestPath(maze.length);
-		boolean isSolution = rat.solveMaze(maze);
-		if (isSolution) {
-			// solution exists we can move our patrol
-		} else {
-			// solution doesn't exist, patrol can't reach destination
-		}
 	}
 
 }

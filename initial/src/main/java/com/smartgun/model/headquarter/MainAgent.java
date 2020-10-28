@@ -15,11 +15,10 @@ public class MainAgent implements IMainAgent {
     private List<Patrol> policePatrols;
 //    private Point ambulanceBasePosition;
 
-    // INPUT PARAM: countOfPatrols
     // INPUT PARAM: ambulanceBasePosition
-    public MainAgent(MonitoringAgent monitoringAgent, Integer countOfPatrols) {
+    public MainAgent(MonitoringAgent monitoringAgent, List<Patrol> patrols) {
         this.monitoringAgent = monitoringAgent;
-//        this.policePatrols = generatePatrols(countOfPatrols);
+        this.policePatrols = patrols;
     }
 
     @Override
@@ -29,6 +28,26 @@ public class MainAgent implements IMainAgent {
 
     @Override
     public Patrol choosePatrolToInterence() {
+        // 1 - available entries
+        // 0 - collisions
+        /* SEARCH PATROLS USING THE SHORTEST PATH ALGORITM
+        int maze[][] = {
+                { 1, 0, 0, 0 },
+                { 1, 1, 0, 1 },
+                { 0, 1, 0, 0 },
+                { 1, 1, 1, 1 }
+        };
+
+        TheShortestPath rat = new TheShortestPath(maze.length);
+        boolean isSolution = rat.solveMaze(maze);
+        if (isSolution) {
+            // solution exists we can move our patrol
+        } else {
+            // solution doesn't exist, patrol can't reach destination
+        }
+        */
+
+
         List<Patrol> patrolsWhoObserve = new ArrayList<>();
         Random randomize = new Random();
 
@@ -52,35 +71,4 @@ public class MainAgent implements IMainAgent {
     public Point coordinatesToSendAmbulance() {
         return monitoringAgent.coordinatesData();
     }
-
-//    @Override
-//    public List<Patrol> generatePatrols(Integer countOfPatrols){
-//        List<Patrol> generatedPatrols = new ArrayList<>();
-//            if (countOfPatrols != null) {
-//            for (int i = 0; i < countOfPatrols; i++) {
-//                Navigation navigation = new Navigation();
-//                SmartWatch smartWatch = new SmartWatch(
-//                        new Point(
-//                                (int)this.ambulanceBasePosition.getX(),
-//                                (int)this.ambulanceBasePosition.getY()
-//                        ),
-//                        navigation
-//                );
-//
-//                this.monitoringAgent.addSmartWatch(smartWatch);
-//
-//                generatedPatrols.add(
-//                        new Patrol(
-//                                smartWatch,
-//                                navigation,
-//                                new Policeman(true),
-//                                new Policeman(false)
-//
-//                        )
-//                );
-//            }
-//        }
-//
-//        return generatedPatrols;
-//    }
 }
