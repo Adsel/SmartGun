@@ -3,6 +3,7 @@ package com.smartgun.model.policeman;
 import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.policeman.SmartWatch;
 import com.smartgun.model.policeman.interfaces.IMainAgent;
+import com.smartgun.model.policeman.MonitoringAgent;
 
 import java.awt.*;
 import java.util.ArrayList;

@@ -27,6 +27,7 @@ public class Application {
 				{ 1, 1, 1, 1 }
 		};
 
+		/* !!! Problem !!!
 		TheShortestPath rat = new TheShortestPath(maze.length);
 		boolean isSolution = rat.solveMaze(maze);
 		if (isSolution) {
@@ -34,6 +35,7 @@ public class Application {
 		} else {
 			// solution doesn't exist, patrol can't reach destination
 		}
+		 */
 	}
 
 }
