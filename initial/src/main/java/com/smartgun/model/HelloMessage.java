@@ -1,4 +1,4 @@
-package com.smartgun;
+package com.smartgun.model;
 
 public class HelloMessage {
 

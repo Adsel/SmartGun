@@ -1,4 +1,4 @@
-package com.smartgun.messagingstompwebsocket;
+package com.smartgun.model;
 
 public class Greeting {
 
