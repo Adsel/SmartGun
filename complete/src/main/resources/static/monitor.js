@@ -5,6 +5,7 @@ const CHARACTER_HOSPITAL = "H";
 
 let backgroundColor="#c0c0c0";
 let wallColor = "#222";
+let patrolColor = "#374F6B";
 
 let map = loadMapFromServer();
 let mapY=map.length;
@@ -41,6 +42,16 @@ dataCanvas.style.position = "absolute";
 monitorParent.appendChild(dataCanvas);
 let dataContext = dataCanvas.getContext("2d");
 
+//TRIGGER ON DATA CANVAS CLICK
+dataCanvas.addEventListener("mousemove", function(e) {
+    let cRect = canvas.getBoundingClientRect();        // Gets CSS pos, and width/height
+    let mouseX = Math.round(e.clientX - cRect.left);  // Subtract the 'left' of the canvas
+    let mouseY = Math.round(e.clientY - cRect.top);   // from the X/Y positions to make
+    dataContext.clearRect(0, 0, canvas.width, canvas.height);  // (0,0) the top left of the canvas
+    dataContext.fillStyle="#FFF";
+    dataContext.font = "21px Roboto";
+    dataContext.fillText("X: "+mouseX+", Y: "+mouseY, 10, 20);
+});
 
 //MONITOR LOGIC
 initiateWalls();
@@ -84,7 +95,6 @@ function initiateWalls(){
     let currX=0;
     let currY=0;
     map.forEach(function(line){
-        console.log(line.split(""));
         line.split("").forEach(function(character){
             // console.log("Character:" + character + " CurrX:" + currX + " CurrY:"+ currY);
            switch(character){
@@ -122,6 +132,11 @@ function drawHospital(x,y){
     context.fillRect(boxSize*x, boxSize*y+boxSize, boxSize, -outlineSize);
     context.fillRect(boxSize*x, boxSize*y, outlineSize, boxSize);
     context.fillRect(boxSize*x+boxSize, boxSize*y, -outlineSize, boxSize);
+}
+function drawUnit(x,y,type){
+    dataContext.beginPath();
+    dataContext.arc(boxSize*x, 75, 50, 0, 2 * Math.PI);
+    dataContext.stroke();
 }
 
 
