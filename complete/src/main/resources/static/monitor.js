@@ -45,8 +45,8 @@ let dataContext = dataCanvas.getContext("2d");
 //TRIGGER ON DATA CANVAS CLICK
 dataCanvas.addEventListener("mousemove", function(e) {
     let cRect = canvas.getBoundingClientRect();        // Gets CSS pos, and width/height
-    let mouseX = Math.round(e.clientX - cRect.left);  // Subtract the 'left' of the canvas
-    let mouseY = Math.round(e.clientY - cRect.top);   // from the X/Y positions to make
+    let mouseX = parseInt(Math.round(e.clientX - cRect.left)/boxSize);  // Subtract the 'left' of the canvas
+    let mouseY = parseInt(Math.round(e.clientY - cRect.top)/boxSize);   // from the X/Y positions to make
     dataContext.clearRect(0, 0, 200, 33);  // (0,0) the top left of the canvas
     dataContext.fillStyle="#FFF";
     dataContext.font = "21px Roboto";
@@ -56,6 +56,7 @@ dataCanvas.addEventListener("mousemove", function(e) {
 //MONITOR LOGIC
 initiateWalls();
 drawPatrol(37,22,"test");
+drawPatrol(12,10,"test");
 //END OF MONITOR LOGIC
 
 function loadMapFromServer(){
