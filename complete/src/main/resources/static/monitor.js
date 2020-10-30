@@ -1,7 +1,9 @@
 let monitorParent = document.getElementById("monitorPreview");
 
 const CHARACTER_WALL = "#";
+const CHARACTER_HOSPITAL = "H";
 
+let backgroundColor="#c0c0c0";
 let wallColor = "#222";
 
 let map = loadMapFromServer();
@@ -19,17 +21,29 @@ if(mapX>mapY){
 monitorParent.style.height = mapY * boxSize + "px";
 monitorParent.style.width = mapX * boxSize + "px";
 
-//SETTING UP CANVAS
+//SETTING UP MAP CANVAS
 let canvas = document.createElement("canvas");
 canvas.id = "monitor";
 canvas.height = monitorParent.clientHeight;
 canvas.width = monitorParent.clientWidth;
+canvas.style.zIndex = "1";
+canvas.style.position = "absolute";
 monitorParent.appendChild(canvas);
 let context = canvas.getContext("2d");
 
+//SETTING UP DATA CANVAS ON TOP OF MAP CANVAS
+let dataCanvas = document.createElement("canvas");
+dataCanvas.id="dataMonitor";
+dataCanvas.height = monitorParent.clientHeight;
+dataCanvas.width = monitorParent.clientWidth;
+dataCanvas.style.zIndex = "2";
+dataCanvas.style.position = "absolute";
+monitorParent.appendChild(dataCanvas);
+let dataContext = dataCanvas.getContext("2d");
+
 
 //MONITOR LOGIC
-    initiateWalls();
+initiateWalls();
 //END OF MONITOR LOGIC
 
 function loadMapFromServer(){
@@ -39,7 +53,7 @@ function loadMapFromServer(){
         "##############################\n" +
         "#........#######.............#\n" +
         "####.###..#####..####.######.#\n" +
-        "####.####.####..#####......#.#\n" +
+        "####.####.##H#..#####......#.#\n" +
         "##.............######.####.#.#\n" +
         "####.########.###.....####.#.#\n" +
         "####.########.###.###.####.#.#\n" +
@@ -65,6 +79,8 @@ function drawWall(x, y){
     context.fillRect(boxSize*x,boxSize*y,boxSize,boxSize);
 }
 function initiateWalls(){
+    context.fillStyle = backgroundColor;
+    context.fillRect(0,0,monitorParent.clientWidth,monitorParent.clientHeight);
     let currX=0;
     let currY=0;
     map.forEach(function(line){
@@ -75,6 +91,9 @@ function initiateWalls(){
                case CHARACTER_WALL:
                    drawWall(currX,currY);
                    break;
+               case CHARACTER_HOSPITAL:
+                   drawHospital(currX,currY);
+                   break;
            }
            currX++;
            if(currX>(mapX-1)){
@@ -84,6 +103,27 @@ function initiateWalls(){
         });
     });
 }
+
+function clearData(){
+    dataContext.clearRect(0, 0, dataCanvas.width, dataCanvas.height);
+}
+
+function drawHospital(x,y){
+    let drawSize = parseInt(boxSize/2.5);
+    let outlineSize = parseInt(boxSize/6);
+    context.fillStyle = "#FF0000";
+    context.fillRect(boxSize*x,boxSize*y,boxSize,boxSize);
+    context.fillStyle = "#FFF";
+    context.fillRect(boxSize*x, boxSize*y, drawSize, drawSize);
+    context.fillRect((boxSize*x)+boxSize, boxSize*y, -drawSize, drawSize);
+    context.fillRect((boxSize*x)+boxSize, (boxSize*y)+boxSize, -drawSize, -drawSize);
+    context.fillRect((boxSize*x), (boxSize*y)+boxSize, drawSize, -drawSize);
+    context.fillRect(boxSize*x, boxSize*y, boxSize, outlineSize);
+    context.fillRect(boxSize*x, boxSize*y+boxSize, boxSize, -outlineSize);
+    context.fillRect(boxSize*x, boxSize*y, outlineSize, boxSize);
+    context.fillRect(boxSize*x+boxSize, boxSize*y, -outlineSize, boxSize);
+}
+
 
 
 
