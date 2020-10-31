@@ -1,9 +1,9 @@
-package com.smartgun.model.policeman;
+package com.smartgun.model.headquarter;
 
+import com.smartgun.model.headquarter.interfaces.IMainAgent;
+import com.smartgun.model.policeman.MonitoringAgent;
 import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.policeman.SmartWatch;
-import com.smartgun.model.policeman.interfaces.IMainAgent;
-import com.smartgun.model.policeman.MonitoringAgent;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,6 +12,9 @@ import java.util.Random;
 
 public class MainAgent implements IMainAgent {
     private MonitoringAgent monitoringAgent;
+
+
+
     private List<Patrol> policePatrols;
 
     public MainAgent(MonitoringAgent monitoringAgent, List<Patrol> policePatrols) {
@@ -49,4 +52,9 @@ public class MainAgent implements IMainAgent {
     public Point coordinatesToSendAmbulance() {
         return monitoringAgent.coordinatesData();
     }
+
+    public List<Patrol> getPolicePatrols() {
+        return policePatrols;
+    }
+    
 }
