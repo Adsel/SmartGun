@@ -1,6 +1,7 @@
-package com.smartgun.model.policeman;
+package com.smartgun.model.headquarter;
 
-import com.smartgun.model.policeman.interfaces.IHeadquarter;
+import com.smartgun.model.headquarter.interfaces.IHeadquarter;
+import com.smartgun.model.headquarter.MainAgent;
 
 import java.awt.*;
 import java.util.Map;

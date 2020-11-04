@@ -4,8 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.smartgun.model.policeman.interfaces.IMonitoringAgent;
-import com.smartgun.model.policeman.SmartWatch;
+import com.smartgun.model.headquarter.interfaces.IMonitoringAgent;
 
 public class MonitoringAgent  implements IMonitoringAgent{
     private List<SmartWatch> smartWatches;
