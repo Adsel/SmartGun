@@ -14,6 +14,7 @@ import java.awt.*;
 *
 * Trzeba by się zastanowić jeszcze nad statusem ambulansu (w akcji, wolny, zepsuty ??)
 * */
+
 public class Ambulances implements IAmbulances {
     private List<Ambulance> ambulances;
     private MainAgent mainAgent;
