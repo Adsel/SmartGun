@@ -1,8 +1,7 @@
 package com.smartgun.model.headquarter.interfaces;
 
+import java.awt.Point;
 import com.smartgun.model.headquarter.Ambulance;
-
-import java.awt.*;
 
 public interface IAmbulances {
     void sendAmbulanceTo(Point point, int ambulanceId);

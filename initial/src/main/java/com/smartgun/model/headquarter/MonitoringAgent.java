@@ -1,6 +1,6 @@
 package com.smartgun.model.headquarter;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import com.smartgun.model.policeman.*;

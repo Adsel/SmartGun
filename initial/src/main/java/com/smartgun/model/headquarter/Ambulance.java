@@ -1,9 +1,8 @@
 package com.smartgun.model.headquarter;
 
-import com.smartgun.model.policeman.Patrol;
-
-import java.awt.*;
+import java.awt.Point;
 import java.util.Objects;
+import com.smartgun.model.policeman.Patrol;
 
 public class Ambulance {
     private int id;

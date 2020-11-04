@@ -1,12 +1,11 @@
 package com.smartgun.model.headquarter;
 
-import com.smartgun.model.headquarter.interfaces.IHeadQuarter;
-
 import java.awt.Point;
-import java.awt.*;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import com.smartgun.model.headquarter.interfaces.IHeadQuarter;
 import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.policeman.Navigation;
 import com.smartgun.model.policeman.SmartWatch;
