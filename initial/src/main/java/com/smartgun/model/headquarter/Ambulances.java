@@ -1,11 +1,10 @@
 package com.smartgun.model.headquarter;
 
-import com.smartgun.model.headquarter.interfaces.IAmbulances;
-import com.smartgun.model.policeman.Patrol;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.*;
+import java.awt.Point;
+import com.smartgun.model.headquarter.interfaces.IAmbulances;
+import com.smartgun.model.policeman.Patrol;
 
 /*Klasa będzie przechowaywała listę wszytkich ambulansów. Domyślnie ustawia lokalizację na 0,0 (centrum ambulasów)
 * oraz domyślnie ambulans jest pusty.

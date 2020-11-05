@@ -1,14 +1,13 @@
 package com.smartgun.model.headquarter;
 
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import com.smartgun.model.headquarter.interfaces.IMainAgent;
 import com.smartgun.model.headquarter.MonitoringAgent;
 import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.policeman.SmartWatch;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class MainAgent implements IMainAgent {
     private MonitoringAgent monitoringAgent;
