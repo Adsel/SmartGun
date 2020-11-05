@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello WebSocket</title>
+    <title>Smart Gun - Simulation</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
     <link href="css/preloader.css" rel="stylesheet">
@@ -11,55 +11,76 @@
     <script src="js/preloader.js"></script>
     <script src="https://cdn.jsdelivr.net/sockjs/0.3/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="js/monitor.js"></script>
     <script src="js/app.js"></script>
 </head>
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
-<div id="main-content" class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="connect">WebSocket connection:</label>
-                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                    </button>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="name">What is your name?</label>
-                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
-                </div>
-                <button id="send" class="btn btn-default" type="submit">Send</button>
-            </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <table id="conversation" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Greetings</th>
-                </tr>
-                </thead>
-                <tbody id="greetings">
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+    <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+        enabled. Please enable
+        Javascript and reload this page!</h2></noscript>
+    <div id="main-content" class="container">
+        <!-- INPUT DATA -->
+        <div class="row">
+            <div class="col-md-12">
+                <form class="form-inline" style="display:none;">
+                    <div class="form-group">
+                        <label for="name">What is your name?</label>
+                        <input type="text" id="name" class="form-control" placeholder="Your name here...">
+                    </div>
+                    <button id="send" class="btn btn-default" type="submit">Send</button>
+                </form>
 
-<!-- CANVAS PRELOADER MY FRIENDS -->
-<div id="loader-wrapper">
-    <div class="load">
-        <hr/><hr/><hr/><hr/>
+                <h2>Parameters</h2>
+                <form>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="randMap">
+                        <label class="form-check-label" for="randMap">Random map</label>
+                    </div>
+                    <br>
+                    <div class="btn-group" id="beforeConnection" role="group">
+                        <button id="connect" class="btn btn-lg btn-success" type="submit">
+                            Start simulation
+                        </button>
+                    </div>
+                    <div class="btn-group" id="afterConnection" style="display: none;" role="group">
+                        <button id="reconnect" class="btn btn-lg btn-primary" type="submit">
+                            Restart simulation
+                        </button>
+                        <button id="disconnect" class="btn btn-lg btn-danger" type="submit">
+                            Stop simulation
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- RESULT -->
+        <div class="row">
+            <div class="col-md-12">
+                <div id="monitorPreview" style="display: none;"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="conversation" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Temporary logs</th>
+                    </tr>
+                    </thead>
+                    <tbody id="greetings">
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</div>
+
+    <!-- CANVAS PRELOADER MY FRIENDS -->
+    <div id="loader-wrapper" style="display: none;">
+        <div class="load">
+            <hr/><hr/><hr/><hr/>
+        </div>
+    </div>
 
 </body>
 </html>
