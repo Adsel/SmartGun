@@ -1,9 +1,9 @@
 let stompClient = null;
 
 const setConnected = (connected) => {
-    $("#connect").css("display", connected ? "none" : "block");
-    $("#disconnect").css("display", connected ? "block" : "none" );
-    $("#reconnect").css("display", connected ? "block" : "none" );
+    $("#beforeConnection").css("display", connected ? "none" : "block");
+    $("#afterConnection").css("display", connected ? "block" : "none" );
+    $("#monitorPreview").css("display", connected ? "block" : "none" );
 
     if (connected) {
         $("#conversation").show();
@@ -24,9 +24,12 @@ const connect = () => {
         // Listening and waiting for messages from server
         stompClient.subscribe('/topic/simulation', function (data) {
             showGreeting(JSON.parse(data.body).content);
-
         });
         login();
+
+        // === RUN CANVAS ===
+        runPreloader();
+        drawCanvas();
     });
 };
 
@@ -36,6 +39,9 @@ const disconnect = () => {
     }
     setConnected(false);
     console.log("Disconnected");
+
+    // === CLEAR CANVAS ===
+    clearCanvas();
 };
 
 const login = () => {

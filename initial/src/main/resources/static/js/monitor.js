@@ -1,4 +1,4 @@
-window.onload = function() {
+const drawCanvas = () => {
     let monitorParent = document.getElementById("monitorPreview");
 
     const CHARACTER_WALL = "#";
@@ -122,6 +122,7 @@ window.onload = function() {
         context.fillStyle = wallColor;
         context.fillRect(boxSize*x,boxSize*y,boxSize,boxSize);
     }
+
     function initiateWalls(){
         context.fillStyle = backgroundColor;
         context.fillRect(0,0,monitorParent.clientWidth,monitorParent.clientHeight);
@@ -166,6 +167,7 @@ window.onload = function() {
         context.fillRect(boxSize*x, boxSize*y, outlineSize, boxSize);
         context.fillRect(boxSize*x+boxSize, boxSize*y, -outlineSize, boxSize);
     }
+
     function drawPatrol(x,y,type){
         //TODO: FINISH ALL STATES OF PATROL
         let outlineSize = parseInt(boxSize/4.5);
@@ -176,4 +178,9 @@ window.onload = function() {
         dataContext.clearRect(boxSize*x, boxSize*y, outlineSize, boxSize);
         dataContext.clearRect(boxSize*x+boxSize, boxSize*y, -outlineSize, boxSize);
     }
+}
+
+const clearCanvas = () => {
+    // TODO:
+    // LUIGI THE CITY NEEDS YOU
 }
