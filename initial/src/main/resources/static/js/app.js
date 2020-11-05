@@ -1,8 +1,10 @@
 let stompClient = null;
 
 const setConnected = (connected) => {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
+    $("#connect").css("display", connected ? "none" : "block");
+    $("#disconnect").css("display", connected ? "block" : "none" );
+    $("#reconnect").css("display", connected ? "block" : "none" );
+
     if (connected) {
         $("#conversation").show();
     }
@@ -20,8 +22,8 @@ const connect = () => {
         console.log('Connected: ' + frame);
 
         // Listening and waiting for messages from server
-        stompClient.subscribe('/topic/simulation', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
+        stompClient.subscribe('/topic/simulation', function (data) {
+            showGreeting(JSON.parse(data.body).content);
 
         });
         login();
