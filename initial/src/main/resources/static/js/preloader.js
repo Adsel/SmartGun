@@ -7,7 +7,7 @@ const runPreloader = () => {
 
     // CODE BELOW HIDES PRELOADER
         setTimeout(() => {
-            $("#loader-wrapper").remove();
+            $("#loader-wrapper").css("display", "none");
         }, 3000);
 
 }
