@@ -1,3 +1,4 @@
+// STOMP OPERATIONS
 let stompClient = null;
 
 const setConnected = (connected) => {
@@ -45,7 +46,9 @@ const disconnect = () => {
 };
 
 const login = () => {
-    stompClient.send('/app/login', {});
+    stompClient.send('/app/login', {}, JSON.stringify({
+        'isRandomMap': $('#randMap').is(':checked')
+    }));
 };
 
 const sendName = () => {
@@ -57,7 +60,7 @@ const showGreeting = (message) => {
 };
 
 $(() => {
-    $("form").on('submit', function(e) {
+    $("form").on('submit', (e) => {
         e.preventDefault();
     });
     $( "#connect" ).click(() => {
