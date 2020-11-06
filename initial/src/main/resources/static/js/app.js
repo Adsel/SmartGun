@@ -2,7 +2,7 @@
 let stompClient = null;
 
 const setConnected = (connected) => {
-    $("#beforeConnection").css("display", connected ? "none" : "block");
+    $("#initialData").css("display", connected ? "none" : "block");
     $("#afterConnection").css("display", connected ? "block" : "none" );
     $("#monitorPreview").css("display", connected ? "block" : "none" );
 
