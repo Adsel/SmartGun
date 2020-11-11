@@ -8,6 +8,6 @@ const runPreloader = () => {
     // CODE BELOW HIDES PRELOADER
         setTimeout(() => {
             $("#loader-wrapper").remove();
-        }, 3000);
+        }, 1000);
 
 }
