@@ -263,7 +263,7 @@ async function updateMonitor(){
     }
     //TRIGGER ON DATA CANVAS CLICK
     document.getElementById("dataMonitor").addEventListener("click", function(e) {
-        let cRect = canvas.getBoundingClientRect();        // Gets CSS pos, and width/height
+        let cRect = document.getElementById("monitor").getBoundingClientRect();        // Gets CSS pos, and width/height
         let mouseX = parseInt(Math.round(e.clientX - cRect.left)/boxSize);  // Subtract the 'left' of the canvas
         let mouseY = parseInt(Math.round(e.clientY - cRect.top)/boxSize);   // from the X/Y positions to make
         dataContext.clearRect(0, 0, 200, 33);  // (0,0) the top left of the canvas
