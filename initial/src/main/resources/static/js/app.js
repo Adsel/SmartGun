@@ -47,12 +47,61 @@ const disconnect = () => {
 };
 
 const login = (data) => {
+    // === COMPLETE DATA FROM FORM ===
     if(!data) {
+        let interventionProbablity = [];
+
         lastData = JSON.stringify({
+            'patrolsCount': $('#countOfPatrols').val() != "" ? $('#countOfPatrols').val(): null,
+            'patrolsPerDistrict': [
+                $('#countOfPatrolsPerSafety').val() != "" ? $('#countOfPatrolsPerSafety').val(): null,
+                $('#countOfPatrolsPerMedium').val() != "" ? $('#countOfPatrolsPerMedium').val(): null,
+                $('#countOfPatrolsPerDangerous').val() != "" ? $('#countOfPatrolsPerDangerous').val(): null
+            ],
+            'ambulancesCount': $('#countOfAmbulances').val() != "" ? $('#countOfAmbulances').val(): null,
+            'patrolRadius': $('#patrolRadius').val() != "" ? $('#patrolRadius').val(): null,
+            'interventionProbablity': [
+                $('#interventionProbablityForSafety').val() != "" ? $('#interventionProbablityForSafety').val() : null,
+                $('#interventionProbablityForMedium').val() != "" ? $('#interventionProbablityForMedium').val() : null,
+                $('#interventionProbablityForDangerous').val() != "" ? $('#interventionProbablityForDangerous').val(): null
+            ],
+            'nightInterventionProbablity': [
+                $('#interventionProbablityForSafetyNight').val() != "" ? $('#interventionProbablityForSafetyNight').val(): null,
+                $('#interventionProbablityForMediumNight').val() != "" ? $('#interventionProbablityForMediumNight').val(): null,
+                $('#interventionProbablityForDangerousNight').val() != "" ? $('#interventionProbablityForDangerousNight').val(): null
+            ],
+            'interventionDuration': [
+                $('#minIntervationDuration').val() != "" ? $('#minIntervationDuration').val(): null,
+                $('#maxIntervationDuration').val() != "" ? $('#maxIntervationDuration').val(): null
+            ],
+            'shootingProbablity': [
+                $('#shootingProbablityForSafety').val() != "" ? $('#shootingProbablityForSafety').val(): null,
+                $('#shootingProbablityForMedium').val() != "" ? $('#shootingProbablityForMedium').val(): null,
+                $('#shootingProbablityForDangerous').val() != "" ? $('#shootingProbablityForDangerous').val(): null
+            ],
+            'interventionToShootingProbablity': [
+                $('#interventionToShootingProbablityForSafety').val() != "" ? $('#interventionToShootingProbablityForSafety').val(): null,
+                $('#interventionToShootingProbablityForMedium').val() != "" ? $('#interventionToShootingProbablityForMedium').val(): null,
+                $('#interventionToShootingProbablityForDangerous').val() != "" ? $('#interventionToShootingProbablityForDangerous').val(): null
+            ],
+            'shootingDuration': [
+                $('#minShootingDuration').val() != "" ? $('#minShootingDuration').val(): null,
+                $('#maxShootingDuration').val() != "" ? $('#maxShootingDuration').val(): null
+            ],
+            'accuratePolicemanShootProbablity':
+                $('#accurateShootingProbablityForPoliceman').val() != "" ? $('#accurateShootingProbablityForPoliceman').val(): null,
+            'accuratePolicemanShootProbablityNight':
+                $('#accurateShootingProbablityForPolicemanNight').val() != "" ? $('#accurateShootingProbablityForPolicemanNight').val(): null,
+            'accurateAggressorShootProbablity':
+                $('#accurateShootingProbablityForAggressor').val() != "" ? $('#accurateShootingProbablityForAggressor').val(): null,
+            'accurateAggressorShootProbablityNight':
+                $('#accurateShootingProbablityForAggressorNight').val() != "" ?  $('#accurateShootingProbablityForAggressorNight').val(): null,
+            'isDayAndNightSystem': $('#dayAndNight').is(':checked'),
             'isRandomMap': $('#randMap').is(':checked')
         });
     }
     stompClient.send('/app/login', {}, lastData);
+    console.log("Last data", lastData);
 };
 
 const sendName = () => {
