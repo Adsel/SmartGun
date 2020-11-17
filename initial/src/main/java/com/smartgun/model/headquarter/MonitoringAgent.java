@@ -1,17 +1,17 @@
-package com.smartgun.model.policeman;
+package com.smartgun.model.headquarter;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import com.smartgun.model.policeman.*;
 
-import com.smartgun.model.policeman.interfaces.IMonitoringAgent;
-import com.smartgun.model.policeman.SmartWatch;
+import com.smartgun.model.headquarter.interfaces.IMonitoringAgent;
 
-public class MonitoringAgent  implements IMonitoringAgent{
+public class MonitoringAgent implements IMonitoringAgent{
     private List<SmartWatch> smartWatches;
 
-    public MonitoringAgent(List<SmartWatch> smartWatches) {
-        this.smartWatches = smartWatches;
+    public MonitoringAgent() {
+        this.smartWatches = new ArrayList();
     }
 
     //we'd see if its works, if not i would check equals method
@@ -25,6 +25,10 @@ public class MonitoringAgent  implements IMonitoringAgent{
             }
         }
         return coordinates;
+    }
+
+    public void addSmartWatch(SmartWatch smartWatch) {
+        this.smartWatches.add(smartWatch);
     }
 
     //sth not clr

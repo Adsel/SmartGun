@@ -1,9 +1,8 @@
-package com.smartgun.model.policeman.interfaces;
+package com.smartgun.model.headquarter.interfaces;
 
-import com.smartgun.model.policeman.SmartWatch;
-
-import java.awt.*;
+import java.awt.Point;
 import java.util.List;
+import com.smartgun.model.policeman.SmartWatch;
 
 public interface IMonitoringAgent {
     Point coordinatesData();

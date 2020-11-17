@@ -1,6 +1,8 @@
 package com.smartgun.model.policeman;
 
-public class Policeman {
+import com.smartgun.model.policeman.interfaces.IPoliceman;
+
+public class Policeman implements IPoliceman {
     private boolean hasSmartWatch;
 
     public Policeman(boolean hasSmartWatch) {

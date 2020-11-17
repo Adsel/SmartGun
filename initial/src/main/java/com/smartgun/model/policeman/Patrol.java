@@ -1,12 +1,14 @@
 package com.smartgun.model.policeman;
 
 import java.awt.Point;
-
 import com.smartgun.model.policeman.SmartWatch;
 import com.smartgun.model.policeman.Policeman;
 import com.smartgun.model.policeman.Navigation;
+import com.smartgun.model.policeman.interfaces.IPatrol;
 
-public class Patrol {
+public class Patrol implements IPatrol {
+    //unikalne id patrolu
+    private int id;
     // Jeden smartwatch na patrol
     private SmartWatch smartWatch;
     // Jeden samochód z nawigacją na patrol
@@ -25,6 +27,7 @@ public class Patrol {
     }
 
     public Patrol(
+            int id,
             SmartWatch smartWatch,
             Navigation navigation,
             Policeman headPoliceman,
@@ -32,12 +35,14 @@ public class Patrol {
      //      , X connector
     ) {
      //   smartWatch.addConnectior(connector);
+        this.id = id;
         this.smartWatch = smartWatch;
         this.navigation = navigation;
         this.headPoliceman = headPoliceman;
         this.youngerPoliceman = youngerPoliceman;
     }
 
+    @Override
     public void setTarget(Point point, Patrol.State state) {
         //
     }

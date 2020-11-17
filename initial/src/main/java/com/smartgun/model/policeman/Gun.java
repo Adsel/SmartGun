@@ -1,8 +1,9 @@
 package com.smartgun.model.policeman;
 
 import com.smartgun.model.policeman.SmartWatch;
+import com.smartgun.model.policeman.interfaces.IGun;
 
-public class Gun {
+public class Gun implements IGun {
     private SmartWatch smartWatch;
 
     public Gun(SmartWatch smartWatch) {
@@ -10,6 +11,7 @@ public class Gun {
     }
 
     // FIRES AND SENDS INFO TO SMARTWATCH (SV)
+    @Override
     public void fire() {
         this.smartWatch.getFired();
     }
