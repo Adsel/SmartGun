@@ -1,19 +1,28 @@
-const drawCanvas = () => {
+let map;
+let boxSize;
+let backgroundColor="#c0c0c0";
+let wallColor = "#222";
+const PATROL_PRIMARY = "#29ff00";
+const PATROL_PATROLLING = "#374F6B";
+const PATROL_INTERVENTION = "#2137BD";
+const PATROL_SHOOTING = "#9b7d12";
+const PATROL_WOUNDED = "#b50202";
+const AMBULANCE_PRIMARY = "#fa1111";
+const AMBULANCE_SECONDARY = "#EEEEEE";
+const CHARACTER_WALL = "#";
+const CHARACTER_HOSPITAL = "H";
+
+let context;
+let dataContext;
+
+
+async function initiateMonitor(){
     let monitorParent = document.getElementById("monitorPreview");
-
-    const CHARACTER_WALL = "#";
-    const CHARACTER_HOSPITAL = "H";
-
-    let backgroundColor="#c0c0c0";
-    let wallColor = "#222";
-    let patrolColor = "#374F6B";
-
-    let map = loadMapFromServer();
+    map = loadMapFromServer();
     let mapY=map.length;
     let mapX=map[0].length;
 
     //SETTING UP SIZE OF SINGLE ELEMENT IN MONITOR
-    let boxSize;
     if(mapX>mapY){
         boxSize = parseInt( monitorParent.clientWidth / mapX);
     }else{
@@ -31,7 +40,7 @@ const drawCanvas = () => {
     canvas.style.zIndex = "1";
     canvas.style.position = "absolute";
     monitorParent.appendChild(canvas);
-    let context = canvas.getContext("2d");
+    context = canvas.getContext("2d");
 
     //SETTING UP DATA CANVAS ON TOP OF MAP CANVAS
     let dataCanvas = document.createElement("canvas");
@@ -41,25 +50,10 @@ const drawCanvas = () => {
     dataCanvas.style.zIndex = "2";
     dataCanvas.style.position = "absolute";
     monitorParent.appendChild(dataCanvas);
-    let dataContext = dataCanvas.getContext("2d");
+    dataContext = dataCanvas.getContext("2d");
 
-    //TRIGGER ON DATA CANVAS CLICK
-    dataCanvas.addEventListener("mousemove", function(e) {
-        let cRect = canvas.getBoundingClientRect();        // Gets CSS pos, and width/height
-        let mouseX = parseInt(Math.round(e.clientX - cRect.left)/boxSize);  // Subtract the 'left' of the canvas
-        let mouseY = parseInt(Math.round(e.clientY - cRect.top)/boxSize);   // from the X/Y positions to make
-        dataContext.clearRect(0, 0, 200, 33);  // (0,0) the top left of the canvas
-        dataContext.fillStyle="#FFF";
-        dataContext.font = "21px Roboto";
-        dataContext.fillText("X: "+mouseX+", Y: "+mouseY, 10, 20);
-    });
-
-    //MONITOR LOGIC
     initiateWalls();
-    drawPatrol(37,22,"test");
-    drawPatrol(12,10,"test");
     //END OF MONITOR LOGIC
-
     function loadMapFromServer(){
         let arrayMap = [];
         let len=0;
@@ -79,36 +73,66 @@ const drawCanvas = () => {
         //     "##.####.####........#####....#\n" +
         //     "##...##......######.......####\n" +
         //     "##############################";
-        let loadedMap = "############################################################\n" +
-            "#........#####.........................#####...............#\n" +
-            "####.###..####.######.######.#####.###.#####.######.######.#\n" +
-            "####.####.#H##.######......#.#####.###.#####.######......#.#\n" +
-            "##.............######.####.#.###.............######.####.#.#\n" +
-            "####.########.###.....####.#.#####.########.###.....####.#.#\n" +
-            "####.########.###.###.####.#.#####.########.###.###.####.#.#\n" +
-            "#............................##............................#\n" +
-            "####.##############.###.####.#####.##############.###.####.#\n" +
-            "####.##############.###.####.#####.##############.###.####.#\n" +
-            "##............#.....###.####.###............#.....###.####.#\n" +
-            "##.####.###########.......##.###.####.###########.......##.#\n" +
-            "##.####.####........#####......#.####.####........#####....#\n" +
-            "##...##......######.......####.#...##......###.##.......####\n" +
-            "#########################.####.###############.#############\n" +
-            "#########################.####.###############.#############\n" +
-            "#........#######.............#.........#######.............#\n" +
-            "####.###..#####..####.######.#####.###..#####..####.######.#\n" +
-            "####.####.####..#####......#.#####.####.#H##..#####......#.#\n" +
-            "##.............######.####.#.###.............######.####.#.#\n" +
-            "####.########.###.....####.#.#####.########.###.....####.#.#\n" +
-            "####.########.###.###.####.#.#####.########.###.###.####.#.#\n" +
-            "#............................##............................#\n" +
-            "####.##############.###.####.#####.##############.###.####.#\n" +
-            "####.##############.###.####.#####.##############.###.####.#\n" +
-            "##............#.....###.####................#.....###.####.#\n" +
-            "##.####.###########.......##.###.####.###########.......##.#\n" +
-            "##.####.####........#####....###.####.####........#####....#\n" +
-            "##...##......######.......######...##......######.......####\n" +
-            "############################################################";
+        let loadedMap = "##############################################################################\n" +
+            "##...................................#########....###############.....#####.##\n" +
+            "##.#####.######.#############.######...........##.###.......#####.#########.##\n" +
+            "##.#####..###......####.......###################.#########.................##\n" +
+            "##.######.###.####......#####.###################.##########.##.##########.###\n" +
+            "##.##.###.###.#########.####.................................##.#########..###\n" +
+            "##.##.###....................####.#####.################.######.#########.####\n" +
+            "##.##.###.#######################.#####.#####.....######.######.##........####\n" +
+            "##.##.###........######.................#########..................#.####.####\n" +
+            "##.##.##########..#####.#########.#####..........###################.####.####\n" +
+            "##.##.###########.#####.#########.#####.################...............##.####\n" +
+            "##...........................####.#####.#.##.............#######.###.#.##.####\n" +
+            "#####.#######.#########.#########.#####.#.##.###.###.###.#######..........####\n" +
+            "#####.#....##.#########.#########.......#................#######.########.####\n" +
+            "###...#.##.##.....................#####.#.######.###.###.#######.########.####\n" +
+            "###.#.#.###############################.#...####.....###.####H##.########.####\n" +
+            "###.#.#.###H###########################.################...............#####.#\n" +
+            "###.#....................................................#############.#####.#\n" +
+            "###.#############.#############.#######.######.#############...........##....#\n" +
+            "###.###########.................#######.######.###.##.###.####.###.###.##.####\n" +
+            "###.###########.#######################.....##.###.##.###.####.###.###.##.####\n" +
+            "###.........................###########.###..#.###..........................##\n" +
+            "###.##.##############.#####.............###.##.####.##.###.###.###.###.####.##\n" +
+            "###..#.........##.....###.########.##.#.....##.####.##.###.###.###.###.####.##\n" +
+            "####.#########.######.###.########.##.##.##.##.####.##.............###.####.##\n" +
+            "####...............................##.##.##.##.###################.....####.##\n" +
+            "####.######.#######.##############.##.##.#####..............##########.####.##\n" +
+            "####.######.#######.##############.##.##.#####.####.#######.....#............#\n" +
+            "####...............................##.##.#####.####.#######.#####.####.#####.#\n" +
+            "####.#########.##########.########.##.##.#####.####.........#####.####.#####.#\n" +
+            "####.#########.##########.########.##.##.#####.#######.####.#####.####.#####.#\n" +
+            "###..............########..........##.##.#####...............................#\n" +
+            "################..........########.##.##.#####.###############################\n" +
+            "#....###########.########.########.##.##.#####.###############################\n" +
+            "####..................................##.#####.###############################\n" +
+            "##############.#########################.#####.###############################\n" +
+            "###............#########################.#####.###############################\n" +
+            "#####.#############......................#####.###############################\n" +
+            "#####.#############.##########################.###############################\n" +
+            "#.....#############.##########################..##############################\n" +
+            "###################.###########################.##############################\n" +
+            "#########...........###########################.##############################\n" +
+            "#########.##.###.##.##################.....................................###\n" +
+            "#########.##.#......##############.....########.######.###.########.###.##.###\n" +
+            "#########.##...####.##############.###..........######.###.####.....###.##.###\n" +
+            "#########.##.#......##############.###.#####.#########.###.####.##.####..#.###\n" +
+            "#............######.##############.###.#####...............####.##.#####...###\n" +
+            "#.###.#.##.#.....##.##############.###.###########.#######.........##....#.###\n" +
+            "#.....#.##.#.###.##.##############.###.....................#####.####.####.###\n" +
+            "#.###..................................######.##########H#######....#.####.###\n" +
+            "#.###.##.##.####.##.###.#####################....###############.##.#.####.###\n" +
+            "#.######.##......##.###.########################.###############.##.#.####.###\n" +
+            "#....##.....####.##.###.########################...........................###\n" +
+            "####.##.#####.......###.###########################.###########.####.#####.###\n" +
+            "####....#####.##.##..............#################......................##.###\n" +
+            "####.##..........##.############...........#######.######.#####.#######.##.###\n" +
+            "####.##.#####.##.##.############.#########.#######.######.#####............###\n" +
+            "####................############.#########.#######.#####........##############\n" +
+            "###..##############........................#######....########################\n" +
+            "##############################################################################";
 
         //TODO: POBRANIE MAPY Z SERWERA
 
@@ -148,12 +172,9 @@ const drawCanvas = () => {
         });
     }
 
-    function clearData(){
-        dataContext.clearRect(0, 0, dataCanvas.width, dataCanvas.height);
-    }
 
     function drawHospital(x,y){
-        let drawSize = parseInt(boxSize/2.5);
+        let drawSize = (parseInt(boxSize/2.5))+1;
         let outlineSize = parseInt(boxSize/6);
         context.fillStyle = "#FF0000";
         context.fillRect(boxSize*x,boxSize*y,boxSize,boxSize);
@@ -168,19 +189,170 @@ const drawCanvas = () => {
         context.fillRect(boxSize*x+boxSize, boxSize*y, -outlineSize, boxSize);
     }
 
-    function drawPatrol(x,y,type){
-        //TODO: FINISH ALL STATES OF PATROL
-        let outlineSize = parseInt(boxSize/4.5);
-        dataContext.fillStyle = patrolColor;
+}
+
+function deleteMonitor(){
+    let monitorParent = document.getElementById("monitorPreview");
+    monitorParent.innerHTML = '';
+    monitorParent.style.height = 1000 + "px";
+    monitorParent.style.width = 1000 + "px";
+    console.log("boxsize:" + boxSize);
+}
+
+async function updateMonitor(){
+    clearData();
+    let serverData = getServerData();
+    drawData();
+
+    function drawAmbulance(x,y){
+        let drawSize = parseInt(boxSize/2.2);
+        let outlineSize = parseInt(boxSize/9);
+        let outlineSizeUnit = parseInt(boxSize/5);
+        let outlineSizeUnitOut = parseInt(boxSize/6);
+        dataContext.fillStyle = wallColor;
         dataContext.fillRect(boxSize*x,boxSize*y,boxSize,boxSize);
+        dataContext.fillStyle = AMBULANCE_PRIMARY;
+        dataContext.fillRect(boxSize*x+outlineSizeUnit,boxSize*y+outlineSizeUnit,boxSize-2*outlineSizeUnit,boxSize-2*outlineSizeUnit);
+        dataContext.fillStyle = AMBULANCE_SECONDARY;
+        dataContext.fillRect(boxSize*x+outlineSizeUnit, boxSize*y+outlineSizeUnit, drawSize-outlineSizeUnit, drawSize-outlineSizeUnit);
+        dataContext.fillRect((boxSize*x)+boxSize-outlineSizeUnit, boxSize*y+outlineSizeUnit, -drawSize+outlineSizeUnit, drawSize-outlineSizeUnit);
+        dataContext.fillRect((boxSize*x)+boxSize-outlineSizeUnit, (boxSize*y)+boxSize-outlineSizeUnit, -drawSize+outlineSizeUnit, -drawSize+outlineSizeUnit);
+        dataContext.fillRect((boxSize*x)+outlineSizeUnit, (boxSize*y)+boxSize-outlineSizeUnit, drawSize-outlineSizeUnit, -drawSize+outlineSizeUnit);
+        dataContext.fillRect(boxSize*x+outlineSizeUnit, boxSize*y+outlineSizeUnit, boxSize-2*outlineSizeUnit, outlineSize);
+        dataContext.fillRect(boxSize*x+outlineSizeUnit, boxSize*y+boxSize-outlineSizeUnit, boxSize-2*outlineSizeUnit, -outlineSize);
+        dataContext.fillRect(boxSize*x+outlineSizeUnit, boxSize*y+outlineSizeUnit, outlineSize, boxSize-2*outlineSizeUnit);
+        dataContext.fillRect(boxSize*x+boxSize-outlineSizeUnit, boxSize*y+outlineSizeUnit, -outlineSize, boxSize-2*outlineSizeUnit);
+        dataContext.clearRect(boxSize*x, boxSize*y, boxSize, outlineSizeUnitOut);
+        dataContext.clearRect(boxSize*x, boxSize*y+boxSize, boxSize, -outlineSizeUnitOut);
+        dataContext.clearRect(boxSize*x, boxSize*y, outlineSizeUnitOut, boxSize);
+        dataContext.clearRect(boxSize*x+boxSize, boxSize*y, -outlineSizeUnitOut, boxSize);
+    }
+    function drawPatrol(x,y,type){
+
+        let outlineSize = parseInt(boxSize/6);
+        let outlineSizeUnit = parseInt(boxSize/2.7);
+
+        switch(type){
+            case "patrolling":{
+                dataContext.fillStyle = PATROL_PATROLLING;
+                break;
+            }
+            case "intervention":{
+                dataContext.fillStyle = PATROL_INTERVENTION;
+                break;
+            }
+            case "shooting":{
+                dataContext.fillStyle = PATROL_SHOOTING;
+                break;
+            }
+            case "wounded":{
+                dataContext.fillStyle = PATROL_WOUNDED;
+                break;
+            }
+        }
+
+        dataContext.fillRect((boxSize*x)+outlineSize,(boxSize*y)+outlineSize,boxSize-(2*outlineSize),boxSize-(2*outlineSize));
+
+        dataContext.fillStyle = PATROL_PRIMARY;
+        dataContext.fillRect((boxSize*x)+outlineSizeUnit,(boxSize*y)+outlineSizeUnit,boxSize-(2*outlineSizeUnit),boxSize-(2*outlineSizeUnit));
         dataContext.clearRect(boxSize*x, boxSize*y, boxSize, outlineSize);
         dataContext.clearRect(boxSize*x, boxSize*y+boxSize, boxSize, -outlineSize);
         dataContext.clearRect(boxSize*x, boxSize*y, outlineSize, boxSize);
         dataContext.clearRect(boxSize*x+boxSize, boxSize*y, -outlineSize, boxSize);
     }
-}
+    function clearData(){
+        dataContext.clearRect(0, 0, document.getElementById("dataMonitor").clientWidth, document.getElementById("dataMonitor").clientHeight);
+    }
+    function getServerData(){
+        //SOME SAMPLE DATA
+        let data = {
+            "ambulances":{
+              "0":{
+                  "x":5,
+                  "y":7,
+                  "status":"intervention",
+                  "heading-to": {
+                      "x": 13,
+                      "y": 1
+                  },
+                  "info": "Some additional info to display"
+              },
+                "1":{
+                    "x":46,
+                    "y":36,
+                    "status":"intervention",
+                    "heading-to": {
+                        "x": 15,
+                        "y": 22
+                    },
+                    "info": "Some additional info to display"
+                },
+            },
+            "patrols":{
+                "0":{
+                    "x": 21,
+                    "y": 21,
+                    "status": "patrolling",
+                    "heading-to": {
+                        "x": 15,
+                        "y": 22
+                    },
+                    "info": "Some additional info to display"
+                },
+                "1":{
+                    "x": 62,
+                    "y": 27,
+                    "status": "intervention",
+                    "heading-to": {
+                        "x": 15,
+                        "y": 22
+                },
+                "info": "Some additional info to display"
+                },
+                "2":{
+                    "x": 4,
+                    "y": 48,
+                    "status": "shooting",
+                    "heading-to": {
+                        "x": 15,
+                        "y": 22
+                    },
+                    "info": "Some additional info to display"
+                },
+                "3":{
+                    "x": 29,
+                    "y": 49,
+                    "status": "wounded",
+                    "heading-to": {
+                        "x": 15,
+                        "y": 22
+                    },
+                    "info": "Some additional info to display"
+                },
+            },
 
-const clearCanvas = () => {
-    // TODO:
-    // LUIGI THE CITY NEEDS YOU
+        }
+        return data;
+    }
+
+    function drawData(){
+        console.log(serverData["patrols"]["0"]);
+        for(let obj in serverData["patrols"]){
+            drawPatrol(serverData["patrols"][obj]["x"],serverData["patrols"][obj]["y"],serverData["patrols"][obj]["status"]);
+        }
+        for(let obj in serverData["ambulances"]){
+            drawAmbulance(serverData["ambulances"][obj]["x"],serverData["ambulances"][obj]["y"]);
+        }
+
+    }
+    //TRIGGER ON DATA CANVAS CLICK
+    document.getElementById("dataMonitor").addEventListener("click", function(e) {
+        let cRect = document.getElementById("monitor").getBoundingClientRect();        // Gets CSS pos, and width/height
+        let mouseX = parseInt(Math.round(e.clientX - cRect.left)/boxSize);  // Subtract the 'left' of the canvas
+        let mouseY = parseInt(Math.round(e.clientY - cRect.top)/boxSize);   // from the X/Y positions to make
+        dataContext.clearRect(0, 0, 200, 33);  // (0,0) the top left of the canvas
+        dataContext.fillStyle="#FFF";
+        dataContext.font = "21px Roboto";
+        dataContext.fillText("X: "+mouseX+", Y: "+mouseY, 10, 20);
+    });
 }
