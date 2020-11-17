@@ -9,6 +9,7 @@ import com.smartgun.model.HelloMessage;
 import com.smartgun.model.Greeting;
 import com.smartgun.service.GreetingService;
 import com.smartgun.shared.Data;
+import com.smartgun.model.simulation.InitialData;
 
 @Controller
 public class GreetingController {
@@ -19,11 +20,13 @@ public class GreetingController {
         this.greetingService = greetingService;
     }
 
-    // GET DATA FROM CLIENT
+    // GET INITIAL DATA FROM CLIENT, THEN START SIMULATION
     @MessageMapping("/login")
     @SendTo("/topic/simulation")
-    public void login() throws Exception {
+    public void login(InitialData data) throws Exception {
+        Data.setupData(data);
         Data.isUser = true;
+        System.out.println(data);
     }
 
     @MessageMapping("/hello")

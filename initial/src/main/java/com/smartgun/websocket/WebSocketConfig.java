@@ -5,6 +5,9 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.context.event.EventListener;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import com.smartgun.shared.Data;
 
 import com.smartgun.shared.Config;
 
@@ -23,4 +26,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/gs-guide-websocket").withSockJS();
     }
 
+    @EventListener
+    public void onDisconnectEvent(SessionDisconnectEvent event) {
+        restartSimulation();
+    }
+
+    private void restartSimulation() {
+        Data.isUser = false;
+        Data.data = null;
+        System.out.println("Stopped simulation!");
+    }
 }

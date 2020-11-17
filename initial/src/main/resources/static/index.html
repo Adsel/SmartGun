@@ -30,17 +30,20 @@
                     <button id="send" class="btn btn-default" type="submit">Send</button>
                 </form>
 
-                <h2>Parameters</h2>
                 <form>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="randMap">
-                        <label class="form-check-label" for="randMap">Random map</label>
-                    </div>
-                    <br>
-                    <div class="btn-group" id="beforeConnection" role="group">
-                        <button id="connect" class="btn btn-lg btn-success" type="submit">
-                            Start simulation
-                        </button>
+                    <div id="initialData">
+                        <h1>Welcome in Simulation of Smart Gun!</h1>
+                        <h2>Set some init parameters</h2>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="randMap">
+                            <label class="form-check-label" for="randMap">Random map</label>
+                        </div>
+                        <br>
+                        <div class="btn-group" id="beforeConnection" role="group">
+                            <button id="connect" class="btn btn-lg btn-success" type="submit">
+                                Start simulation
+                            </button>
+                        </div>
                     </div>
                     <div class="btn-group" id="afterConnection" style="display: none;" role="group">
                         <button id="reconnect" class="btn btn-lg btn-primary" type="submit">

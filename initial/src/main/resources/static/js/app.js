@@ -1,7 +1,8 @@
+// STOMP OPERATIONS
 let stompClient = null;
 
 const setConnected = (connected) => {
-    $("#beforeConnection").css("display", connected ? "none" : "block");
+    $("#initialData").css("display", connected ? "none" : "block");
     $("#afterConnection").css("display", connected ? "block" : "none" );
     $("#monitorPreview").css("display", connected ? "block" : "none" );
 
@@ -14,7 +15,8 @@ const setConnected = (connected) => {
     $("#greetings").html("");
 }
 
-const connect = () => {
+let lastData = false;
+const connect = (data) => {
     const socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
@@ -25,7 +27,7 @@ const connect = () => {
         stompClient.subscribe('/topic/simulation', function (data) {
             showGreeting(JSON.parse(data.body).content);
         });
-        login();
+        login(data);
 
         // === RUN CANVAS ===
         runPreloader();
@@ -44,8 +46,13 @@ const disconnect = () => {
     clearCanvas();
 };
 
-const login = () => {
-    stompClient.send('/app/login', {});
+const login = (data) => {
+    if(!data) {
+        lastData = JSON.stringify({
+            'isRandomMap': $('#randMap').is(':checked')
+        });
+    }
+    stompClient.send('/app/login', {}, lastData);
 };
 
 const sendName = () => {
@@ -57,14 +64,19 @@ const showGreeting = (message) => {
 };
 
 $(() => {
-    $("form").on('submit', function(e) {
+    $("form").on('submit', (e) => {
         e.preventDefault();
     });
     $( "#connect" ).click(() => {
-        connect();
+        connect(lastData);
     });
     $( "#disconnect" ).click(() => {
         disconnect();
+    });
+    $( "#reconnect" ).click(() => {
+        disconnect();
+        connect(lastData);
+        runPreloader();
     });
     $( "#send" ).click(() => {
         sendName();
