@@ -64,6 +64,10 @@ const showGreeting = (message) => {
 };
 
 $(() => {
+    $("#dayAndNight").change(() => {
+        console.log('Day and Night param');
+        $('.dependsOnNightParam').toggle();
+    });
     $("form").on('submit', (e) => {
         e.preventDefault();
     });
