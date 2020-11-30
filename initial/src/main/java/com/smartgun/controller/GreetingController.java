@@ -24,8 +24,8 @@ public class GreetingController {
     @MessageMapping("/login")
     @SendTo("/topic/simulation")
     public void login(InitialData data) throws Exception {
-        Data.setupData(data);
-        Data.isUser = true;
+//        Data.setupData(data);
+//        Data.isUser = true;
         System.out.println(data);
     }
 
