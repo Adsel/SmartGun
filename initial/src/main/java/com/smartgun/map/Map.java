@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 public class Map {
     private char[][] map;
-    private int rows = 1;
 
     public Map(String path){
         loadMap(path);
@@ -24,8 +23,9 @@ public class Map {
             Scanner input = new Scanner(new BufferedReader(new FileReader(path)));
 
             //getting number of rows from matrix map
+            int rows = 1;
             while (input.hasNextLine()){
-                this.rows++;
+                rows++;
                 input.nextLine();
             }
             //set numbers of rows in char matrix
