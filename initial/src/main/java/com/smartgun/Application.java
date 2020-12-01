@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import java.awt.Point;
 
 import com.smartgun.model.policeman.*;
+import com.smartgun.model.map.*;
 
 @EnableScheduling
 @SpringBootApplication
@@ -36,6 +37,18 @@ public class Application {
 			// solution doesn't exist, patrol can't reach destination
 		}
 		 */
+
+
+		// === READING MAP DEMO ===
+
+		// TODO: make map address as relative path
+		// OLD ABSOLUTE PATH: "C:\\Projects\\SmartGun\\initial\\src\\main\\resources\\static\\maps\\samplemap.txt"
+		String path = "";
+		Map map = new Map(
+				Map.AVAILABLE_MAP_NAMES[0]
+		);
+		map.loadMap();
+
 	}
 
 }

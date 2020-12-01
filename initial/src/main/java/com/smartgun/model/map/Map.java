@@ -1,26 +1,29 @@
-package com.smartgun.map;
+package com.smartgun.model.map;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Scanner;
 
 public class Map {
+    public static String[] AVAILABLE_MAP_NAMES = {
+        "samplemap.txt"
+    };
+
     private char[][] map;
+    private String mapPath;
 
     public Map(String path){
-        loadMap(path);
+        this.mapPath = path;
     }
 
     public char[][] getMap() {
         return map;
     }
 
-    public void loadMap(String path){
+    public void loadMap(){
         try {
-            //TODO universal method to get path of file
-
-            //String path1 = "C:\\Projects\\SmartGun\\initial\\src\\main\\resources\\static\\samplemap.txt";
-            Scanner input = new Scanner(new BufferedReader(new FileReader(path)));
+            //TODO: make relative path from current path + map name
+            Scanner input = new Scanner(new BufferedReader(new FileReader(this.mapPath)));
 
             //getting number of rows from matrix map
             int rows = 1;

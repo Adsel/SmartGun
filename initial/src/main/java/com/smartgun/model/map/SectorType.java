@@ -1,4 +1,4 @@
-package com.smartgun.map;
+package com.smartgun.model.map;
 
 public enum SectorType {
     RED,
