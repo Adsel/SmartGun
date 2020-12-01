@@ -1,6 +1,7 @@
 package com.smartgun.model.map;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.Scanner;
 
@@ -22,7 +23,8 @@ public class Map {
 
     public void loadMap(){
         try {
-            //TODO: make relative path from current path + map name
+            this.mapPath = new File(AVAILABLE_MAP_NAMES[0]).getAbsolutePath();
+
             Scanner input = new Scanner(new BufferedReader(new FileReader(this.mapPath)));
 
             //getting number of rows from matrix map
