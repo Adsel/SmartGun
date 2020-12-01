@@ -55,6 +55,78 @@ public class InitialData {
     public boolean getIsDayAndNightSystem() { return this.isDayAndNightSystem; }
 
 
+    public boolean isRandomMap() {
+        return isRandomMap;
+    }
+
+    public void setRandomMap(boolean randomMap) {
+        isRandomMap = randomMap;
+    }
+
+    public void setPatrolsCount(Integer patrolsCount) {
+        this.patrolsCount = patrolsCount;
+    }
+
+    public void setPatrolsPerDistrict(Integer[] patrolsPerDistrict) {
+        this.patrolsPerDistrict = patrolsPerDistrict;
+    }
+
+    public void setAmbulancesCount(Integer ambulancesCount) {
+        this.ambulancesCount = ambulancesCount;
+    }
+
+    public void setPatrolRadius(Integer patrolRadius) {
+        this.patrolRadius = patrolRadius;
+    }
+
+    public void setInterventionProbablity(Integer[] interventionProbablity) {
+        this.interventionProbablity = interventionProbablity;
+    }
+
+    public void setNightInterventionProbablity(Integer[] nightInterventionProbablity) {
+        this.nightInterventionProbablity = nightInterventionProbablity;
+    }
+
+    public void setInterventionDuration(Integer[] interventionDuration) {
+        this.interventionDuration = interventionDuration;
+    }
+
+    public void setShootingProbablity(Integer[] shootingProbablity) {
+        this.shootingProbablity = shootingProbablity;
+    }
+
+    public void setInterventionToShootingProbablity(Integer[] interventionToShootingProbablity) {
+        this.interventionToShootingProbablity = interventionToShootingProbablity;
+    }
+
+    public void setShootingDuration(Integer[] shootingDuration) {
+        this.shootingDuration = shootingDuration;
+    }
+
+    public void setAccuratePolicemanShootProbablity(Integer accuratePolicemanShootProbablity) {
+        this.accuratePolicemanShootProbablity = accuratePolicemanShootProbablity;
+    }
+
+    public void setAccuratePolicemanShootProbablityNight(Integer accuratePolicemanShootProbablityNight) {
+        this.accuratePolicemanShootProbablityNight = accuratePolicemanShootProbablityNight;
+    }
+
+    public void setAccurateAggressorShootProbablity(Integer accurateAggressorShootProbablity) {
+        this.accurateAggressorShootProbablity = accurateAggressorShootProbablity;
+    }
+
+    public void setAccurateAggressorShootProbablityNight(Integer accurateAggressorShootProbablityNight) {
+        this.accurateAggressorShootProbablityNight = accurateAggressorShootProbablityNight;
+    }
+
+    public boolean isDayAndNightSystem() {
+        return isDayAndNightSystem;
+    }
+
+    public void setDayAndNightSystem(boolean dayAndNightSystem) {
+        isDayAndNightSystem = dayAndNightSystem;
+    }
+
     public String toString() {
         return "{" +
                     "\'patrolsCount\':" +  this.getPatrolsCount() + "," +
