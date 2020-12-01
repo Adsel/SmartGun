@@ -31,7 +31,8 @@ const connect = (data) => {
 
         // === RUN CANVAS ===
         runPreloader();
-        drawCanvas();
+        initiateMonitor().then($("#loader-wrapper").remove());
+        updateMonitor();
     });
 };
 
@@ -43,7 +44,7 @@ const disconnect = () => {
     console.log("Disconnected");
 
     // === CLEAR CANVAS ===
-    clearCanvas();
+    deleteMonitor();
 };
 
 const login = (data) => {
