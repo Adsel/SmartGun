@@ -94,6 +94,11 @@ const login = (data) => {
                 $('#accurateShootingProbablityForAggressor').val() != "" ? parseInt($('#accurateShootingProbablityForAggressor').val()) : -1,
             'accurateAggressorShootProbablityNight':
                 $('#accurateShootingProbablityForAggressorNight').val() != "" ?  parseInt($('#accurateShootingProbablityForAggressorNight').val()) : -1,
+            'approachProbablity': [
+                $('#failReachingDestinationProbablityForSafety').val() != "" ? parseInt($('#failReachingDestinationProbablityForSafety').val()) : -1,
+                $('#failReachingDestinationProbablityForMedium').val() != "" ? parseInt($('#failReachingDestinationProbablityForMedium').val()): -1,
+                $('#failReachingDestinationProbablityForDangerous').val() != "" ? parseInt($('#failReachingDestinationProbablityForDangerous').val()) : -1
+            ],
             'isDayAndNightSystem': $('#dayAndNight').is(':checked'),
             'isRandomMap': $('#randMap').is(':checked')
         });

@@ -16,6 +16,7 @@ public class InitialData {
     private Integer accuratePolicemanShootProbablityNight;
     private Integer accurateAggressorShootProbablity;
     private Integer accurateAggressorShootProbablityNight;
+    private Integer[] approachProbablity;
     private boolean isDayAndNightSystem;
 
     public InitialData() { }
@@ -51,6 +52,8 @@ public class InitialData {
     public Integer getAccurateAggressorShootProbablity() { return this.accurateAggressorShootProbablity; }
 
     public Integer getAccurateAggressorShootProbablityNight() { return this.accurateAggressorShootProbablityNight; }
+
+    public Integer[] getApproachProbablity() { return this.approachProbablity; }
 
     public boolean getIsDayAndNightSystem() { return this.isDayAndNightSystem; }
 
@@ -127,23 +130,42 @@ public class InitialData {
         isDayAndNightSystem = dayAndNightSystem;
     }
 
+    public void setApproachProbablity(Integer[] approachProbablity) {
+        this.approachProbablity = approachProbablity;
+    }
+
+    private String stringBuilder(Integer[] integers) {
+        String json = "[";
+        for (int i = 0; i < integers.length; i++) {
+            if (i != 0) {
+                json += ", " + integers[i];
+            } else {
+                json += integers[i];
+            }
+        }
+        json += "]";
+
+        return json;
+    }
+
     public String toString() {
         return "{" +
                     "\'patrolsCount\':" +  this.getPatrolsCount() + "," +
                      "\'isRandomMap\':" +  this.getIsRandomMap() + "," +
-                    "\'patrolsPerDistrict\':" + this.getPatrolsPerDistrict() + "," +
+                    "\'patrolsPerDistrict\':" + stringBuilder(getPatrolsPerDistrict()) + "," +
                     "\'ambulancesCount\':" + this.getAmbulancesCount() + "," +
                     "\'patrolRadius\':" + this.getPatrolRadius() + "," +
-                    "\'interventionProbablity\':" + this.getInterventionProbablity() + "," +
-                    "\'nightInterventionProbablity\':" + this.getNightInterventionProbablity() + "," +
-                    "\'interventionDuration\':" + this.getInterventionDuration() + "," +
-                    "\'shootingProbablity\':" + this.getShootingProbablity() + "," +
-                    "\'interventionToShootingProbablity\':" + this.getInterventionToShootingProbablity() + "," +
-                    "\'shootingDuration\':" + this.getShootingDuration() + "," +
+                    "\'interventionProbablity\':" + stringBuilder(getInterventionProbablity()) + "," +
+                    "\'nightInterventionProbablity\':" + stringBuilder(getNightInterventionProbablity()) + "," +
+                    "\'interventionDuration\':" + stringBuilder(getInterventionDuration()) + "," +
+                    "\'shootingProbablity\':" + stringBuilder(getShootingProbablity()) + "," +
+                    "\'interventionToShootingProbablity\':" + stringBuilder(getInterventionToShootingProbablity()) + "," +
+                    "\'shootingDuration\':" + stringBuilder(getShootingDuration()) + "," +
                     "\'accuratePolicemanShootProbablity\':" + this.getAccuratePolicemanShootProbablity() + "," +
                     "\'accuratePolicemanShootProbablityNight\':" + this.getAccuratePolicemanShootProbablityNight() + "," +
                     "\'accurateAggressorShootProbablity\':" + this.getAccurateAggressorShootProbablity() + "," +
                     "\'accurateAggressorShootProbablityNight\':" + this.getAccurateAggressorShootProbablityNight() + "," +
+                    "\'approachProbablity\':" + stringBuilder(getApproachProbablity()) + "," +
                     "\'isDayAndNightSystem\':" + this.getIsDayAndNightSystem()
                 + "}";
     }
