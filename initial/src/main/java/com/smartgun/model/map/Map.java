@@ -21,9 +21,9 @@ public class Map {
         return map;
     }
 
-    public void loadMap(){
+    public void loadMap(int number){
         try {
-            this.mapPath = new File(AVAILABLE_MAP_NAMES[0]).getAbsolutePath();
+            this.mapPath = new File(AVAILABLE_MAP_NAMES[number]).getAbsolutePath();
 
             Scanner input = new Scanner(new BufferedReader(new FileReader(this.mapPath)));
 
