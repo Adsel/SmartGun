@@ -5,10 +5,13 @@ import java.io.FileNotFoundException;
 import java.io.File;
 import java.io.FileReader;
 import java.util.Scanner;
+import java.nio.file.FileSystems;
 
 public class Map {
-
-    public static String sourceFilePath = "src\\main\\resources\\static\\maps\\";
+    private static String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
+    public static String sourceFilePath = "src" + Map.FILE_SEPARATOR +
+            "main" + Map.FILE_SEPARATOR + "resources" + Map.FILE_SEPARATOR +
+            "static" + Map.FILE_SEPARATOR + "maps" + Map.FILE_SEPARATOR;
     private char[][] map;
     private String mapPath;
 
