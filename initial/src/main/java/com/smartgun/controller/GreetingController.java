@@ -25,8 +25,9 @@ public class GreetingController {
     @SendTo("/topic/simulation")
     public void login(InitialData data) throws Exception {
         Data.setupData(data);
-        Data.isUser = true;
-        System.out.println(data);
+
+        // CHECK AFTER SETUP
+        System.out.println(Data.data);
     }
 
     @MessageMapping("/hello")
