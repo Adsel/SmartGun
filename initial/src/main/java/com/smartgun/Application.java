@@ -38,19 +38,6 @@ public class Application {
 		}
 		 */
 
-
-		// === READING MAP DEMO ===
-
-		// TODO: make map address as relative path
-		// OLD ABSOLUTE PATH: "C:\\Projects\\SmartGun\\initial\\src\\main\\resources\\static\\maps\\samplemap.txt"
-
-		Map map = new Map("samplemap.txt");
-		try {
-			map.loadMap();
-			map.printMap();
-		}catch (Exception e){
-			e.printStackTrace();
-		}
 	}
 
 }

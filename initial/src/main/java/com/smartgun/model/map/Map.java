@@ -5,19 +5,20 @@ import java.io.FileNotFoundException;
 import java.io.File;
 import java.io.FileReader;
 import java.util.Scanner;
-import java.nio.file.FileSystems;
+import java.util.List;
 
 public class Map {
-    private static String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
-    public static String sourceFilePath = "src" + Map.FILE_SEPARATOR +
-            "main" + Map.FILE_SEPARATOR + "resources" + Map.FILE_SEPARATOR +
-            "static" + Map.FILE_SEPARATOR + "maps" + Map.FILE_SEPARATOR;
+
     private char[][] map;
     private String mapPath;
+    private List<Sector> sectors;
 
-    public Map(String mapName){
-        File file = new File(sourceFilePath + mapName);
-        this.mapPath = file.getAbsolutePath();
+    public Map(
+            String mapName,
+            List<Sector> sectors
+    ){
+        this.mapPath = (new File(Maps.FILE_DIRECTORY + mapName)).getAbsolutePath();
+        this.sectors = sectors;
     }
 
     public void loadMap() throws FileNotFoundException {
