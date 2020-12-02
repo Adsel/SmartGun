@@ -66,7 +66,7 @@ public class Data {
 
     public static void setupData(InitialData data) {
         // SETTING STARTING DATA
-        if (data.getIsRandomMap()) {/tpac
+        if (data.getIsRandomMap()) {
         }
 
         // PATROLS AND AMBULANCES
