@@ -43,12 +43,14 @@ public class Application {
 
 		// TODO: make map address as relative path
 		// OLD ABSOLUTE PATH: "C:\\Projects\\SmartGun\\initial\\src\\main\\resources\\static\\maps\\samplemap.txt"
-		String path = "";
-		Map map = new Map(
-				Map.AVAILABLE_MAP_NAMES[0]
-		);
-		map.loadMap();
 
+		Map map = new Map("samplemap.txt");
+		try {
+			map.loadMap();
+			map.printMap();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 
 }

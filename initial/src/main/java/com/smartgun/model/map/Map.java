@@ -1,50 +1,57 @@
 package com.smartgun.model.map;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.File;
 import java.io.FileReader;
 import java.util.Scanner;
 
 public class Map {
-    public static String[] AVAILABLE_MAP_NAMES = {
-        "samplemap.txt"
-    };
 
+    public static String sourceFilePath = "src\\main\\resources\\static\\maps\\";
     private char[][] map;
     private String mapPath;
 
-    public Map(String path){
-        this.mapPath = path;
+    public Map(String mapName){
+        File file = new File(sourceFilePath + mapName);
+        this.mapPath = file.getAbsolutePath();
     }
 
+    public void loadMap() throws FileNotFoundException {
+        int xSize = 0;
+
+        try {
+            Scanner input = new Scanner(new BufferedReader(new FileReader(this.mapPath)));
+            while (input.hasNextLine()) {
+                xSize++;
+                input.nextLine();
+            }
+            input.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.map = new char[xSize][];
+
+        try {
+            Scanner input = new Scanner(new BufferedReader(new FileReader(this.mapPath)));
+            int i = 0;
+
+            while (input.hasNextLine()) {
+                this.map[i] = input.nextLine().toCharArray();
+                i++;
+            }
+            input.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public char[][] getMap() {
         return map;
     }
 
-    public void loadMap(int number){
-        try {
-            this.mapPath = new File(AVAILABLE_MAP_NAMES[number]).getAbsolutePath();
-
-            Scanner input = new Scanner(new BufferedReader(new FileReader(this.mapPath)));
-
-            //getting number of rows from matrix map
-            int rows = 1;
-            while (input.hasNextLine()){
-                rows++;
-                input.nextLine();
-            }
-            //set numbers of rows in char matrix
-            this.map = new char[rows][];
-
-            //join every single line as char array finally is char array double matrix
-            while (input.hasNextLine()) {
-                for (int i = 0; i < rows; i++) {
-                    char[] temp = input.nextLine().toCharArray();
-                    this.map[i] = temp;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void printMap(){
+        for (int i=0; i < this.map.length; i++){
+            System.out.println(this.map[i]);
         }
     }
 }
