@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import java.awt.Point;
 
 import com.smartgun.model.policeman.*;
+import com.smartgun.model.map.*;
 
 @EnableScheduling
 @SpringBootApplication
@@ -36,6 +37,7 @@ public class Application {
 			// solution doesn't exist, patrol can't reach destination
 		}
 		 */
+
 	}
 
 }
