@@ -30,7 +30,8 @@ public class Maps {
         return Maps.AVAILABLE_MAPS.get(Maps.DEFAULT_MAP_INDEX);
     }
 
-    public static Map getMap(Integer index) {
+    public static Map getRandMap() {
+        Integer index = (int)(Math.random() * Maps.AVAILABLE_MAPS.size());
         return Maps.AVAILABLE_MAPS.get(index);
     }
 }

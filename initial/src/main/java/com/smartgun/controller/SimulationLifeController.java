@@ -3,10 +3,8 @@ package com.smartgun.controller;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.util.HtmlUtils;
 
-import com.smartgun.model.InitClientMessage;
-import com.smartgun.model.SimulationData;
+import com.smartgun.model.simulation.ClientStartingSimulationData;
 import com.smartgun.service.SimulationLifeService;
 import com.smartgun.shared.Data;
 import com.smartgun.model.simulation.InitialData;
@@ -23,18 +21,10 @@ public class SimulationLifeController {
     // GET INITIAL DATA FROM CLIENT, THEN START SIMULATION
     @MessageMapping("/login")
     @SendTo("/topic/simulation")
-    public void login(InitialData data) throws Exception {
+    public String login(InitialData data) throws Exception {
         Data.setupData(data);
 
         // CHECK AFTER SETUP
-        System.out.println(Data.data);
-    }
-
-    @MessageMapping("/hello")
-    @SendTo("/topic/simulation")
-    public SimulationData dataForSimulation(InitClientMessage message) throws Exception {
-        Thread.sleep(1000); // simulated delay
-
-        return new SimulationData("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+        return (new ClientStartingSimulationData(Data.map)).toString();
     }
 }

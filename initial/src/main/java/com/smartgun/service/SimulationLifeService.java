@@ -1,5 +1,6 @@
 package com.smartgun.service;
 
+import com.smartgun.model.simulation.SimulationData;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.smartgun.shared.Config;
-import com.smartgun.model.SimulationData;
+import com.smartgun.model.simulation.ClientStartingSimulationData;
 
 import com.smartgun.model.incident.*;
 import com.smartgun.model.headquarter.*;
