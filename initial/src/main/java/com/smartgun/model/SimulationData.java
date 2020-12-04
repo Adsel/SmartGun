@@ -1,13 +1,13 @@
 package com.smartgun.model;
 
-public class Greeting {
+public class SimulationData {
 
     private String content;
 
-    public Greeting() {
+    public SimulationData() {
     }
 
-    public Greeting(String content) {
+    public SimulationData(String content) {
         this.content = content;
     }
 

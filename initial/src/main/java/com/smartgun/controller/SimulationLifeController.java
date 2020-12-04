@@ -5,19 +5,19 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
 
-import com.smartgun.model.HelloMessage;
-import com.smartgun.model.Greeting;
-import com.smartgun.service.GreetingService;
+import com.smartgun.model.InitClientMessage;
+import com.smartgun.model.SimulationData;
+import com.smartgun.service.SimulationLifeService;
 import com.smartgun.shared.Data;
 import com.smartgun.model.simulation.InitialData;
 
 @Controller
-public class GreetingController {
+public class SimulationLifeController {
     // SEND DATA TO CLIENT
-    private final GreetingService greetingService;
+    private final SimulationLifeService simulationLifeService;
 
-    GreetingController(GreetingService greetingService) {
-        this.greetingService = greetingService;
+    SimulationLifeController(SimulationLifeService simulationLifeService) {
+        this.simulationLifeService = simulationLifeService;
     }
 
     // GET INITIAL DATA FROM CLIENT, THEN START SIMULATION
@@ -32,9 +32,9 @@ public class GreetingController {
 
     @MessageMapping("/hello")
     @SendTo("/topic/simulation")
-    public Greeting greeting(HelloMessage message) throws Exception {
+    public SimulationData dataForSimulation(InitClientMessage message) throws Exception {
         Thread.sleep(1000); // simulated delay
 
-        return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+        return new SimulationData("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
     }
 }

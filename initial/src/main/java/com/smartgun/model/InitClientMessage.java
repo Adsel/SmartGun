@@ -1,13 +1,13 @@
 package com.smartgun.model;
 
-public class HelloMessage {
+public class InitClientMessage {
 
     private String name;
 
-    public HelloMessage() {
+    public InitClientMessage() {
     }
 
-    public HelloMessage(String name) {
+    public InitClientMessage(String name) {
         this.name = name;
     }
 
