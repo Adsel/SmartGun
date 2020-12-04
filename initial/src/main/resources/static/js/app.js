@@ -31,8 +31,7 @@ const connect = (data) => {
 
         // === RUN CANVAS ===
         runPreloader();
-        initiateMonitor().then($("#loader-wrapper").remove());
-        updateMonitor();
+        initiateMonitor().then(updateMonitor()).then($("#loader-wrapper").remove());
     });
 };
 
