@@ -54,8 +54,20 @@ public class Map {
     }
 
     public void printMap(){
-        for (int i=0; i < this.map.length; i++){
+        for (int i = 0; i < this.map.length; i++){
             System.out.println(this.map[i]);
         }
+    }
+
+    public String toString(){
+        String mapString = "" + this.mapPath;
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                mapString += map[i][j];
+            }
+            mapString += "\n";
+        }
+
+        return mapString;
     }
 }

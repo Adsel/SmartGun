@@ -1,13 +1,13 @@
 package com.smartgun.model.simulation;
 
 public class SimulationData {
-    private String context;
+    private String content;
 
     public SimulationData(){}
 
-    public SimulationData(String context) {
-        this.context = context;
+    public SimulationData(String content) {
+        this.content = content;
     }
 
-    public String getContext() { return this.context; }
+    public String getContent() { return content; }
 }

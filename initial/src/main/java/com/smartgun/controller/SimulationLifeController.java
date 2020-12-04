@@ -1,5 +1,6 @@
 package com.smartgun.controller;
 
+import com.smartgun.data.MapData;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -21,10 +22,12 @@ public class SimulationLifeController {
     // GET INITIAL DATA FROM CLIENT, THEN START SIMULATION
     @MessageMapping("/login")
     @SendTo("/topic/simulation")
-    public String login(InitialData data) throws Exception {
+    public ClientStartingSimulationData login(InitialData data) throws Exception {
         Data.setupData(data);
 
         // CHECK AFTER SETUP
-        return (new ClientStartingSimulationData(Data.map)).toString();
+        return new ClientStartingSimulationData(
+                new MapData(Data.map.toString())
+        );
     }
 }

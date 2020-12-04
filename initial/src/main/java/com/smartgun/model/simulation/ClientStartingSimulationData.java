@@ -1,20 +1,17 @@
 package com.smartgun.model.simulation;
 
-import com.smartgun.model.map.Map;
+import com.smartgun.data.MapData;
 
 public class ClientStartingSimulationData {
-    private Map currentMap;
+    private MapData currentMap;
 
     public ClientStartingSimulationData() {
     }
 
-    public ClientStartingSimulationData(Map map) {
+    public ClientStartingSimulationData(MapData map) {
         this.currentMap = map;
     }
 
-
-    public String toString() {
-        return "";
-    }
+    public MapData getCurrentMap(){ return currentMap; }
 
 }
