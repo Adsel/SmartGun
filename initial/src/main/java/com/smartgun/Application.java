@@ -16,8 +16,6 @@ public class Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 
-
-
 		// THE SHORTEST PATH IN MAZE
 
 		// 1 - available entries
@@ -52,8 +50,5 @@ public class Application {
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-
-
 	}
-
 }

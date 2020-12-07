@@ -20,7 +20,7 @@ public class Map implements IMap {
     private int[][] mapOfInt;
     private boolean[][] visited;
     private List<Point> path;
-    java.util.List<Point> hospitalList;
+    List<Point> hospitalList;
     List<Point> policeOffice;
 
     public Map(
