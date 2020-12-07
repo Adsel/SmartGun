@@ -1,18 +1,19 @@
 package com.smartgun.model.map;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.List;
 
 public class Map implements IMap {
 
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String GREEN = "\033[0;32m";
+    public static final String RESET = "\033[0m";
+
+    public static final char HOSPITAL_CHARACTER = 'H';
+    public static final char POLICE_CHARACTER = 'P';
+    public static final char WALL_CHARACTER = '#';
 
     private char[][] map;
     private String mapPath;
@@ -74,12 +75,12 @@ public class Map implements IMap {
         for (int i = 0; i < xLength; i++) {
             for (int j = 0; j < yLength; j++) {
 
-                if (this.map[i][j] == '#') {
+                if (this.map[i][j] == WALL_CHARACTER) {
                     this.mapOfInt[i][j] = 0;
-                } else if (this.map[i][j] == 'H') {
+                } else if (this.map[i][j] == HOSPITAL_CHARACTER) {
                     hospitalList.add(new Point(i, j));
                     this.mapOfInt[i][j] = 0;
-                } else if (this.map[i][j] == 'P') {
+                } else if (this.map[i][j] == POLICE_CHARACTER) {
                     policeOffice.add(new Point(i, j));
                     this.mapOfInt[i][j] = 0;
                 } else {
@@ -144,9 +145,8 @@ public class Map implements IMap {
             for (int j = 0; j < 60; j++) {
                 a = i;
                 b = j;
-
                 if (new Point(a, b).equals(path.stream().filter(point -> point.x == a && point.y == b).findFirst().orElse(null))) {
-                    System.out.print(ANSI_GREEN + mapOfInt[i][j] + ANSI_RESET);
+                    System.out.print(GREEN + mapOfInt[i][j] + RESET);
                 } else {
                     System.out.print(mapOfInt[i][j]);
                 }
@@ -163,7 +163,6 @@ public class Map implements IMap {
             }
             mapString += "\n";
         }
-
         return mapString;
     }
 }

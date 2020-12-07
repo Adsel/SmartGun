@@ -43,7 +43,7 @@ public class Application {
 			map.loadMap();
 			map.printMap();
 			ShortestPathBFS shortestPathBFS = new ShortestPathBFS(map);
-			List<Point> list = shortestPathBFS.solve(new ShortestPathBFS.Coordinate(28,55), new ShortestPathBFS.Coordinate(1,58));
+			List<Point> list = shortestPathBFS.solve(new ShortestPathBFS.Coordinate(1,2), new ShortestPathBFS.Coordinate(1,15));
 			map.printPath();
 			System.out.println(list);
 
