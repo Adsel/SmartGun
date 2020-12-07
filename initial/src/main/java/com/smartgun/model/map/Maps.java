@@ -31,7 +31,12 @@ public class Maps {
             ),
             new Map(
                     "map2.txt",
-                    new ArrayList(Arrays.asList(
+                    new ArrayList<>(Arrays.asList(
+                            new Sector(1,SectorType.RED, new Point(0,0), new Point(30,39)),
+                            new Sector(2,SectorType.RED, new Point(0,31), new Point(30,78)),
+                            new Sector(3,SectorType.YELLOW, new Point(31,0), new Point(51,78)),
+                            new Sector(4,SectorType.GREEN, new Point(52,0), new Point(80,39)),
+                            new Sector(5,SectorType.GREEN, new Point(52,40), new Point(80,78))
                     ))
             ),
             new Map(
