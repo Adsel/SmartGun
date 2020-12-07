@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.nio.file.FileSystems;
 import java.util.Arrays;
-
+//C:\Projects\SmartGun\initial\src\main\resources\static\maps\samplemap.txt
 public class Maps {
     private static String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
-    public static String FILE_DIRECTORY = "src" + Maps.FILE_SEPARATOR +
+    public static String FILE_DIRECTORY =  "src" + Maps.FILE_SEPARATOR +
             "main" + Maps.FILE_SEPARATOR + "resources" + Maps.FILE_SEPARATOR +
             "static" + Maps.FILE_SEPARATOR + "maps" + Maps.FILE_SEPARATOR;
     private static Integer DEFAULT_MAP_INDEX = 0;
