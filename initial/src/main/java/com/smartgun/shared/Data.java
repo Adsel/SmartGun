@@ -1,9 +1,11 @@
 package com.smartgun.shared;
 
+import com.smartgun.model.headquarter.interfaces.IMainAgent;
 import com.smartgun.model.map.Map;
 import com.smartgun.model.map.Maps;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.map.SectorType;
+import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.simulation.InitialData;
 
 import java.io.FileNotFoundException;
@@ -12,7 +14,7 @@ public class Data {
     public static boolean isUser = false;
     public static InitialData data;
     public static Map map;
-
+    public static ServerSimulationData serverSimulationData;
 
 
     // DEFAULTS
@@ -189,6 +191,19 @@ public class Data {
             }
         }
 
+        System.out.println(map.getSectors());
+
+        Data.serverSimulationData = new ServerSimulationData(
+                map.getSectors(), data.getPatrolsPerDistrict(),
+                map, data.getPatrolRadius(), data.getAmbulancesCount(),
+                data.getPatrolsCount()
+        );
+
+        System.out.println("START");
+        for (Patrol p: serverSimulationData.getPatrols()) {
+            System.out.println(p);
+        }
+        System.out.println("STOP");
         Data.data = data;
         Data.isUser = true;
     }

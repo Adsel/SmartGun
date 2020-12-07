@@ -1,6 +1,7 @@
 package com.smartgun.service;
 
 import com.smartgun.model.simulation.SimulationData;
+import com.smartgun.shared.ServerSimulationData;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +31,7 @@ public class SimulationLifeService {
         Point AMBULANCE_STARTING_POSITION = new Point(0, 0);
 
         // START SIMULATION
-        MonitoringAgent agent = new MonitoringAgent();
-        HeadQuarter headquarter = new HeadQuarter(5, agent);
-        MainAgent coreAgent = new MainAgent(agent, headquarter.getPatrols());
+        ServerSimulationData simulationData = new ServerSimulationData();
     }
 
     public void checkIncidents(int currentTime) {

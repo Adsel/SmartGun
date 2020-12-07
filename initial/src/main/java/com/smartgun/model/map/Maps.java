@@ -8,10 +8,9 @@ import java.util.Arrays;
 
 public class Maps {
     private static String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
-    public static String FILE_DIRECTORY = "src" + Maps.FILE_SEPARATOR +
-            "main" + Maps.FILE_SEPARATOR + "resources" + Maps.FILE_SEPARATOR +
-            "static" + Maps.FILE_SEPARATOR + "maps" + Maps.FILE_SEPARATOR;
-    private static Integer DEFAULT_MAP_INDEX = 0;
+    public static String FILE_DIRECTORY = "src" + FILE_SEPARATOR + "main" + FILE_SEPARATOR
+            + "resources" + FILE_SEPARATOR + "static" + FILE_SEPARATOR + "maps" + FILE_SEPARATOR;
+    private static Integer DEFAULT_MAP_INDEX = 1;
     public static List<Map> AVAILABLE_MAPS = new ArrayList<>(Arrays.asList(
             new Map(
                     "map1.txt",
