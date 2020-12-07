@@ -26,7 +26,7 @@ public class Map implements IMap {
     public Map(
             String mapName,
             List<Sector> sectors
-    ) {
+    ){
         this.mapPath = (new File(Maps.FILE_DIRECTORY + mapName)).getAbsolutePath();
         this.sectors = sectors;
         this.hospitalList = new ArrayList<>();
@@ -153,5 +153,17 @@ public class Map implements IMap {
             }
             System.out.println();
         }
+    }
+
+    public String toString(){
+        String mapString = "" + this.mapPath;
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                mapString += map[i][j];
+            }
+            mapString += "\n";
+        }
+
+        return mapString;
     }
 }
