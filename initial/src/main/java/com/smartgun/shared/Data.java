@@ -1,13 +1,21 @@
 package com.smartgun.shared;
 
+import com.smartgun.model.map.Map;
+import com.smartgun.model.map.Maps;
 import com.smartgun.model.simulation.InitialData;
+
+import java.io.FileNotFoundException;
 
 public class Data {
     public static boolean isUser = false;
     public static InitialData data;
-    private static Integer IS_NOT_SETUP = -1;
+    public static Map map;
+
+
 
     // DEFAULTS
+    private static Integer IS_NOT_SETUP = -1;
+
     private static Integer SECTOR_COUNT = 6;
 
     private static Integer ADDITIONAL_PATROLS = 3;
@@ -64,10 +72,14 @@ public class Data {
             8
     };
 
-    public static void setupData(InitialData data) {
+    public static void setupData(InitialData data) throws FileNotFoundException {
         // SETTING STARTING DATA
         if (data.getIsRandomMap()) {
+            map = Maps.getRandMap();
+        } else {
+            map = Maps.getMap();
         }
+        map.loadMap();
 
         // PATROLS AND AMBULANCES
         Integer minimumPatrols = 0;
@@ -176,9 +188,5 @@ public class Data {
 
         Data.data = data;
         Data.isUser = true;
-    }
-
-    private static void randMap() {
-
     }
 }
