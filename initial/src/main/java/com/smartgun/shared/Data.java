@@ -1,7 +1,11 @@
 package com.smartgun.shared;
 
+import com.smartgun.model.headquarter.interfaces.IMainAgent;
 import com.smartgun.model.map.Map;
 import com.smartgun.model.map.Maps;
+import com.smartgun.model.map.Sector;
+import com.smartgun.model.map.SectorType;
+import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.simulation.InitialData;
 
 import java.io.FileNotFoundException;
@@ -10,7 +14,7 @@ public class Data {
     public static boolean isUser = false;
     public static InitialData data;
     public static Map map;
-
+    public static ServerSimulationData serverSimulationData;
 
 
     // DEFAULTS
@@ -82,23 +86,24 @@ public class Data {
         map.loadMap();
 
         // PATROLS AND AMBULANCES
-        Integer minimumPatrols = 0;
         Integer[] computedPatrols = data.getPatrolsPerDistrict();
         for (int i = 0; i < computedPatrols.length; i++) {
             if (computedPatrols[i] < Data.PATROLS_PER_DISTRICT[i]) {
                 computedPatrols[i] = Data.PATROLS_PER_DISTRICT[i];
             }
-
-            minimumPatrols += computedPatrols[i];
         }
-        Integer minimumAmbulances = minimumPatrols;
-        minimumPatrols += ADDITIONAL_PATROLS;
         data.setPatrolsPerDistrict(computedPatrols);
+
+        Integer minimumPatrols = ADDITIONAL_PATROLS;
+        for (Sector sector: map.getSectors()) {
+            minimumPatrols += SectorType.valueOf(sector.getSectorType().toString()).ordinal() + 1;
+        }
 
         if (data.getPatrolsCount() < minimumPatrols) {
             data.setPatrolsCount(minimumPatrols);
         }
 
+        Integer minimumAmbulances = SECTOR_COUNT;
         if (data.getAmbulancesCount() < minimumAmbulances) {
             data.setAmbulancesCount(minimumAmbulances);
         }
@@ -186,6 +191,19 @@ public class Data {
             }
         }
 
+        System.out.println(map.getSectors());
+
+        Data.serverSimulationData = new ServerSimulationData(
+                map.getSectors(), data.getPatrolsPerDistrict(),
+                map, data.getPatrolRadius(), data.getAmbulancesCount(),
+                data.getPatrolsCount()
+        );
+
+        System.out.println("START");
+        for (Patrol p: serverSimulationData.getPatrols()) {
+            System.out.println(p);
+        }
+        System.out.println("STOP");
         Data.data = data;
         Data.isUser = true;
     }

@@ -156,7 +156,7 @@ public class Map implements IMap {
     }
 
     public String toString(){
-        String mapString = "" + this.mapPath;
+        String mapString = "";
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 mapString += map[i][j];
@@ -165,4 +165,6 @@ public class Map implements IMap {
         }
         return mapString;
     }
+
+    public List<Sector> getSectors() { return sectors; }
 }

@@ -14,6 +14,11 @@ public class MainAgent implements IMainAgent {
     // private Point ambulanceBasePosition;
     private List<Patrol> policePatrols;
 
+    // TODO:
+    public MainAgent() {
+
+    }
+
     public MainAgent(MonitoringAgent monitoringAgent, List<Patrol> policePatrols) {
         this.monitoringAgent = monitoringAgent;
         this.policePatrols = policePatrols;
