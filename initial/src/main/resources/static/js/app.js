@@ -17,12 +17,12 @@ const setConnected = (connected) => {
 
 let lastData = false;
 const connect = (data) => {
+    runPreloader();
     const socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-
         // Listening and waiting for messages from server
         stompClient.subscribe('/topic/simulation', function (data) {
 
@@ -33,7 +33,7 @@ const connect = (data) => {
             }
             else {
                 // INIT SIMULATION DATA (MAP, etc.)
-
+                initiateMonitor(msgData.currentMap).then(updateMonitor()).then($("#loader-wrapper").remove());
                 // TODO:
                 // INIT THIS DATA
                 // @LUIGI
@@ -43,8 +43,6 @@ const connect = (data) => {
         login(data);
 
         // === RUN CANVAS ===
-        runPreloader();
-        initiateMonitor().then(updateMonitor()).then($("#loader-wrapper").remove());
     });
 };
 

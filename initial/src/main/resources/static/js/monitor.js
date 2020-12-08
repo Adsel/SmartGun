@@ -20,7 +20,7 @@ let serverData;
 let dataPresentingType = "all";
 
 
-async function initiateMonitor() {
+async function initiateMonitor(serverMap) {
     let monitorParent = document.getElementById("monitorPreview");
     monitorParent.setAttribute("style", "width: 99.8vw");
     monitorParent.setAttribute("style", "height: 99.8vw");
@@ -141,11 +141,11 @@ async function initiateMonitor() {
             "###..##############........................#######....########################\n" +
             "##############################################################################";
 
-        //TODO: POBRANIE MAPY Z SERWERA
-
         loadedMap.split('\n').forEach(function (line) {
             arrayMap[len++] = line;
         });
+        console.log(serverMap.map);
+        console.log("++++++++++++++++++++++++++++++++++++++++++++++++++");
         return arrayMap;
     }
 
