@@ -165,4 +165,6 @@ public class Map implements IMap {
         }
         return mapString;
     }
+
+    public List<Sector> getSectors() { return sectors; }
 }
