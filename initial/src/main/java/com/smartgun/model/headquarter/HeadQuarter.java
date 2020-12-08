@@ -92,7 +92,6 @@ public class HeadQuarter implements IHeadQuarter {
                 );
             }
         }
-
         return generatedPatrols;
     }
 }

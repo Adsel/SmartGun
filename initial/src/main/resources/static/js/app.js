@@ -12,7 +12,7 @@ const setConnected = (connected) => {
     else {
         $("#conversation").hide();
     }
-    $("#greetings").html("");
+    $("#notifications").html("");
 }
 
 let lastData = false;
@@ -25,7 +25,20 @@ const connect = (data) => {
 
         // Listening and waiting for messages from server
         stompClient.subscribe('/topic/simulation', function (data) {
-            showGreeting(JSON.parse(data.body).content);
+
+            const msgData = JSON.parse(data.body);
+            if (!(msgData.currentMap != null && msgData.currentMap != undefined)) {
+                // LOG ACCIDENTS AND EVENTS
+                showNotification(msgData.content);
+            }
+            else {
+                // INIT SIMULATION DATA (MAP, etc.)
+
+                // TODO:
+                // INIT THIS DATA
+                // @LUIGI
+                // THE CITY NEEDS YOU!
+            }
         });
         login(data);
 
@@ -111,8 +124,9 @@ const sendName = () => {
     stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
 };
 
-const showGreeting = (message) => {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+const showNotification = (message) => {
+    $("#notifications").append("<tr><td>" + message + "</td></tr>");
+    console.log('MESSAGE', message);
 };
 
 $(() => {

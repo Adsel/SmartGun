@@ -1,31 +1,25 @@
 package com.smartgun.service;
 
-import org.springframework.context.event.EventListener;
+import com.smartgun.model.simulation.SimulationData;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.messaging.SessionConnectEvent;
-import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import com.smartgun.shared.Config;
-import com.smartgun.model.Greeting;
+import com.smartgun.model.simulation.ClientStartingSimulationData;
 
-import com.smartgun.model.policeman.*;
 import com.smartgun.model.incident.*;
 import com.smartgun.model.headquarter.*;
 import java.awt.Point;
 
 @Service
-public class GreetingService {
+public class SimulationLifeService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private List<Incident> incidents;
 
-    GreetingService(SimpMessagingTemplate simpMessagingTemplate) {
+    SimulationLifeService(SimpMessagingTemplate simpMessagingTemplate) {
         this.simpMessagingTemplate = simpMessagingTemplate;
 
         // STORED INCIDENTS
@@ -58,7 +52,7 @@ public class GreetingService {
     public void sendMessages() {
         simpMessagingTemplate.convertAndSend(
                 Config.WS_MESSAGE_TRANSFER_DESTINATION,
-                new Greeting("New greeting!")
+                new SimulationData("Next portion of Data!")
         );
     }
 }
