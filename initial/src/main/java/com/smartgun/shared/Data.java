@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 public class Data {
     public static boolean isUser = false;
     public static InitialData data;
-    public static Map map;
     public static ServerSimulationData serverSimulationData;
 
 
@@ -78,6 +77,7 @@ public class Data {
 
     public static void setupData(InitialData data) throws FileNotFoundException {
         // SETTING STARTING DATA
+        Map map;
         if (data.getIsRandomMap()) {
             map = Maps.getRandMap();
         } else {

@@ -1,7 +1,6 @@
 package com.smartgun.service;
 
 import com.smartgun.model.simulation.SimulationData;
-import com.smartgun.shared.ServerSimulationData;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.smartgun.shared.Config;
-import com.smartgun.model.simulation.ClientStartingSimulationData;
-
 import com.smartgun.model.incident.*;
-import com.smartgun.model.headquarter.*;
-import java.awt.Point;
 
 @Service
 public class SimulationLifeService {
@@ -25,13 +20,6 @@ public class SimulationLifeService {
 
         // STORED INCIDENTS
         this.incidents = new ArrayList<>();
-
-        // INPUT VARIABLES (FROM CLIENT)
-        Integer COUNT_OF_PATROLS = 5;
-        Point AMBULANCE_STARTING_POSITION = new Point(0, 0);
-
-        // START SIMULATION
-        ServerSimulationData simulationData = new ServerSimulationData();
     }
 
     public void checkIncidents(int currentTime) {

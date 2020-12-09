@@ -27,7 +27,7 @@ public class SimulationLifeController {
 
         // CHECK AFTER SETUP
         return new ClientStartingSimulationData(
-                new MapData(Data.map.toString())
+                new MapData(Data.serverSimulationData.getMap().toString())
         );
     }
 }

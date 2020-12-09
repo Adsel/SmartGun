@@ -22,7 +22,7 @@ public class Map implements IMap {
     private boolean[][] visited;
     private List<Point> path;
     List<Point> hospitalList;
-    List<Point> policeOffice;
+    List<Point> policeOfficeList;
 
     public Map(
             String mapName,
@@ -31,7 +31,7 @@ public class Map implements IMap {
         this.mapPath = (new File(Maps.FILE_DIRECTORY + mapName)).getAbsolutePath();
         this.sectors = sectors;
         this.hospitalList = new ArrayList<>();
-        this.policeOffice = new ArrayList<>();
+        this.policeOfficeList = new ArrayList<>();
     }
 
     public void loadMap() throws FileNotFoundException {
@@ -66,7 +66,7 @@ public class Map implements IMap {
         int yLength = this.map[0].length;
 
         this.hospitalList = new ArrayList<>();
-        this.policeOffice = new ArrayList<>();
+        this.policeOfficeList = new ArrayList<>();
 
         //int[][] mapInt = new int[xLength][yLength];
         this.mapOfInt = new int[xLength][yLength];
@@ -81,7 +81,7 @@ public class Map implements IMap {
                     hospitalList.add(new Point(i, j));
                     this.mapOfInt[i][j] = 0;
                 } else if (this.map[i][j] == POLICE_CHARACTER) {
-                    policeOffice.add(new Point(i, j));
+                    policeOfficeList.add(new Point(i, j));
                     this.mapOfInt[i][j] = 0;
                 } else {
                     this.mapOfInt[i][j] = 1;

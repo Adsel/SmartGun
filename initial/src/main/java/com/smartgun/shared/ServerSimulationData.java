@@ -12,6 +12,7 @@ import java.util.List;
 
 public class ServerSimulationData {
     private HeadQuarter headQuarter;
+    private Map map;
 
     public ServerSimulationData() {}
 
@@ -30,7 +31,10 @@ public class ServerSimulationData {
                 patrolRadius, patrolCount
         );
         headQuarter.generatePatrols(patrolsPerDistrict, patrolCount);
+        this.map = map;
     }
+
+    public Map getMap() { return map; }
 
     public List<Patrol> getPatrols() { return headQuarter.getPatrols(); }
 }
