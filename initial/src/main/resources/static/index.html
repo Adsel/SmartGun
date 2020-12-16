@@ -11,6 +11,8 @@
     <script src="js/preloader.js"></script>
     <script src="https://cdn.jsdelivr.net/sockjs/0.3/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
     <script src="js/monitor.js"></script>
     <script src="js/app.js"></script>
 </head>
@@ -18,6 +20,12 @@
 <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
     enabled. Please enable
     Javascript and reload this page!</h2></noscript>
+<div class="row">
+    <div class="col-md-12">
+        <div id="monitorPreview" style="display: none;"></div>
+        <div id="monitorDataPreview"><table id="monitorDataTable"></table></div>
+    </div>
+</div>
 <div id="main-content" class="container">
     <!-- INPUT DATA -->
     <div class="row">
@@ -43,34 +51,61 @@
                     <h4>Ambulances and Patrols</h4>
                     <div class="form-group" style="margin-left: 35px;">
                         <label for="countOfPatrols" style="font-weight: bold;">Count of Patrols</label>
-                        <input type="number" class="form-control" style="border: 1px black solid;" id="countOfPatrols" min="5" placeholder="default: sum of patrols per districts and 3 additional">
+                        <input type="number" class="form-control" style="border: 1px black solid;" id="countOfPatrols"
+                               min="5" placeholder="default: sum of patrols per districts and 3 additional">
                     </div>
                     <div class="form-group" style="margin-left: 35px;">
-                        <label for="countOfPatrolsPerSafety" style="font-weight: bold;">Count of Patrols per District</label>
-                        <input type="number" title="Safety District" style="margin-bottom: 5px; border: 1px green solid;" class="form-control" id="countOfPatrolsPerSafety" min="1" placeholder="default: 1 ambulance">
-                        <input type="number" title="Medium District"style="margin-bottom: 5px; border: 1px orange solid;" class="form-control" id="countOfPatrolsPerMedium" min="1" placeholder="default: 2 ambulances">
-                        <input type="number" title="Dangerous District" style="margin-bottom: 5px; border: 1px red solid;" class="form-control" id="countOfPatrolsPerDangerous" min="1" placeholder="default: 3 ambulances">
+                        <label for="countOfPatrolsPerSafety" style="font-weight: bold;">Count of Patrols per
+                            District</label>
+                        <input type="number" title="Safety District"
+                               style="margin-bottom: 5px; border: 1px green solid;" class="form-control"
+                               id="countOfPatrolsPerSafety" min="1" placeholder="default: 1 ambulance">
+                        <input type="number" title="Medium District"
+                               style="margin-bottom: 5px; border: 1px orange solid;" class="form-control"
+                               id="countOfPatrolsPerMedium" min="1" placeholder="default: 2 ambulances">
+                        <input type="number" title="Dangerous District"
+                               style="margin-bottom: 5px; border: 1px red solid;" class="form-control"
+                               id="countOfPatrolsPerDangerous" min="1" placeholder="default: 3 ambulances">
                     </div>
                     <div class="form-group" style="margin-left: 35px;">
                         <label for="countOfAmbulances" style="font-weight: bold;">Count of Ambulances</label>
-                        <input type="number" class="form-control" style="border: 1px black solid;" id="countOfAmbulances" min="4" placeholder="default: 1 ambulance per 1 patrol">
+                        <input type="number" class="form-control" style="border: 1px black solid;"
+                               id="countOfAmbulances" min="4" placeholder="default: 1 ambulance per 1 patrol">
                     </div>
                     <div class="form-group" style="margin-left: 35px;">
                         <label for="patrolRadius" style="font-weight: bold;">Patrol radius</label>
-                        <input type="number" class="form-control" style="border: 1px black solid;" id="patrolRadius" min="4" placeholder="patrol radius">
+                        <input type="number" class="form-control" style="border: 1px black solid;" id="patrolRadius"
+                               min="4" placeholder="patrol radius">
                     </div>
 
                     <h4>Interventions</h4>
                     <div class="form-group" style="margin-left: 35px;">
-                        <label for="interventionProbablityForSafety" style="font-weight: bold;">Probablity of intervation (day)</label>
-                        <input type="number" title="Safety District" style="margin-bottom: 5px; border: 1px green solid;" class="form-control" id="interventionProbablityForSafety" min="1" placeholder="10%">
-                        <input type="number" title="Medium District"style="margin-bottom: 5px; border: 1px orange solid;" class="form-control" id="interventionProbablityForMedium" min="1" placeholder="30%">
-                        <input type="number" title="Dangerous District" style="margin-bottom: 5px; border: 1px red solid;" class="form-control" id="interventionProbablityForDangerous" min="1" placeholder="40%">
+                        <label for="interventionProbablityForSafety" style="font-weight: bold;">Probablity of
+                            intervation (day)</label>
+                        <input type="number" title="Safety District"
+                               style="margin-bottom: 5px; border: 1px green solid;" class="form-control"
+                               id="interventionProbablityForSafety" min="1" placeholder="10%">
+                        <input type="number" title="Medium District"
+                               style="margin-bottom: 5px; border: 1px orange solid;" class="form-control"
+                               id="interventionProbablityForMedium" min="1" placeholder="30%">
+                        <input type="number" title="Dangerous District"
+                               style="margin-bottom: 5px; border: 1px red solid;" class="form-control"
+                               id="interventionProbablityForDangerous" min="1" placeholder="40%">
 
-                        <label for="interventionProbablityForSafetyNight" class="dependsOnNightParam" style="font-weight: bold;">Probablity of intervation (night)</label>
-                        <input type="number" title="Safety District" style="margin-bottom: 5px; border: 1px green solid;" class="form-control dependsOnNightParam" id="interventionProbablityForSafetyNight" min="1" placeholder="15%">
-                        <input type="number" title="Medium District"style="margin-bottom: 5px; border: 1px orange solid;" class="form-control dependsOnNightParam" id="interventionProbablityForMediumNight" min="1" placeholder="35%">
-                        <input type="number" title="Dangerous District" style="margin-bottom: 5px; border: 1px red solid;" class="form-control dependsOnNightParam" id="interventionProbablityForDangerousNight" min="1" placeholder="45%">
+                        <label for="interventionProbablityForSafetyNight" class="dependsOnNightParam"
+                               style="font-weight: bold;">Probablity of intervation (night)</label>
+                        <input type="number" title="Safety District"
+                               style="margin-bottom: 5px; border: 1px green solid;"
+                               class="form-control dependsOnNightParam" id="interventionProbablityForSafetyNight"
+                               min="1" placeholder="15%">
+                        <input type="number" title="Medium District"
+                               style="margin-bottom: 5px; border: 1px orange solid;"
+                               class="form-control dependsOnNightParam" id="interventionProbablityForMediumNight"
+                               min="1" placeholder="35%">
+                        <input type="number" title="Dangerous District"
+                               style="margin-bottom: 5px; border: 1px red solid;"
+                               class="form-control dependsOnNightParam" id="interventionProbablityForDangerousNight"
+                               min="1" placeholder="45%">
                     </div>
                     <div style="margin-left: 35px;">
                         <span style="font-weight: bold;">Duration of intervention (s)</span>
@@ -78,26 +113,42 @@
                     <div class="form-row" style="margin-left: 35px;">
                         <div class="form-group col-md-3">
                             <label for="minIntervationDuration">Minimum</label>
-                            <input type="number" class="form-control" style="border: 1px black solid;" id="minIntervationDuration" placeholder="30">
+                            <input type="number" class="form-control" style="border: 1px black solid;"
+                                   id="minIntervationDuration" placeholder="30">
                         </div>
                         <div class="form-group col-md-3">
                             <label for="maxIntervationDuration">Maximum</label>
-                            <input type="number" class="form-control" style="border: 1px black solid;" id="maxIntervationDuration" placeholder="60">
+                            <input type="number" class="form-control" style="border: 1px black solid;"
+                                   id="maxIntervationDuration" placeholder="60">
                         </div>
                     </div>
 
 
                     <h4>Shootings</h4>
                     <div class="form-group" style="margin-left: 35px;">
-                        <label for="shootingProbablityForSafety" style="font-weight: bold;">Probablity of shooting</label>
-                        <input type="number" title="Safety District" style="margin-bottom: 5px; border: 1px green solid;" class="form-control" id="shootingProbablityForSafety" min="1" placeholder="5%">
-                        <input type="number" title="Medium District"style="margin-bottom: 5px; border: 1px orange solid;" class="form-control" id="shootingProbablityForMedium" min="1" placeholder="10%">
-                        <input type="number" title="Dangerous District" style="margin-bottom: 5px; border: 1px red solid;" class="form-control" id="shootingProbablityForDangerous" min="1" placeholder="20%">
+                        <label for="shootingProbablityForSafety" style="font-weight: bold;">Probablity of
+                            shooting</label>
+                        <input type="number" title="Safety District"
+                               style="margin-bottom: 5px; border: 1px green solid;" class="form-control"
+                               id="shootingProbablityForSafety" min="1" placeholder="5%">
+                        <input type="number" title="Medium District"
+                               style="margin-bottom: 5px; border: 1px orange solid;" class="form-control"
+                               id="shootingProbablityForMedium" min="1" placeholder="10%">
+                        <input type="number" title="Dangerous District"
+                               style="margin-bottom: 5px; border: 1px red solid;" class="form-control"
+                               id="shootingProbablityForDangerous" min="1" placeholder="20%">
 
-                        <label for="shootingProbablityForSafety" style="font-weight: bold;">Probablity of intervention turning to shooting </label>
-                        <input type="number" title="Safety District" style="margin-bottom: 5px; border: 1px green solid;" class="form-control" id="interventionToShootingProbablityForSafety" min="1" placeholder="5%">
-                        <input type="number" title="Medium District"style="margin-bottom: 5px; border: 1px orange solid;" class="form-control" id="interventionToShootingProbablityForMedium" min="1" placeholder="12%">
-                        <input type="number" title="Dangerous District" style="margin-bottom: 5px; border: 1px red solid;" class="form-control" id="interventionToShootingProbablityForDangerous" min="1" placeholder="35%">
+                        <label for="shootingProbablityForSafety" style="font-weight: bold;">Probablity of intervention
+                            turning to shooting </label>
+                        <input type="number" title="Safety District"
+                               style="margin-bottom: 5px; border: 1px green solid;" class="form-control"
+                               id="interventionToShootingProbablityForSafety" min="1" placeholder="5%">
+                        <input type="number" title="Medium District"
+                               style="margin-bottom: 5px; border: 1px orange solid;" class="form-control"
+                               id="interventionToShootingProbablityForMedium" min="1" placeholder="12%">
+                        <input type="number" title="Dangerous District"
+                               style="margin-bottom: 5px; border: 1px red solid;" class="form-control"
+                               id="interventionToShootingProbablityForDangerous" min="1" placeholder="35%">
 
                         <div>
                             <span style="font-weight: bold;">Duration of shooting (s)</span>
@@ -105,34 +156,57 @@
                         <div class="form-row">
                             <div class="form-group col-md-3">
                                 <label for="minShootingDuration">Minimum</label>
-                                <input type="number" class="form-control" style="border: 1px black solid;" id="minShootingDuration" placeholder="20">
+                                <input type="number" class="form-control" style="border: 1px black solid;"
+                                       id="minShootingDuration" placeholder="20">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="maxShootingDuration">Maximum</label>
-                                <input type="number" class="form-control" style="border: 1px black solid;" id="maxShootingDuration" placeholder="60">
+                                <input type="number" class="form-control" style="border: 1px black solid;"
+                                       id="maxShootingDuration" placeholder="60">
                             </div>
                         </div>
                     </div>
 
                     <h4>Accurate shoots</h4>
                     <div class="form-group" style="margin-left: 35px;">
-                        <label for="accurateShootingProbablityForPoliceman" style="font-weight: bold;">Probablity of policeman does accurate shoot</label>
-                        <input type="number" title="Policeman" style="margin-bottom: 5px; border: 1px green solid;" class="form-control" id="accurateShootingProbablityForPoliceman" min="1" placeholder="70%">
-                        <label for="accurateShootingProbablityForPolicemanNight" class="dependsOnNightParam" style="font-weight: bold;">Probablity of policeman does accurate shoot in night</label>
-                        <input type="number" title="Policeman in Night" style="margin-bottom: 5px; border: 1px green solid;" class="form-control dependsOnNightParam" id="accurateShootingProbablityForPolicemanNight" min="1" placeholder="50%">
+                        <label for="accurateShootingProbablityForPoliceman" style="font-weight: bold;">Probablity of
+                            policeman does accurate shoot</label>
+                        <input type="number" title="Policeman" style="margin-bottom: 5px; border: 1px green solid;"
+                               class="form-control" id="accurateShootingProbablityForPoliceman" min="1"
+                               placeholder="70%">
+                        <label for="accurateShootingProbablityForPolicemanNight" class="dependsOnNightParam"
+                               style="font-weight: bold;">Probablity of policeman does accurate shoot in night</label>
+                        <input type="number" title="Policeman in Night"
+                               style="margin-bottom: 5px; border: 1px green solid;"
+                               class="form-control dependsOnNightParam" id="accurateShootingProbablityForPolicemanNight"
+                               min="1" placeholder="50%">
 
-                        <label for="accurateShootingProbablityForAggressor" style="font-weight: bold;">Probablity of aggressor does accurate shoot</label>
-                        <input type="number" title="Aggressor" style="margin-bottom: 5px; border: 1px red solid;" class="form-control" id="accurateShootingProbablityForAggressor" min="1" placeholder="20%">
-                        <label for="accurateShootingProbablityForAggressorNight" class="dependsOnNightParam" style="font-weight: bold;">Probablity of aggressor does accurate shoot in night</label>
-                        <input type="number" title="Aggressor in Night" style="margin-bottom: 5px; border: 1px red solid;" class="form-control dependsOnNightParam" id="accurateShootingProbablityForAggressorNight" min="1" placeholder="12%">
+                        <label for="accurateShootingProbablityForAggressor" style="font-weight: bold;">Probablity of
+                            aggressor does accurate shoot</label>
+                        <input type="number" title="Aggressor" style="margin-bottom: 5px; border: 1px red solid;"
+                               class="form-control" id="accurateShootingProbablityForAggressor" min="1"
+                               placeholder="20%">
+                        <label for="accurateShootingProbablityForAggressorNight" class="dependsOnNightParam"
+                               style="font-weight: bold;">Probablity of aggressor does accurate shoot in night</label>
+                        <input type="number" title="Aggressor in Night"
+                               style="margin-bottom: 5px; border: 1px red solid;"
+                               class="form-control dependsOnNightParam" id="accurateShootingProbablityForAggressorNight"
+                               min="1" placeholder="12%">
                     </div>
 
                     <h4>Approach</h4>
                     <div class="form-group" style="margin-left: 35px;">
-                        <label for="failReachingDestinationProbablityForSafety" style="font-weight: bold;">Probablity of patrol doesn't reach the target</label>
-                        <input type="number" title="Safety District" style="margin-bottom: 5px; border: 1px green solid;" class="form-control" id="failReachingDestinationProbablityForSafety" min="1" placeholder="4%">
-                        <input type="number" title="Medium District"style="margin-bottom: 5px; border: 1px orange solid;" class="form-control" id="failReachingDestinationProbablityForMedium" min="1" placeholder="6%">
-                        <input type="number" title="Dangerous District" style="margin-bottom: 5px; border: 1px red solid;" class="form-control" id="failReachingDestinationProbablityForDangerous" min="1" placeholder="8%">
+                        <label for="failReachingDestinationProbablityForSafety" style="font-weight: bold;">Probablity of
+                            patrol doesn't reach the target</label>
+                        <input type="number" title="Safety District"
+                               style="margin-bottom: 5px; border: 1px green solid;" class="form-control"
+                               id="failReachingDestinationProbablityForSafety" min="1" placeholder="4%">
+                        <input type="number" title="Medium District"
+                               style="margin-bottom: 5px; border: 1px orange solid;" class="form-control"
+                               id="failReachingDestinationProbablityForMedium" min="1" placeholder="6%">
+                        <input type="number" title="Dangerous District"
+                               style="margin-bottom: 5px; border: 1px red solid;" class="form-control"
+                               id="failReachingDestinationProbablityForDangerous" min="1" placeholder="8%">
                     </div>
 
                     <h4>Another parameters</h4>
@@ -140,8 +214,10 @@
                         <input type="checkbox" class="form-check-input" style="border: 1px black solid;" id="randMap">
                         <label class="form-check-label" for="randMap" style="font-weight: bold;">Random map</label>
                         <br>
-                        <input type="checkbox" class="form-check-input" checked="checked" style="border: 1px black solid;" id="dayAndNight">
-                        <label class="form-check-label" for="dayAndNight" style="font-weight: bold;">Day and Night system</label>
+                        <input type="checkbox" class="form-check-input" checked="checked"
+                               style="border: 1px black solid;" id="dayAndNight">
+                        <label class="form-check-label" for="dayAndNight" style="font-weight: bold;">Day and Night
+                            system</label>
                     </div>
 
                     <br>
@@ -166,11 +242,6 @@
     <!-- RESULT -->
     <div class="row">
         <div class="col-md-12">
-            <div id="monitorPreview" style="display: none;"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
             <table id="conversation" class="table table-striped">
                 <thead>
                 <tr>
@@ -187,7 +258,10 @@
 <!-- CANVAS PRELOADER MY FRIENDS -->
 <div id="loader-wrapper" style="display: none;">
     <div class="load">
-        <hr/><hr/><hr/><hr/>
+        <hr/>
+        <hr/>
+        <hr/>
+        <hr/>
     </div>
 </div>
 
