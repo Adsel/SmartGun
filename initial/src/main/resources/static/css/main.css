@@ -28,3 +28,11 @@ canvas {
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 }
+
+#paramTogglerOff.active {
+    background-color: rgb(200, 35, 51);
+}
+
+#paramTogglerOn.active {
+    background-color: rgb(34, 138, 57);
+}

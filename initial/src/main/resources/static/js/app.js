@@ -131,6 +131,16 @@ const showNotification = (message) => {
 };
 
 $(() => {
+    $(".param-toggler").change((event) => {
+        const INPUT_TURN_ON_ID = 'turnOnParams';
+        const INPUT_TURN_OFF_ID = 'turnOffParams';
+        if (event.currentTarget.id) {
+            $('#' + INPUT_TURN_OFF_ID).parent().toggleClass("active");
+            $('#' + INPUT_TURN_ON_ID).parent().toggleClass("active");
+            $('#paramsWrapper').toggle();
+        }
+    });
+
     $("#dayAndNight").change(() => {
         console.log('Day and Night param');
         $('.dependsOnNightParam').toggle();
