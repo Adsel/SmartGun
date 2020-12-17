@@ -27,6 +27,7 @@ const connect = (data) => {
         stompClient.subscribe('/topic/simulation', function (data) {
 
             const msgData = JSON.parse(data.body);
+            console.log(msgData);
             if (!(msgData.currentMap != null && msgData.currentMap != undefined)) {
                 // LOG ACCIDENTS AND EVENTS
                 showNotification(msgData.content);

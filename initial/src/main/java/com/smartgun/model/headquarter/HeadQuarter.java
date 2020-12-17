@@ -46,9 +46,10 @@ public class HeadQuarter implements IHeadQuarter {
         return this.patrols;
     }
 
+    // method which sends patrol
     @Override
     public void sendPatrolTo(Point point) {
-        mainAgent.coordinatesToSendAmbulance();
+//        mainAgent.coordinatesToSendAmbulance();
     }
 
     // TODO in next roadmap: rand position in this sector
@@ -92,6 +93,7 @@ public class HeadQuarter implements IHeadQuarter {
         }
     }
 
+    //wyposezenie nowych patroli
     @Override
     public void addPatrol(SmartWatch sw, Navigation nv) {
         this.patrols.add(
@@ -105,4 +107,6 @@ public class HeadQuarter implements IHeadQuarter {
                 )
         );
     }
+
+
 }
