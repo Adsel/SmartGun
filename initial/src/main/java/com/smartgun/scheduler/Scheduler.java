@@ -29,31 +29,33 @@ public class Scheduler {
 
     @Scheduled(fixedRateString = "3000", initialDelayString = "0")
     public void lifeCycleTask() {
-        this.timestamp += 3;
-        //SYSTEM DNIA I NOCY
+        if (Data.isUser) {
+            this.timestamp += 3;
+            //SYSTEM DNIA I NOCY
 //        if (Data.data.getIsDayAndNightSystem()) {
 //            //nmbr of days, timestamp/const
 //        }
 
-        // === CHECKS IF ANY INCIDENTS HAS BEEN OUTDATED ===
-        simulationLifeService.checkIncidents(this.timestamp);
+            // === CHECKS IF ANY INCIDENTS HAS BEEN OUTDATED ===
+            simulationLifeService.checkIncidents(this.timestamp);
 
-        Random rand = new Random();
-        int incidentDurationTime = rand.nextInt(10) + 1;
-        int n = rand.nextInt(10);
-        // p(A) = 0,1; A - probability of incident Data.data ///////// LOSOWANIE
-
-
+            Random rand = new Random();
+            int incidentDurationTime = rand.nextInt(10) + 1;
+            int n = rand.nextInt(10);
+            // p(A) = 0,1; A - probability of incident Data.data ///////// LOSOWANIE
 
 
-        if (n == 8) {
-            Incident createdIncident = new Incident(this.timestamp, incidentDurationTime);
-            simulationLifeService.addIncident(
-                    createdIncident
-            );
 
-            String incidentMode = createdIncident.isFiredIncident() ? "FIRED" : "NORMAL";
-            System.out.println("ADDED " + incidentMode + " INCIDENT!");
+
+            if (n == 8) {
+                Incident createdIncident = new Incident(this.timestamp, incidentDurationTime);
+                simulationLifeService.addIncident(
+                        createdIncident
+                );
+
+                String incidentMode = createdIncident.isFiredIncident() ? "FIRED" : "NORMAL";
+                System.out.println("ADDED " + incidentMode + " INCIDENT!");
+            }
         }
     }
 }
