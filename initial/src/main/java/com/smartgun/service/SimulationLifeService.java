@@ -35,6 +35,9 @@ public class SimulationLifeService {
 
     // wysyłanie danych
     public void sendMessages() {
+        for (Incident i: Data.serverSimulationData.getIncidents()) {
+            System.out.println(i.getIncidentPoint());
+        }
         simpMessagingTemplate.convertAndSend(
                 Config.WS_MESSAGE_TRANSFER_DESTINATION,
                 //tutaj zawartość główna - patrole, ambulanse, zdarzenia

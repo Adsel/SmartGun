@@ -8,6 +8,7 @@ import com.smartgun.shared.Data;
 
 import com.smartgun.model.incident.*;
 
+import java.awt.*;
 import java.util.Random;
 
 @Component
@@ -48,7 +49,7 @@ public class Scheduler {
 
 
             if (n == 8) {
-                Incident createdIncident = new Incident(this.timestamp, incidentDurationTime);
+                Incident createdIncident = new Incident(this.timestamp, incidentDurationTime, new Point(0, 0));
                 simulationLifeService.addIncident(
                         createdIncident
                 );

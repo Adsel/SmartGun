@@ -8,21 +8,14 @@ public class Incident {
     private boolean willBeFire;
     private int startTime;
     private int endTime;
+    // TYP INCYDENTU
 
-    public Incident(int startTime, int durationTime) {
+    public Incident(int startTime, int durationTime, Point position) {
         // TODO: random position
         this.incidentPoint = new Point(1, 1);
         this.startTime = startTime;
         this.endTime = startTime + endTime;
-        Random rand = new Random();
-        int n = rand.nextInt(2);
-        // p(A) = 0,5; A - probability of fired incident
-        // p(b) = 0,5; B - probability of normal incident
-        if (n == 1) {
-            this.willBeFire = false;
-        } else {
-            this.willBeFire = true;
-        }
+        this.incidentPoint = position;
     }
 
     public boolean isFiredIncident() {
@@ -32,4 +25,6 @@ public class Incident {
     public int getEndTime() {
         return this.endTime;
     }
+
+    public Point getIncidentPoint(){ return this.incidentPoint; }
 }
