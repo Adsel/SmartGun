@@ -1,13 +1,20 @@
 package com.smartgun.data;
 
+import com.smartgun.model.map.Map;
+
 public class MapData {
-    private String map;
+    private Map map;
 
     public MapData(){}
 
-    public MapData(String map) {
+    public MapData(Map map) {
         this.map = map;
     }
 
-    public String getMap() { return map; }
+    public String getMapAsString() { return map.toString(); }
+
+    public Map getMap() {
+        return map;
+    }
+
 }

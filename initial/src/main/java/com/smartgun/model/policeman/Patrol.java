@@ -1,6 +1,8 @@
 package com.smartgun.model.policeman;
 
 import java.awt.Point;
+
+import com.smartgun.model.map.Sector;
 import com.smartgun.model.policeman.SmartWatch;
 import com.smartgun.model.policeman.Policeman;
 import com.smartgun.model.policeman.Navigation;
@@ -15,8 +17,10 @@ public class Patrol implements IPatrol {
     private Navigation navigation;
     // Dwóch policjantów na patrol, każdy ma jeden pistolet, ale tylko jeden ma pistolet
     private Policeman headPoliceman;
+
     private Policeman youngerPoliceman;
 
+    private Sector sector;
 
     // TODO: posiadać pistolety
     public enum State {

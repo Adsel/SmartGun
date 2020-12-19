@@ -52,9 +52,27 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     // TODO in next roadmap: rand position in this sector
-    public Point generatePatrolPosition(Sector sector) {
-        Integer randedX = (int) this.ambulanceBasePosition.getX();
-        Integer randedY = (int) this.ambulanceBasePosition.getY();
+    public Point generatePatrolPosition(Sector sector, Map map) {
+        int randedX = 0;
+        int randedY = 0;
+
+        int minX = sector.getLeftUpperCorner().x;
+        int maxX = sector.getRightBottomCorner().x;
+        int minY = sector.getLeftUpperCorner().y;
+        int maxY = sector.getRightBottomCorner().y;
+
+        while (map.isWall(randedX,randedY)){
+            randedX = minX + (int) (Math.random() * (maxX - minX));
+            randedY = minY + (int) (Math.random() * (maxY - minY));
+        }
+
+        int[][] directions = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+
+
+//        new Point(0,0), new Point(19,39)
+
+//        Integer randedX = (int) this.ambulanceBasePosition.getX();
+//        Integer randedY = (int) this.ambulanceBasePosition.getY();
 
         return new Point(randedX, randedY);
     }
@@ -69,7 +87,7 @@ public class HeadQuarter implements IHeadQuarter {
 
                 Navigation navigation = new Navigation();
                 SmartWatch smartWatch = new SmartWatch(
-                        this.generatePatrolPosition(sector),
+                        this.generatePatrolPosition(sector, this.map),
                         navigation
                 );
 
