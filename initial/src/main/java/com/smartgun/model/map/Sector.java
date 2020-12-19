@@ -1,6 +1,8 @@
 package com.smartgun.model.map;
 
 import java.awt.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class Sector {
@@ -8,8 +10,6 @@ public class Sector {
     private SectorType sectorType;
     private Point leftUpperCorner;
     private Point rightBottomCorner;
-//    private int[][] sectorMap;
-//    private Map map;
 
     public Sector(int id, SectorType sectorType, Point leftUpperCorner, Point rightBottomCorner) {
         this.id = id;
@@ -35,18 +35,13 @@ public class Sector {
         return rightBottomCorner;
     }
 
-//    public void setSectorMap(Map map){
-//      int x = this.rightBottomCorner.x - this.leftUpperCorner.x;
-//      int y = this.rightBottomCorner.y - this.leftUpperCorner.y;
-//
-//      this.sectorMap = new int[x][y];
-//
-//      for (int i = 0; i < x; i++){
-//          for (int j = 0; j < y; j++){
-//              this.sectorMap[i][j] = map.getMapOfInt()[i][j];
-//          }
-//      }
-//    }
-//
-//    public int[][] getSectorMap(){return this.sectorMap;}
+    public List<Point> getSectorPoints(Map map) {
+        return map.getMapPoints().stream().filter(this::isInSector
+        ).collect(Collectors.toList());
+    }
+
+    public boolean isInSector(Point point){
+        return  point.x < this.getRightBottomCorner().x && point.x >= this.leftUpperCorner.x
+        && point.y < this.getRightBottomCorner().y && point.y >= this.leftUpperCorner.y;
+    }
 }

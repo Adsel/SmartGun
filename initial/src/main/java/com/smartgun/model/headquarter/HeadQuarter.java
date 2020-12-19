@@ -66,9 +66,6 @@ public class HeadQuarter implements IHeadQuarter {
             randedY = minY + (int) (Math.random() * (maxY - minY));
         }
 
-        int[][] directions = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
-
-
 //        new Point(0,0), new Point(19,39)
 
 //        Integer randedX = (int) this.ambulanceBasePosition.getX();
@@ -93,32 +90,45 @@ public class HeadQuarter implements IHeadQuarter {
 
                 monitoringAgent.addSmartWatch(smartWatch);
 
-                addPatrol(smartWatch, navigation);
+                addPatrol(smartWatch, navigation, sector);
             }
         }
 
         Integer additionalPatrols = patrolsCount - this.patrols.size();
-        for (int j = 0; j < additionalPatrols; j++) {
+        List<Sector> sectors = getSectorsForAdditionalPatrols(additionalPatrols);
+
+        for (Sector sector : sectors) {
                 Navigation navigation = new Navigation();
                 SmartWatch smartWatch = new SmartWatch(
-                        new Point(0, 0),
+                        this.generatePatrolPosition(sector, this.map),
                         navigation
                 );
 
                 monitoringAgent.addSmartWatch(smartWatch);
-                addPatrol(smartWatch, navigation);
+                addPatrol(smartWatch, navigation, sector);
         }
     }
 
+    private List<Sector> getSectorsForAdditionalPatrols(int numberOfPatrols){
+        //TODO: improve refactor randomly draw sectors
+        List<Sector> sectors = new ArrayList<>();
+        for(int i = 0; i < numberOfPatrols; i++){
+            sectors.add(this.sectors.get(0));
+        }
+        return sectors;
+    }
+
     @Override
-    public void addPatrol(SmartWatch sw, Navigation nv) {
+    public void addPatrol(SmartWatch sw, Navigation nv, Sector sector) {
         this.patrols.add(
                 new Patrol(
                         0,
                         sw,
                         nv,
                         new Policeman(true),
-                        new Policeman(false)
+                        new Policeman(false),
+                        this.map,
+                        sector
                         // TODO WHEN X WILL BE ADDED: X connector;
                 )
         );

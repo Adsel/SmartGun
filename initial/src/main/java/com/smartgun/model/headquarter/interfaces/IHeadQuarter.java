@@ -14,5 +14,5 @@ public interface IHeadQuarter {
     void sendPatrolTo(Point point);
     void generatePatrols(Integer[] integers, Integer patrolsCount);
     Point generatePatrolPosition(Sector sector, Map map);
-    void addPatrol(SmartWatch sw, Navigation nv);
+    void addPatrol(SmartWatch sw, Navigation nv, Sector sector);
 }
