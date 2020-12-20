@@ -6,7 +6,6 @@ import com.smartgun.shared.Data;
 import java.util.List;
 
 public class SimulationData {
-    //tutaj dodawać parametry, a uzupelniać w SimulationLifeService
     private String content;
     private List<Incident> incidents;
 

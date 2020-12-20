@@ -3,6 +3,8 @@ package com.smartgun.model.headquarter;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import com.smartgun.model.headquarter.interfaces.IHeadQuarter;
 import com.smartgun.model.headquarter.interfaces.IMainAgent;
 import com.smartgun.model.map.Map;
@@ -76,7 +78,7 @@ public class HeadQuarter implements IHeadQuarter {
 
                 monitoringAgent.addSmartWatch(smartWatch);
 
-                addPatrol(smartWatch, navigation);
+                addPatrol(UUID.randomUUID().toString(),smartWatch, navigation);
             }
         }
 
@@ -89,16 +91,16 @@ public class HeadQuarter implements IHeadQuarter {
                 );
 
                 monitoringAgent.addSmartWatch(smartWatch);
-                addPatrol(smartWatch, navigation);
+                addPatrol(UUID.randomUUID().toString(), smartWatch, navigation);
         }
     }
 
     //wyposezenie nowych patroli
     @Override
-    public void addPatrol(SmartWatch sw, Navigation nv) {
+    public void addPatrol(String id, SmartWatch sw, Navigation nv) {
         this.patrols.add(
                 new Patrol(
-                        0,
+                        id,
                         sw,
                         nv,
                         new Policeman(true),
