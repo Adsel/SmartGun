@@ -27,11 +27,21 @@ let dataContext;
 let serverData;
 let dataPresentingType = "all";
 
+function preHide(){
+    $("#mainDataContainer").children().hide();
+    $("#mainDataContainer").hide();
+}
 
 async function initiateMonitor(serverMap) {
+    document.getElementById("mainDataContainer").setAttribute("display","inline");
+    let cont = document.getElementById("mainDataContainer");
+    cont.setAttribute("style", "width: 98vw");
+    cont.setAttribute("style", "height: 66vw");
+    $("#mainDataContainer").children().show();
+    $("#mainDataContainer").show();
     let monitorParent = document.getElementById("monitorPreview");
-    monitorParent.setAttribute("style", "width: 99.8vw");
-    monitorParent.setAttribute("style", "height: 99.8vw");
+    monitorParent.setAttribute("style", "width: 100%");
+    monitorParent.setAttribute("style", "height: 100%");
     map = loadMapFromServer();
     let mapY = map.length;
     let mapX = map[0].length;
@@ -52,7 +62,6 @@ async function initiateMonitor(serverMap) {
     canvas.height = monitorParent.clientHeight;
     canvas.width = monitorParent.clientWidth;
     canvas.style.zIndex = "1";
-    canvas.style.position = "absolute";
     monitorParent.appendChild(canvas);
     context = canvas.getContext("2d");
 
@@ -62,7 +71,6 @@ async function initiateMonitor(serverMap) {
     dataCanvas.height = monitorParent.clientHeight;
     dataCanvas.width = monitorParent.clientWidth;
     dataCanvas.style.zIndex = "2";
-    dataCanvas.style.position = "absolute";
     monitorParent.appendChild(dataCanvas);
     dataContext = dataCanvas.getContext("2d");
 
@@ -144,28 +152,21 @@ async function initiateMonitor(serverMap) {
         context.fill();
     }
 
-    document.getElementById("monitorDataPreview").style.display = "block";
-    document.getElementById("centered-group").style.display = "block";
-
-    document.getElementById("onClickInfo").addEventListener("click", function () {
-        dataPresentingType = "allInfo";
-        console.log(dataPresentingType);
-    });
-    document.getElementById("allInfo").addEventListener("click", function () {
-        dataPresentingType = "onClick";
-        console.log(dataPresentingType);
-    });
+    document.getElementById("mainDataContainer");
+    cont.setAttribute("style", "width: 100%");
+    cont.setAttribute("style", "height: " + (monitorParent.clientHeight + (window.innerHeight * 2 / 100)) + "px");
+    console.log(monitorParent.clientHeight);
 }
 
 function deleteMonitor() {
     let monitorParent = document.getElementById("monitorPreview");
     monitorParent.innerHTML = '';
-    monitorParent.style.height = 1000 + "px";
-    monitorParent.style.width = 1000 + "px";
+    monitorParent.setAttribute("style", "width: 100%");
+    monitorParent.setAttribute("style", "height: 100%");
+    $("#mainDataContainer").children().hide();
+    $("#mainDataContainer").hide();
+
     console.log("boxsize:" + boxSize);
-    document.getElementById("monitorDataPreview").style.display = "none";
-    document.getElementById("centered-group").style.display = "none";
-    document.getElementById("monitorDataPreview").innerHTML = "";
 }
 
 async function updateMonitor() {
