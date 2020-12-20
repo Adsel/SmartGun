@@ -34,3 +34,11 @@ canvas{
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
+
+#paramTogglerOff.active {
+    background-color: rgb(200, 35, 51);
+}
+
+#paramTogglerOn.active {
+    background-color: rgb(34, 138, 57);
+}
