@@ -21,6 +21,7 @@ let dataPresentingType = "all";
 
 
 async function initiateMonitor(serverMap) {
+    $('#conversation-row').toggle();
     let monitorParent = document.getElementById("monitorPreview");
     monitorParent.setAttribute("style", "width: 99.8vw");
     monitorParent.setAttribute("style", "height: 99.8vw");
