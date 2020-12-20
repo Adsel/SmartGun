@@ -8,7 +8,7 @@ import com.smartgun.model.policeman.interfaces.IPatrol;
 
 public class Patrol implements IPatrol {
     //unikalne id patrolu
-    private int id;
+    private String id;
     // Jeden smartwatch na patrol
     private SmartWatch smartWatch;
     // Jeden samochód z nawigacją na patrol
@@ -27,7 +27,7 @@ public class Patrol implements IPatrol {
     }
 
     public Patrol(
-            int id,
+            String id,
             SmartWatch smartWatch,
             Navigation navigation,
             Policeman headPoliceman,
