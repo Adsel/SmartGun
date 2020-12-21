@@ -1,5 +1,6 @@
 package com.smartgun.scheduler;
 
+import com.smartgun.model.map.SectorType;
 import com.smartgun.model.map.Sector;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
