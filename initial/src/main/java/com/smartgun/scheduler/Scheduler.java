@@ -49,18 +49,11 @@ public class Scheduler {
             // === CHECKS IF ANY INCIDENTS HAS BEEN OUTDATED ===
             simulationLifeService.checkIncidents(this.timestamp);
 
-            if (
-                    !Data.data.getIsDayAndNightSystem()
-                    || (timestamp > TIME_MORNING && timestamp < TIME_EVENING)
-            ) {
-                // DAY
-                this.generateIncidents(true);
-            } else {
-                this.generateIncidents(false);
-            }
+            // DAY
+            this.generateIncidents(!Data.data.getIsDayAndNightSystem()
+                    || (timestamp > TIME_MORNING && timestamp < TIME_EVENING));
         }
     }
-
 
     private boolean isAccident(Integer percentage) {
         if (generator.nextInt(CERTAINTY_PROBABILITY) < percentage) {
@@ -70,7 +63,7 @@ public class Scheduler {
         return false;
     }
 
-    private int genDurationTime(Integer min, Integer max) {
+    private int genDurationTime(int min, int max) {
         return this.generator.nextInt(max) + min;
     }
 
@@ -80,32 +73,128 @@ public class Scheduler {
         }
     }
 
+    private boolean isShooting(int percent) {
+        return generator.nextInt(CERTAINTY_PROBABILITY) < percent;
+    }
+
+    private boolean checkIfWillBeShooting(int percent) {
+        return generator.nextInt(CERTAINTY_PROBABILITY) < percent;
+    }
+
     private void generateIncidentsPerSector(Sector sector, boolean isDay) {
         //Incident newDayIncident = new IncidentInDay(timestamp, incidentDurationTime, new Point(7,7));
         //Incident createdIncident = new Incident(this.timestamp, incidentDurationTime, new Point(0, 0));
         // String incidentMode = createdIncident.isFiredIncident() ? "FIRED" : "NORMAL";
 
         if (isDay) {
-            Integer intervationProbablityPercentage = Data.data.getInterventionProbablity()[sector.getSectorTypeValue()];
-            if (isAccident(intervationProbablityPercentage)) {
-                Integer durationTime = genDurationTime(
+            // DAY
+            Integer interventionProbability = Data.data.getInterventionProbablity()[sector.getSectorTypeValue()];
+            if (isAccident(interventionProbability)) {
+                if (isShooting(Data.data.getShootingProbablity()[sector.getSectorTypeValue()])) {
+                    // SHOOTING
+                    int durationTime = genDurationTime(
+                            Data.data.getInterventionDuration()[0],
+                            Data.data.getInterventionDuration()[1]
+                    );
+
+                    int shootingDuration = genDurationTime(
+                            Data.data.getShootingDuration()[0],
+                            Data.data.getShootingDuration()[1]
+                    );
+
+                    Incident shooting = new Shooting(simulationTime, durationTime, new Point(0,0),
+                            Incident.IncidentType.SHOOTING, shootingDuration);
+                    addIncident(
+                            shooting
+                    );
+                    System.out.println("SHOOTING!!, time: " + timestamp +
+                            ", sector: "+ sector.getSectorType().toString());
+
+                } else if (checkIfWillBeShooting(Data.data.getInterventionToShootingProbablity()[sector.getSectorTypeValue()])) {
+                    // INTERVENTION TURNING INTO SHOOTING
+                    int durationTime = genDurationTime(
+                            Data.data.getInterventionDuration()[0],
+                            Data.data.getInterventionDuration()[1]
+                    );
+
+                    addIncident(
+                            new Incident(
+                                    this.simulationTime, durationTime, new Point(5, 5),
+                                    Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING
+                            )
+                    );
+                    System.out.println("TURNING INTO SHOOTING, time: " + timestamp +
+                            ", sector: "+ sector.getSectorType().toString());
+
+                } else {
+                    int durationTime = genDurationTime(
+                            Data.data.getInterventionDuration()[0],
+                            Data.data.getInterventionDuration()[1]
+                    );
+                    // TODO:
+                    // GENERATE RANDOM POINT IN CURRENT SECTION
+                    addIncident(
+                            new Incident(
+                                    this.simulationTime, durationTime, new Point(1, 1),
+                                    Incident.IncidentType.INTERVENTION
+                            )
+                    );
+                    System.out.println("CASUAL INTERVENTION, time: " + timestamp +
+                            ", sector: "+ sector.getSectorType().toString());
+                }
+            }
+        } else {
+            // NIGHT
+            if (isShooting(Data.data.getShootingProbablity()[sector.getSectorTypeValue()])) {
+                // SHOOTING
+                int durationTime = genDurationTime(
                         Data.data.getInterventionDuration()[0],
                         Data.data.getInterventionDuration()[1]
                 );
-                // TODO:
-                // GENERATE RANDOM POINT IN CURRENT SECTION
+
+                int shootingDuration = genDurationTime(
+                        Data.data.getShootingDuration()[0],
+                        Data.data.getShootingDuration()[1]
+                );
+
+                Incident nightShooting = new Shooting(simulationTime, durationTime, new Point(0,0),
+                        Incident.IncidentType.SHOOTING, shootingDuration);
+                addIncident(
+                        nightShooting
+                );
+
+                System.out.println("NIGHT SHOOTING!!, time: " + timestamp +
+                        ", sector: "+ sector.getSectorType().toString());
+            } else if (checkIfWillBeShooting(Data.data.getInterventionToShootingProbablity()[sector.getSectorTypeValue()])) {
+                // INTERVENTION TURNING INTO SHOOTING
+                int durationTime = genDurationTime(
+                        Data.data.getInterventionDuration()[0],
+                        Data.data.getInterventionDuration()[1]
+                );
                 addIncident(
                         new Incident(
-                                this.simulationTime, durationTime, new Point(0, 0),
-                                Incident.IncidentType.INTERVENTION
+                                this.simulationTime, durationTime, new Point(5, 5),
+                                Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING
                         )
                 );
-                System.out.println("GENERATED INTERVENTION, HAVE FUN!");
+                System.out.println("TURNING INTO SHOOTING IN THE NIGHT, time: " + timestamp +
+                        ", sector: "+ sector.getSectorType().toString());
+            } else {
+                if (isAccident(Data.data.getNightInterventionProbablity()[sector.getSectorTypeValue()])) {
+                    int durationTime = genDurationTime(
+                            Data.data.getInterventionDuration()[0],
+                            Data.data.getInterventionDuration()[1]
+                    );
+                    addIncident(
+                            new Incident(
+                                    this.simulationTime, durationTime, new Point(4, 4),
+                                    Incident.IncidentType.SHOOTING
+                            )
+                    );
+                    System.out.println("CASUAL NIGHT INTERVENTION, time: " + timestamp +
+                            ", sector: "+ sector.getSectorType().toString());
+                }
             }
-            // TODO: shooting, intervation_turning_to_shooting
-        } else {
-            Integer nightIntervationProbablity = Data.data.getInterventionProbablity()[sector.getSectorTypeValue()];
-            // TODO: shooting, intervation_turning_to_shooting
         }
     }
 
