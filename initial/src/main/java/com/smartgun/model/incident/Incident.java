@@ -1,43 +1,44 @@
 package com.smartgun.model.incident;
 
 import java.awt.Point;
-import java.util.Random;
 
 public class Incident {
-    enum IncidentType {
+    public static enum IncidentType {
         INTERVENTION_TURNING_INTO_SHOOTING,
         SHOOTING,
         INTERVENTION
     }
 
-    private Point incidentPoint;
-    private boolean willBeFire;
+    private Point incidentLocalization;
     private int startTime;
     private int endTime;
+    private IncidentType incidentType;
 
-    Integer policeShooting;
-    Integer agressorShooting;
+    public Incident(){}
 
-    // TYP INCYDENTU
-
-
-//    Integer[] interventionProbability, Integer policeShooting, Integer agressorShooting
-    public Incident(int startTime, int durationTime, Point incidentPoint) {
-        // TODO: random position
-        this.incidentPoint = new Point(1, 1);
+    public Incident(
+            int startTime, int durationTime, Point incidentPoint,
+            IncidentType incidentType
+    ) {
         this.startTime = startTime;
-        this.endTime = startTime + endTime;
-        this.incidentPoint = incidentPoint;
+        this.endTime = startTime + durationTime;
+        this.incidentLocalization = incidentPoint;
+        this.incidentType = incidentType;
     }
 
-    public boolean isFiredIncident() {
-        return this.willBeFire;
+    public Point getIncidentLocalization() {
+        return incidentLocalization;
+    }
+
+    public int getStartTime() {
+        return startTime;
     }
 
     public int getEndTime() {
-        return this.endTime;
+        return endTime;
     }
 
-    public Point getIncidentPoint(){ return this.incidentPoint; }
-
+    public IncidentType getIncidentType() {
+        return incidentType;
+    }
 }

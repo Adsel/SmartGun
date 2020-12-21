@@ -31,4 +31,6 @@ public class Sector {
     public Point getRightBottomCorner() {
         return rightBottomCorner;
     }
+
+    public Integer getSectorTypeValue() { return sectorType.ordinal(); }
 }

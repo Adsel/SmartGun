@@ -1,17 +1,13 @@
 package com.smartgun.scheduler;
 
+import com.smartgun.model.map.Sector;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
 import com.smartgun.service.SimulationLifeService;
 import com.smartgun.shared.Data;
-
 import com.smartgun.model.incident.*;
-
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.awt.*;
 import java.util.Random;
-import java.util.UUID;
 
 @Component
 public class Scheduler {
@@ -21,12 +17,16 @@ public class Scheduler {
     private final int TIME_MORNING = 7;
     private final int TIME_EVENING = 21;
     private int timestamp;
+    private int simulationTime;
+    private Random generator;
+    private Integer CERTAINTY_PROBABILITY = 100;
 
 
     public Scheduler(SimulationLifeService simulationLifeService) {
         this.timestamp = 0;
+        this.simulationTime = 0;
         this.simulationLifeService = simulationLifeService;
-        System.out.println(timestamp);
+        this.generator = new Random();
     }
 
     @Scheduled(fixedRateString = "1000", initialDelayString = "0")
@@ -40,51 +40,75 @@ public class Scheduler {
     public void lifeCycleTask() {
         if (Data.isUser) {
             timestamp += TIME_UNIT;
+            simulationTime += TIME_UNIT;
             if (timestamp > TIME_LIMIT) {
                 timestamp = 0;
             }
-            System.out.println(timestamp);
 
             // === CHECKS IF ANY INCIDENTS HAS BEEN OUTDATED ===
             simulationLifeService.checkIncidents(this.timestamp);
 
-            Random rand = new Random();
-            int incidentDurationTime = rand.nextInt(10) + 1;
-            int n = rand.nextInt(10);
-            // p(A) = 0,1; A - probability of incident Data.data ///////// LOSOWANIE
-
-
-            if (timestamp > TIME_MORNING && timestamp < TIME_EVENING) {
+            if (
+                    !Data.data.getIsDayAndNightSystem()
+                    || (timestamp > TIME_MORNING && timestamp < TIME_EVENING)
+            ) {
                 // DAY
-                if (n == 8) {
-
-
-                    Incident newDayIncident = new IncidentInDay(timestamp, incidentDurationTime, new Point(7,7));
-                    Incident createdIncident = new Incident(this.timestamp, incidentDurationTime, new Point(0, 0));
-                    simulationLifeService.addIncident(
-                            newDayIncident
-                    );
-
-                    String incidentMode = createdIncident.isFiredIncident() ? "FIRED" : "NORMAL";
-                    System.out.println("ADDED " + incidentMode + " INCIDENT!");
-                }
+                this.generateIncidents(true);
             } else {
-                // NIGHT
-                int probabilityOfShooting = 40;
-
-//                Data.data.getShootingProbablity().length
-                System.out.println("SProb:"+Data.data.getShootingProbablity().toString()
-                );
-                if ( probabilityOfShooting < 30) {
-                    Incident newNightIncident = new IncidentInNight(timestamp, incidentDurationTime, new Point(11,11));
-                    simulationLifeService.addIncident(newNightIncident);
-                    System.out.println(newNightIncident);
-                } else {
-                    Incident newNightShootingIncident = new ShootingIncidentInNight(timestamp, incidentDurationTime, new Point(22,22));
-                    simulationLifeService.addIncident(newNightShootingIncident);
-                    System.out.println(newNightShootingIncident);
-                }
+                this.generateIncidents(false);
             }
         }
+    }
+
+
+    private boolean isAccident(Integer percentage) {
+        if (generator.nextInt(CERTAINTY_PROBABILITY) < percentage) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private int genDurationTime(Integer min, Integer max) {
+        return this.generator.nextInt(max) + min;
+    }
+
+    private void generateIncidents(boolean isDay) {
+        for (Sector sector: Data.serverSimulationData.getMap().getSectors()) {
+           generateIncidentsPerSector(sector, isDay);
+        }
+    }
+
+    private void generateIncidentsPerSector(Sector sector, boolean isDay) {
+        //Incident newDayIncident = new IncidentInDay(timestamp, incidentDurationTime, new Point(7,7));
+        //Incident createdIncident = new Incident(this.timestamp, incidentDurationTime, new Point(0, 0));
+        // String incidentMode = createdIncident.isFiredIncident() ? "FIRED" : "NORMAL";
+
+        if (isDay) {
+            Integer intervationProbablityPercentage = Data.data.getInterventionProbablity()[sector.getSectorTypeValue()];
+            if (isAccident(intervationProbablityPercentage)) {
+                Integer durationTime = genDurationTime(
+                        Data.data.getInterventionDuration()[0],
+                        Data.data.getInterventionDuration()[1]
+                );
+                // TODO:
+                // GENERATE RANDOM POINT IN CURRENT SECTION
+                addIncident(
+                        new Incident(
+                                this.simulationTime, durationTime, new Point(0, 0),
+                                Incident.IncidentType.INTERVENTION
+                        )
+                );
+                System.out.println("GENERATED INTERVENTION, HAVE FUN!");
+            }
+            // TODO: shooting, intervation_turning_to_shooting
+        } else {
+            Integer nightIntervationProbablity = Data.data.getInterventionProbablity()[sector.getSectorTypeValue()];
+            // TODO: shooting, intervation_turning_to_shooting
+        }
+    }
+
+    private void addIncident(Incident incident) {
+        simulationLifeService.addIncident(incident);
     }
 }
