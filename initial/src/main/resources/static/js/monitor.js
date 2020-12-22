@@ -310,6 +310,10 @@ async function updateMonitor() {
 
     }
 
+    function changeSimulationTime(time){
+        document.getElementById("simulationTime").innerText = time;
+    }
+
     //TRIGGER ON DATA CANVAS CLICK
     document.getElementById("dataMonitor").addEventListener("mousemove", function (e) {
         let cRect = document.getElementById("monitor").getBoundingClientRect();        // Gets CSS pos, and width/height
