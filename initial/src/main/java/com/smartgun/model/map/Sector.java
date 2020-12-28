@@ -36,7 +36,7 @@ public class Sector {
     }
 
     public List<Point> getSectorPoints(Map map) {
-        return map.getMapPoints().stream().filter(this::isInSector
+        return map.recieveMapPoints().stream().filter(this::isInSector
         ).collect(Collectors.toList());
     }
 

@@ -95,7 +95,7 @@ public class HeadQuarter implements IHeadQuarter {
         }
 
         Integer additionalPatrols = patrolsCount - this.patrols.size();
-        List<Sector> sectors = getSectorsForAdditionalPatrols(additionalPatrols);
+        List<Sector> sectors = receiveSectorsForAdditionalPatrols(additionalPatrols);
 
         for (Sector sector : sectors) {
                 Navigation navigation = new Navigation();
@@ -109,7 +109,7 @@ public class HeadQuarter implements IHeadQuarter {
         }
     }
 
-    private List<Sector> getSectorsForAdditionalPatrols(int numberOfPatrols){
+    private List<Sector> receiveSectorsForAdditionalPatrols(int numberOfPatrols){
         //TODO: improve refactor randomly draw sectors
         List<Sector> sectors = new ArrayList<>();
         for(int i = 0; i < numberOfPatrols; i++){

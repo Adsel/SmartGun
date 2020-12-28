@@ -8,9 +8,9 @@ public interface IMap {
     void loadMap() throws FileNotFoundException;
     char[][] getMap();
     void printMap();
-    int[][] getMapOfInt();
-    int getNumbersOfRows();
-    int getNumberOfColumns();
+    int[][] recieveMapOfint();
+    int recieveNumbersOfRows();
+    int recieveNumberOfColumns();
     boolean isExplored(int row, int col);
     boolean isWall(int row, int col);
     boolean isValidLocation(int row, int col);

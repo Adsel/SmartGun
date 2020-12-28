@@ -95,7 +95,7 @@ public class Data {
         data.setPatrolsPerDistrict(computedPatrols);
 
         Integer minimumPatrols = ADDITIONAL_PATROLS;
-        for (Sector sector: map.getSectors()) {
+        for (Sector sector: map.receiveSectors()) {
             minimumPatrols += SectorType.valueOf(sector.getSectorType().toString()).ordinal() + 1;
         }
 
@@ -191,10 +191,10 @@ public class Data {
             }
         }
 
-        System.out.println(map.getSectors());
+        System.out.println(map.receiveSectors());
 
         Data.serverSimulationData = new ServerSimulationData(
-                map.getSectors(), data.getPatrolsPerDistrict(),
+                map.receiveSectors(), data.getPatrolsPerDistrict(),
                 map, data.getPatrolRadius(), data.getAmbulancesCount(),
                 data.getPatrolsCount()
         );
