@@ -42,4 +42,6 @@ public class SmartWatch implements ISmartWatch {
         this.navigation.getDataFromSmartWatch();
     }
 
+    public Point getCoordinates(){return this.coordinates;}
+
 }
