@@ -25,7 +25,6 @@ let context;
 let dataContext;
 
 let serverData;
-let dataPresentingType = "all";
 
 function preHide(){
     $("#mainDataContainer").children().hide();
@@ -160,7 +159,8 @@ async function initiateMonitor(serverMap) {
             "###..##############........................#######....########################\n" +
             "##############################################################################";*/
 
-        serverMap.map.split('\n').forEach(function (line) {
+        console.log("CHUJ: ", serverMap);
+        serverMap.split('\n').forEach(function (line) {
             arrayMap[len++] = line;
         });
         if(arrayMap[len-1] == '') arrayMap.pop();
