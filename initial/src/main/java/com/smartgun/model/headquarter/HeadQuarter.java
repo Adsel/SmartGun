@@ -52,9 +52,24 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     // TODO in next roadmap: rand position in this sector
-    public Point generatePatrolPosition(Sector sector) {
-        Integer randedX = (int) this.ambulanceBasePosition.getX();
-        Integer randedY = (int) this.ambulanceBasePosition.getY();
+    public Point generatePatrolPosition(Sector sector, Map map) {
+        int randedX = 0;
+        int randedY = 0;
+
+        int minX = sector.getLeftUpperCorner().x;
+        int maxX = sector.getRightBottomCorner().x;
+        int minY = sector.getLeftUpperCorner().y;
+        int maxY = sector.getRightBottomCorner().y;
+
+        while (map.isWall(randedX,randedY)){
+            randedX = minX + (int) (Math.random() * (maxX - minX));
+            randedY = minY + (int) (Math.random() * (maxY - minY));
+        }
+
+//        new Point(0,0), new Point(19,39)
+
+//        Integer randedX = (int) this.ambulanceBasePosition.getX();
+//        Integer randedY = (int) this.ambulanceBasePosition.getY();
 
         return new Point(randedX, randedY);
     }
@@ -69,38 +84,51 @@ public class HeadQuarter implements IHeadQuarter {
 
                 Navigation navigation = new Navigation();
                 SmartWatch smartWatch = new SmartWatch(
-                        this.generatePatrolPosition(sector),
+                        this.generatePatrolPosition(sector, this.map),
                         navigation
                 );
 
                 monitoringAgent.addSmartWatch(smartWatch);
 
-                addPatrol(smartWatch, navigation);
+                addPatrol(smartWatch, navigation, sector);
             }
         }
 
         Integer additionalPatrols = patrolsCount - this.patrols.size();
-        for (int j = 0; j < additionalPatrols; j++) {
+        List<Sector> sectors = getSectorsForAdditionalPatrols(additionalPatrols);
+
+        for (Sector sector : sectors) {
                 Navigation navigation = new Navigation();
                 SmartWatch smartWatch = new SmartWatch(
-                        new Point(0, 0),
+                        this.generatePatrolPosition(sector, this.map),
                         navigation
                 );
 
                 monitoringAgent.addSmartWatch(smartWatch);
-                addPatrol(smartWatch, navigation);
+                addPatrol(smartWatch, navigation, sector);
         }
     }
 
+    private List<Sector> getSectorsForAdditionalPatrols(int numberOfPatrols){
+        //TODO: improve refactor randomly draw sectors
+        List<Sector> sectors = new ArrayList<>();
+        for(int i = 0; i < numberOfPatrols; i++){
+            sectors.add(this.sectors.get(0));
+        }
+        return sectors;
+    }
+
     @Override
-    public void addPatrol(SmartWatch sw, Navigation nv) {
+    public void addPatrol(SmartWatch sw, Navigation nv, Sector sector) {
         this.patrols.add(
                 new Patrol(
                         0,
                         sw,
                         nv,
                         new Policeman(true),
-                        new Policeman(false)
+                        new Policeman(false),
+                        this.map,
+                        sector
                         // TODO WHEN X WILL BE ADDED: X connector;
                 )
         );

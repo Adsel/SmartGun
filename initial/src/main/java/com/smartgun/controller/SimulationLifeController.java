@@ -15,6 +15,7 @@ public class SimulationLifeController {
     // SEND DATA TO CLIENT
     private final SimulationLifeService simulationLifeService;
 
+
     SimulationLifeController(SimulationLifeService simulationLifeService) {
         this.simulationLifeService = simulationLifeService;
     }
@@ -27,7 +28,7 @@ public class SimulationLifeController {
 
         // CHECK AFTER SETUP
         return new ClientStartingSimulationData(
-                new MapData(Data.serverSimulationData.getMap().toString())
+                new MapData(Data.serverSimulationData.getMap())
         );
     }
 }
