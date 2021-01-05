@@ -3,11 +3,14 @@ package com.smartgun.model.headquarter;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import com.smartgun.model.headquarter.interfaces.IHeadQuarter;
 import com.smartgun.model.headquarter.interfaces.IMainAgent;
 import com.smartgun.model.map.Map;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.map.SectorType;
+import com.smartgun.model.map.ShortestPathBFS;
 import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.policeman.Navigation;
 import com.smartgun.model.policeman.SmartWatch;
@@ -51,6 +54,47 @@ public class HeadQuarter implements IHeadQuarter {
         mainAgent.coordinatesToSendAmbulance();
     }
 
+    public Patrol choosePatrolToIntervention(Point point){
+        List<Patrol> patrols = getAllAvailablePatrols();
+
+        return null;
+    }
+    private List<Patrol> getAllAvailablePatrols(){
+        return this.patrols.stream()
+                .filter(patrol -> patrol.getState() == Patrol.State.OBSERVE)
+                .collect(Collectors.toList());
+    }
+
+    public List<Point> sendPatrolToIntervention(Patrol patrol, Point point){
+/*
+        Patrol patrol = patrols
+                .stream()
+                .filter(patrol1 -> patrol1.getId() == patrolId)
+                .findFirst()
+                .orElse(null);
+*/
+
+        ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
+        Point patrolCurrentPoint = patrol.getCoordinates();
+
+        ShortestPathBFS.Coordinate source =
+                new ShortestPathBFS
+                        .Coordinate(
+                                patrolCurrentPoint.x,
+                                patrolCurrentPoint.y);
+
+        ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
+
+        List<Point> points = shortestPathBFS.solve(source, destination);
+
+        //TODO: set this param according to the simulation time
+        for (int i = 0; i < points.size(); i++){
+            patrol.setCoordinates(points.get(i));
+        }
+        //patrol.setCoordinates(point);
+
+        return points;
+    }
     // TODO in next roadmap: rand position in this sector
     public Point generatePatrolPosition(Sector sector, Map map) {
         int randedX = 0;

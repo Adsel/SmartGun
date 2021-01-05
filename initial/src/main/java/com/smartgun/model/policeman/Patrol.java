@@ -116,6 +116,20 @@ public class Patrol implements IPatrol {
         return availableDirections(currentPosition).size() > 2;
     }
 
-    // TODO: CYKLICZNIE POBIERAJ DANE OD SV
+    public int getId(){
+        return this.id;
+    }
+    public Point getCoordinates(){
+        return this.smartWatch.getCoordinates();
+    }
+    public void setCoordinates(Point point){
+        this.smartWatch.setCoordinates(point);
+    }
+
+    public State getState() {
+        return state;
+    }
+// TODO: CYKLICZNIE POBIERAJ DANE OD SV
     //public void action
+
 }
