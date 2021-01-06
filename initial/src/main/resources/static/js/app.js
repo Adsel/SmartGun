@@ -3,7 +3,6 @@ let stompClient = null;
 
 const setConnected = (connected) => {
     $("#initialData").css("display", connected ? "none" : "block");
-    $("#afterConnection").css("display", connected ? "block" : "none" );
     $("#monitorPreview").css("display", connected ? "block" : "none" );
 
     if (connected) {
@@ -30,16 +29,19 @@ const connect = (data) => {
 
             if (!(msgData.currentMap != null && msgData.currentMap != undefined)) {
                 // LOG ACCIDENTS AND EVENTS
-                console.log('PORTION OF DATA', msgData);
+                //console.log('PORTION OF DATA', msgData);
                 const events = msgData.events;
                 const incidents = msgData.incidents;
                 events.forEach(ev => {
+                    //TODO: ADD SIMULATION TIME TO NOTIFICATION
+                    //REPLACE (X,Y) WITH X: Y:
                    showNotification(ev.description) ;
                 });
+                updateMonitor(msgData).then($("#loader-wrapper").remove());
             }
             else {
                 // INIT SIMULATION DATA (MAP, Timer etc.)
-                console.log('START DATA', msgData);
+                //console.log('START DATA', msgData);
                 let isDayAndNightSystem;
                 if (!!msgData.isDayAndNightSystem) {
                     isDayAndNightSystem = msgData.isDayAndNightSystem;
@@ -53,7 +55,7 @@ const connect = (data) => {
                     // INIT TIMER AND CALCULATE PART OF DAY (Night/Day)
                 }
 
-                initiateMonitor(msgData.currentMap.mapAsString).then(updateMonitor()).then($("#loader-wrapper").remove());
+                initiateMonitor(msgData.currentMap.mapAsString);
             }
         });
         login(data);

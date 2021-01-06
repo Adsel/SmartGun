@@ -57,6 +57,6 @@ public class Sector {
             y = generator.nextInt((int) this.rightBottomCorner.getY() - (int) this.leftUpperCorner.getY()) + (int) this.leftUpperCorner.getY();
         } while (map[x] != null && map[x][y] != Map.WALL_CHARACTER);
 
-        return new Point(x, y);
+        return new Point(y, x);
     }
 }
