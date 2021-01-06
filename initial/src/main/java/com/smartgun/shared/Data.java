@@ -11,8 +11,11 @@ import com.smartgun.model.simulation.InitialData;
 import java.io.FileNotFoundException;
 
 public class Data {
+    // główne zmienne statyczne do zarządzania danymi
     public static boolean isUser = false;
+    // poprawione dane WE - incjujące symulacją
     public static InitialData data;
+    // pozostałe dane,
     public static ServerSimulationData serverSimulationData;
 
 
@@ -95,7 +98,7 @@ public class Data {
         data.setPatrolsPerDistrict(computedPatrols);
 
         Integer minimumPatrols = ADDITIONAL_PATROLS;
-        for (Sector sector: map.getSectors()) {
+        for (Sector sector: map.receiveSectors()) {
             minimumPatrols += SectorType.valueOf(sector.getSectorType().toString()).ordinal() + 1;
         }
 
@@ -191,10 +194,10 @@ public class Data {
             }
         }
 
-        System.out.println(map.getSectors());
+        System.out.println(map.receiveSectors());
 
         Data.serverSimulationData = new ServerSimulationData(
-                map.getSectors(), data.getPatrolsPerDistrict(),
+                map.receiveSectors(), data.getPatrolsPerDistrict(),
                 map, data.getPatrolRadius(), data.getAmbulancesCount(),
                 data.getPatrolsCount()
         );

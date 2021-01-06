@@ -16,7 +16,7 @@ import com.smartgun.model.policeman.interfaces.IPatrol;
 
 public class Patrol implements IPatrol {
 
-    private int id;
+    private String id;
     // Jeden smartwatch na patrol
     private SmartWatch smartWatch;
     // Jeden samochód z nawigacją na patrol
@@ -41,7 +41,7 @@ public class Patrol implements IPatrol {
     }
 
     public Patrol(
-            int id,
+            String id,
             SmartWatch smartWatch,
             Navigation navigation,
             Policeman headPoliceman,
@@ -146,9 +146,6 @@ public class Patrol implements IPatrol {
         return availableDirections(currentPosition).size() > 2;
     }
 
-    public int getId(){
-        return this.id;
-    }
     public Point getCoordinates(){
         return this.smartWatch.getCoordinates();
     }
@@ -165,5 +162,4 @@ public class Patrol implements IPatrol {
     }
 // TODO: CYKLICZNIE POBIERAJ DANE OD SV
     //public void action
-
 }

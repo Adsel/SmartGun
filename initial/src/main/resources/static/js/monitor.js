@@ -9,19 +9,36 @@ const PATROL_SHOOTING = "#9b7d12";
 const PATROL_WOUNDED = "#b50202";
 const AMBULANCE_PRIMARY = "#fa1111";
 const AMBULANCE_SECONDARY = "#EEEEEE";
+const INCIDENT_PRIMARY = "#bd213766";
+const INCIDENT_OUTLINE = "#bd2137BD";
+const STATION_PRIMARY = "#2740e2";
+const STATION_SECONDARY = "#f4fd0e";
+const STATION_TERITARY = "#c3ca22";
+
 const CHARACTER_WALL = "#";
 const CHARACTER_HOSPITAL = "H";
 const CHARACTER_ROAD = ".";
+const CHARACTER_STATION = "S";
+
 
 let context;
 let dataContext;
 
 let serverData;
-let dataPresentingType = "all";
 
+function preHide(){
+    $("#mainDataContainer").children().hide();
+    $("#mainDataContainer").hide();
+}
 
 async function initiateMonitor(serverMap) {
     $('#conversation-row').toggle();
+    document.getElementById("mainDataContainer").setAttribute("display","inline");
+    let cont = document.getElementById("mainDataContainer");
+    cont.setAttribute("style", "width: 98vw");
+    cont.setAttribute("style", "height: 66vw");
+    $("#mainDataContainer").children().show();
+    $("#mainDataContainer").show();
     let monitorParent = document.getElementById("monitorPreview");
     monitorParent.setAttribute("style", "width: 99.8vw");
     monitorParent.setAttribute("style", "height: 99.8vw");
@@ -60,7 +77,7 @@ async function initiateMonitor(serverMap) {
     dataContext = dataCanvas.getContext("2d");
 
     initiateWalls();
-
+    drawPoliceStation(10,10);
     //END OF MONITOR LOGIC
     function loadMapFromServer() {
         let arrayMap = [];
@@ -142,9 +159,11 @@ async function initiateMonitor(serverMap) {
             "###..##############........................#######....########################\n" +
             "##############################################################################";*/
 
-        serverMap.map.split('\n').forEach(function (line) {
+        console.log("CHUJ: ", serverMap);
+        serverMap.split('\n').forEach(function (line) {
             arrayMap[len++] = line;
         });
+        if(arrayMap[len-1] == '') arrayMap.pop();
         return arrayMap;
     }
 
@@ -167,6 +186,9 @@ async function initiateMonitor(serverMap) {
                         break;
                     case CHARACTER_HOSPITAL:
                         drawHospital(currX, currY);
+                        break;
+                    case CHARACTER_STATION:
+                        drawPoliceStation(currX,currY);
                         break;
                 }
                 currX++;
@@ -195,24 +217,37 @@ async function initiateMonitor(serverMap) {
         context.fillRect(boxSize * x + boxSize, boxSize * y, -outlineSize, boxSize);
     }
 
-    document.getElementById("monitorDataPreview").style.display = "block";
-    document.getElementById("centered-group").style.display = "block";
+    function drawPoliceStation(x,y){
+        context.fillStyle=STATION_PRIMARY;
+        context.fillRect(boxSize * x, boxSize * y, boxSize, boxSize);
+        context.fillStyle = STATION_SECONDARY;
+        context.strokeStyle = STATION_SECONDARY;
+        context.beginPath();
+        context.arc(x*boxSize+(boxSize/2), y*boxSize+(boxSize/2), boxSize/3, 0, 2 * Math.PI);
+        context.stroke();
+        context.fill();
+        context.fillStyle = STATION_TERITARY;
+        context.strokeStyle = STATION_TERITARY;
+        context.beginPath();
+        context.arc(x*boxSize+(boxSize/2), y*boxSize+(boxSize/2), boxSize/4, 0, 2 * Math.PI);
+        context.stroke();
+        context.fill();
+    }
 
-    document.getElementById("onClickInfo").addEventListener("click", function () {
-        dataPresentingType = "allInfo";
-        console.log(dataPresentingType);
-    });
-    document.getElementById("allInfo").addEventListener("click", function () {
-        dataPresentingType = "onClick";
-        console.log(dataPresentingType);
-    });
+    document.getElementById("mainDataContainer");
+    cont.setAttribute("style", "width: 100%");
+    cont.setAttribute("style", "height: " + (monitorParent.clientHeight + (window.innerHeight * 2 / 100)) + "px");
+    console.log(monitorParent.clientHeight);
 }
 
 function deleteMonitor() {
     let monitorParent = document.getElementById("monitorPreview");
     monitorParent.innerHTML = '';
-    monitorParent.style.height = 1000 + "px";
-    monitorParent.style.width = 1000 + "px";
+    monitorParent.setAttribute("style", "width: 100%");
+    monitorParent.setAttribute("style", "height: 100%");
+    $("#mainDataContainer").children().hide();
+    $("#mainDataContainer").hide();
+
     console.log("boxsize:" + boxSize);
     document.getElementById("monitorDataPreview").style.display = "none";
     document.getElementById("centered-group").style.display = "none";
@@ -223,6 +258,7 @@ async function updateMonitor() {
     clearData();
     serverData = getServerData();
     drawData();
+    drawIncident(23,11);
     /*$('#monitorDataPreview').innerHTML="";
     let ta = document.createElement("table");
     ta.id = "monitorDataTable";
@@ -287,6 +323,15 @@ async function updateMonitor() {
         dataContext.clearRect(boxSize * x + boxSize, boxSize * y, -outlineSize, boxSize);
     }
 
+    function drawIncident(x,y){
+        dataContext.strokeStyle=INCIDENT_OUTLINE;
+        dataContext.fillStyle = INCIDENT_PRIMARY;
+        dataContext.beginPath();
+        dataContext.arc(x*boxSize+(boxSize/2), y*boxSize+(boxSize/2), boxSize*2, 0, 2 * Math.PI);
+        dataContext.stroke();
+        dataContext.fill();
+    }
+
     function clearData() {
         dataContext.clearRect(0, 0, document.getElementById("dataMonitor").clientWidth, document.getElementById("dataMonitor").clientHeight);
     }
@@ -348,6 +393,10 @@ async function updateMonitor() {
             drawAmbulance(serverData["ambulances"][obj]["x"], serverData["ambulances"][obj]["y"]);
         }
 
+    }
+
+    function changeSimulationTime(time){
+        document.getElementById("simulationTime").innerText = time;
     }
 
     //TRIGGER ON DATA CANVAS CLICK

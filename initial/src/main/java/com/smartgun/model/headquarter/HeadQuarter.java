@@ -3,6 +3,8 @@ package com.smartgun.model.headquarter;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import java.util.stream.Collectors;
 
 import com.smartgun.model.headquarter.interfaces.IHeadQuarter;
@@ -85,16 +87,11 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     public void sendPatrolToIntervention(Patrol patrol, Point point){
-/*
-        Patrol patrol = patrols
-                .stream()
-                .filter(patrol1 -> patrol1.getId() == patrolId)
-                .findFirst()
-                .orElse(null);
-*/
         patrol.goToIntervention(point);
     }
+
     // TODO in next roadmap: rand position in this sector
+    @Override
     public Point generatePatrolPosition(Sector sector, Map map) {
         int randedX = 0;
         int randedY = 0;
@@ -132,13 +129,12 @@ public class HeadQuarter implements IHeadQuarter {
                 );
 
                 monitoringAgent.addSmartWatch(smartWatch);
-
-                addPatrol(smartWatch, navigation, sector);
+                addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector);
             }
         }
 
         Integer additionalPatrols = patrolsCount - this.patrols.size();
-        List<Sector> sectors = getSectorsForAdditionalPatrols(additionalPatrols);
+        List<Sector> sectors = receiveSectorsForAdditionalPatrols(additionalPatrols);
 
         for (Sector sector : sectors) {
                 Navigation navigation = new Navigation();
@@ -148,11 +144,11 @@ public class HeadQuarter implements IHeadQuarter {
                 );
 
                 monitoringAgent.addSmartWatch(smartWatch);
-                addPatrol(smartWatch, navigation, sector);
+                addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector);
         }
     }
 
-    private List<Sector> getSectorsForAdditionalPatrols(int numberOfPatrols){
+    private List<Sector> receiveSectorsForAdditionalPatrols(int numberOfPatrols){
         //TODO: improve refactor randomly draw sectors
         List<Sector> sectors = new ArrayList<>();
         for(int i = 0; i < numberOfPatrols; i++){
@@ -162,10 +158,10 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     @Override
-    public void addPatrol(SmartWatch sw, Navigation nv, Sector sector) {
+    public void addPatrol(String id,SmartWatch sw, Navigation nv, Sector sector) {
         this.patrols.add(
                 new Patrol(
-                        0,
+                        id,
                         sw,
                         nv,
                         new Policeman(true),

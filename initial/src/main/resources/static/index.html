@@ -16,14 +16,38 @@
     <script src="js/monitor.js"></script>
     <script src="js/app.js"></script>
 </head>
-<body>
+<body onload="preHide();">
 <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
     enabled. Please enable
     Javascript and reload this page!</h2></noscript>
-<div class="row">
-    <div class="col-md-12">
-        <div id="monitorPreview" style="display: none;"></div>
-        <div id="monitorDataPreview"><table id="monitorDataTable"></table></div>
+<div id="mainDataContainer">
+    <div id="canvasContainer">
+        <div id="monitorPreview"></div>
+    </div>
+    <div id="dataContainer">
+        <div class="dataBox">
+            <div class="dataBoxTitle">Simulation time</div>
+            <div id="simulationTime">17.12.2020 22:24:55</div>
+        </div>
+        <div class="dataBox dataBox2">
+            <table id="monitorDataTable"></table>
+        </div>
+        <div id="consoleBox">
+            <!-- RESULT -->
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="conversation"class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Simulation Messages</th>
+                        </tr>
+                        </thead>
+                        <tbody style="display: flex; flex-direction: column-reverse;"  id="notifications">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <div id="main-content" class="container">
@@ -163,6 +187,7 @@
                             <label class="form-check-label" for="dayAndNight" style="font-weight: bold;">Day and Night system</label>
                         </div>
                     </div>
+
                     <br>
                     <div class="btn-group" id="beforeConnection" role="group">
                         <button id="connect" class="btn btn-lg btn-success" type="submit">
@@ -179,21 +204,6 @@
                     </button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!-- RESULT -->
-    <div class="row" id="conversation-row" style="display: none;">
-        <div class="col-md-12">
-            <table id="conversation" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Temporary logs</th>
-                </tr>
-                </thead>
-                <tbody id="notifications">
-                </tbody>
-            </table>
         </div>
     </div>
 </div>

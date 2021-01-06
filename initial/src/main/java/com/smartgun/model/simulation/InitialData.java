@@ -122,10 +122,6 @@ public class InitialData {
         this.accurateAggressorShootProbablityNight = accurateAggressorShootProbablityNight;
     }
 
-    public boolean isDayAndNightSystem() {
-        return isDayAndNightSystem;
-    }
-
     public void setDayAndNightSystem(boolean dayAndNightSystem) {
         isDayAndNightSystem = dayAndNightSystem;
     }
