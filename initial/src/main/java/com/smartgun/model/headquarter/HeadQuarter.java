@@ -54,6 +54,10 @@ public class HeadQuarter implements IHeadQuarter {
         mainAgent.coordinatesToSendAmbulance();
     }
 
+    public Patrol choosePatrolToBackup(Point point){
+        return choosePatrolToIntervention(point);
+    }
+
     public Patrol choosePatrolToIntervention(Point point){
         ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
         ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);

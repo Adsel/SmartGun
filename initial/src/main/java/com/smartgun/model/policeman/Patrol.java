@@ -66,8 +66,7 @@ public class Patrol implements IPatrol {
         this.state = state;
     }
 
-    public void goToIntervention(Point point){
-        this.setState(State.INTERVENTION);
+    private void findShortestPath(Point point){
         ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
         Point patrolCurrentPoint = this.getCoordinates();
 
@@ -80,12 +79,26 @@ public class Patrol implements IPatrol {
         ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
         currentPathToDrive = shortestPathBFS.solve(source, destination);
     }
+
+    public void goToInterventionAsBackup(Point point){
+        this.setState(State.BACKUP);
+        findShortestPath(point);
+    }
+
+    public void goToIntervention(Point point){
+        this.setState(State.INTERVENTION);
+        findShortestPath(point);
+    }
+
     //TODO: Refactor when simulation implemented
     public void move(){
         if(this.target == null && this.state == State.OBSERVE){
             drawNewTarget();
         }
         if(this.state == State.INTERVENTION){
+
+        }
+        if (this.state == State.BACKUP){
 
         }
     }
