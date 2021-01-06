@@ -48,16 +48,30 @@ public class HeadQuarter implements IHeadQuarter {
         return this.patrols;
     }
 
-    // method which sends patrol
     @Override
     public void sendPatrolTo(Point point) {
-//        mainAgent.coordinatesToSendAmbulance();
+        mainAgent.coordinatesToSendAmbulance();
     }
 
     // TODO in next roadmap: rand position in this sector
-    public Point generatePatrolPosition(Sector sector) {
-        Integer randedX = (int) this.ambulanceBasePosition.getX();
-        Integer randedY = (int) this.ambulanceBasePosition.getY();
+    public Point generatePatrolPosition(Sector sector, Map map) {
+        int randedX = 0;
+        int randedY = 0;
+
+        int minX = sector.getLeftUpperCorner().x;
+        int maxX = sector.getRightBottomCorner().x;
+        int minY = sector.getLeftUpperCorner().y;
+        int maxY = sector.getRightBottomCorner().y;
+
+        while (map.isWall(randedX,randedY)){
+            randedX = minX + (int) (Math.random() * (maxX - minX));
+            randedY = minY + (int) (Math.random() * (maxY - minY));
+        }
+
+//        new Point(0,0), new Point(19,39)
+
+//        Integer randedX = (int) this.ambulanceBasePosition.getX();
+//        Integer randedY = (int) this.ambulanceBasePosition.getY();
 
         return new Point(randedX, randedY);
     }
@@ -72,31 +86,44 @@ public class HeadQuarter implements IHeadQuarter {
 
                 Navigation navigation = new Navigation();
                 SmartWatch smartWatch = new SmartWatch(
-                        this.generatePatrolPosition(sector),
+                        this.generatePatrolPosition(sector, this.map),
                         navigation
                 );
 
                 monitoringAgent.addSmartWatch(smartWatch);
 
                 addPatrol(UUID.randomUUID().toString(),smartWatch, navigation);
+                addPatrol(smartWatch, navigation, sector);
             }
         }
 
         Integer additionalPatrols = patrolsCount - this.patrols.size();
-        for (int j = 0; j < additionalPatrols; j++) {
+        List<Sector> sectors = receiveSectorsForAdditionalPatrols(additionalPatrols);
+
+        for (Sector sector : sectors) {
                 Navigation navigation = new Navigation();
                 SmartWatch smartWatch = new SmartWatch(
-                        new Point(0, 0),
+                        this.generatePatrolPosition(sector, this.map),
                         navigation
                 );
 
                 monitoringAgent.addSmartWatch(smartWatch);
                 addPatrol(UUID.randomUUID().toString(), smartWatch, navigation);
+                addPatrol(smartWatch, navigation, sector);
         }
     }
 
-    //wyposezenie nowych patroli
+    private List<Sector> receiveSectorsForAdditionalPatrols(int numberOfPatrols){
+        //TODO: improve refactor randomly draw sectors
+        List<Sector> sectors = new ArrayList<>();
+        for(int i = 0; i < numberOfPatrols; i++){
+            sectors.add(this.sectors.get(0));
+        }
+        return sectors;
+    }
+
     @Override
+    public void addPatrol(SmartWatch sw, Navigation nv, Sector sector) {
     public void addPatrol(String id, SmartWatch sw, Navigation nv) {
         this.patrols.add(
                 new Patrol(
@@ -104,7 +131,9 @@ public class HeadQuarter implements IHeadQuarter {
                         sw,
                         nv,
                         new Policeman(true),
-                        new Policeman(false)
+                        new Policeman(false),
+                        this.map,
+                        sector
                         // TODO WHEN X WILL BE ADDED: X connector;
                 )
         );

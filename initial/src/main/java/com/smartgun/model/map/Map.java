@@ -15,6 +15,9 @@ public class Map implements IMap {
     public static final char POLICE_CHARACTER = 'P';
     public static final char WALL_CHARACTER = '#';
 
+    private static final int WALL = 0;
+    private static final int STREET = 1;
+
     private char[][] map;
     private String mapPath;
     private List<Sector> sectors;
@@ -101,15 +104,15 @@ public class Map implements IMap {
         }
     }
 
-    public int[][] getMapOfInt() {
+    public int[][] recieveMapOfint() {
         return this.mapOfInt;
     }
 
-    public int getNumbersOfRows() {
+    public int recieveNumbersOfRows() {
         return this.mapOfInt.length;
     }
 
-    public int getNumberOfColumns() {
+    public int recieveNumberOfColumns() {
         return this.mapOfInt[0].length;
     }
 
@@ -118,7 +121,7 @@ public class Map implements IMap {
     }
 
     public boolean isWall(int row, int col) {
-        return mapOfInt[row][col] == 0;
+        return mapOfInt[row][col] == WALL;
     }
 
     public void setVisited(int row, int col, boolean value) {
@@ -126,7 +129,7 @@ public class Map implements IMap {
     }
 
     public boolean isValidLocation(int row, int col) {
-        if (row < 0 || row >= getNumbersOfRows() || col < 0 || col >= getNumberOfColumns()) {
+        if (row < 0 || row >= recieveNumbersOfRows() || col < 0 || col >= recieveNumberOfColumns()) {
             return false;
         }
         return true;
@@ -166,5 +169,25 @@ public class Map implements IMap {
         return mapString;
     }
 
-    public List<Sector> getSectors() { return sectors; }
+    public List<Sector> receiveSectors() { return sectors; }
+
+    public List<Point> recieveHospitalList() {
+        return hospitalList;
+    }
+
+    public List<Point> recievePoliceOfficeList() {
+        return policeOfficeList;
+    }
+    //TODO: Maybe MapPoint(x,y, type) ?
+    public List<Point> recieveMapPoints(){
+        List<Point> list = new ArrayList<>();
+
+        for (int x = 0; x < map.length; x++){
+            for (int y = 0; y < map[x].length; y++){
+                list.add(new Point(x,y));
+            }
+        }
+        return list;
+    }
+
 }

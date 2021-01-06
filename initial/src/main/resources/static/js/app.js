@@ -34,7 +34,8 @@ const connect = (data) => {
             }
             else {
                 // INIT SIMULATION DATA (MAP, etc.)
-                initiateMonitor(msgData.currentMap).then(updateMonitor()).then($("#loader-wrapper").remove());
+                console.log(msgData.currentMap.mapAsString);
+                initiateMonitor(msgData.currentMap.mapAsString).then(updateMonitor()).then($("#loader-wrapper").remove());
                 // TODO:
                 // INIT THIS DATA
                 // @LUIGI
