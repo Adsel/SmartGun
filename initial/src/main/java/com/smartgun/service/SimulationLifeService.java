@@ -40,7 +40,10 @@ public class SimulationLifeService {
 //        }
         simpMessagingTemplate.convertAndSend(
                 Config.WS_MESSAGE_TRANSFER_DESTINATION,
-                new SimulationData("Next portion of Data!", Data.serverSimulationData.getIncidents())
+                new SimulationData(
+                        Data.serverSimulationData.getIncidents(),
+                        Data.serverSimulationData.getEvents()
+                )
         );
     }
 }

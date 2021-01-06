@@ -1,5 +1,6 @@
 package com.smartgun.scheduler;
 
+import com.smartgun.model.incident.Event;
 import com.smartgun.model.map.SectorType;
 import com.smartgun.model.map.Sector;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,6 +18,7 @@ public class Scheduler {
     private final int TIME_LIMIT = 23;
     private final int TIME_MORNING = 7;
     private final int TIME_EVENING = 21;
+    private final boolean FLAG_POLICEMAN_STARTING_FIRE = true;
     private int timestamp;
     private int simulationTime;
     private Random generator;
@@ -49,10 +51,16 @@ public class Scheduler {
             // === CHECKS IF ANY INCIDENTS HAS BEEN OUTDATED ===
             simulationLifeService.checkIncidents(this.timestamp);
 
+            // === GENERATE EVENTS (LIKE POLICEMAN FIRED, etc.) ===
+            this.generateEvents();
+
             // DAY
-            this.generateIncidents(!Data.data.getIsDayAndNightSystem()
-                    || (timestamp > TIME_MORNING && timestamp < TIME_EVENING));
+            this.generateIncidents(this.isDay());
         }
+    }
+
+    private boolean isDay() {
+        return !Data.data.getIsDayAndNightSystem() || (timestamp > TIME_MORNING && timestamp < TIME_EVENING);
     }
 
     private boolean isAccident(Integer percentage) {
@@ -107,8 +115,6 @@ public class Scheduler {
                     addIncident(
                             shooting
                     );
-                    System.out.println("SHOOTING!!, time: " + timestamp +
-                            ", sector: "+ sector.getSectorType().toString());
 
                 } else if (checkIfWillBeShooting(Data.data.getInterventionToShootingProbablity()[sector.getSectorTypeValue()])) {
                     // INTERVENTION TURNING INTO SHOOTING
@@ -200,5 +206,71 @@ public class Scheduler {
 
     private void addIncident(Incident incident) {
         simulationLifeService.addIncident(incident);
+    }
+
+    private void generateEvents() {
+        Data.serverSimulationData.restartEvents();
+        for (int i = 0; i < Data.serverSimulationData.getIncidents().size(); i++) {
+            Incident incident = Data.serverSimulationData.getIncidents().get(i);
+            Incident.IncidentType type = incident.getIncidentType();
+            if (type == Incident.IncidentType.INTERVENTION) {
+
+            } else if (type == Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING) {
+
+            } else if (type == Incident.IncidentType.SHOOTING) {
+                if (this.isDay()) {
+                    this.shootingTurn(
+                            Data.data.getAccuratePolicemanShootProbablity(),
+                            Data.data.getAccurateAggressorShootProbablity(),
+                            incident
+                    );
+                } else {
+                    this.shootingTurn(
+                            Data.data.getAccuratePolicemanShootProbablityNight(),
+                            Data.data.getAccurateAggressorShootProbablityNight(),
+                            incident
+                    );
+                }
+            }
+        }
+    }
+
+    private boolean isFiredSuccessfully(Integer probability, Incident incident, Event.EventType type) {
+        if (isAccident(probability)) {
+            String description = "(" + (int)incident.getIncidentLocalization().getX() + "," +
+                     + (int)incident.getIncidentLocalization().getY() + ")";
+            if (type == Event.EventType.AGGRESSOR_HURTED) {
+                description += " aggressor has been hurt";
+            } else if (type == Event.EventType.POLICEMAN_HURTED) {
+                description += " policeman has been hurt";
+            }
+
+            Data.serverSimulationData.addEvent(new Event(
+                    description,
+                    type,
+                    incident.getIncidentLocalization()
+            ));
+            Data.serverSimulationData.removeIncident(incident);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean randTruth() {
+        return (new Random()).nextBoolean();
+    }
+
+    private void shootingTurn(Integer policemanProb, Integer aggressorProb, Incident incident) {
+        if (this.randTruth() == FLAG_POLICEMAN_STARTING_FIRE) {
+            if (!isFiredSuccessfully(policemanProb, incident, Event.EventType.AGGRESSOR_HURTED)) {
+                isFiredSuccessfully(aggressorProb, incident, Event.EventType.POLICEMAN_HURTED);
+            }
+        } else {
+            if (!isFiredSuccessfully(policemanProb, incident, Event.EventType.POLICEMAN_HURTED)) {
+                isFiredSuccessfully(aggressorProb, incident, Event.EventType.AGGRESSOR_HURTED);
+            }
+        }
     }
 }

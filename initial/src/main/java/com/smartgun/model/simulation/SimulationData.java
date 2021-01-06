@@ -1,25 +1,23 @@
 package com.smartgun.model.simulation;
 
+import com.smartgun.model.incident.Event;
 import com.smartgun.model.incident.Incident;
 import com.smartgun.shared.Data;
 
 import java.util.List;
 
 public class SimulationData {
-    private String content;
     private List<Incident> incidents;
+    private List<Event> events;
+    public static final int SIMULATION_TIME_UNIT = 10; // 1 sec in real time it's 10 sec in simulation
+    public static final int EVENTS_PROBABILITY_IN_TIME = 60 / SIMULATION_TIME_UNIT;
+    public static final int FIRE_PROBABILITY_IN_TIME = 15 / SIMULATION_TIME_UNIT;
 
     public SimulationData(){}
 
-    public SimulationData(String content, List<Incident> incidents) {
-        this.content = content;
+    public SimulationData(List<Incident> incidents, List<Event> events) {
         this.incidents = incidents;
-    }
-
-    public String getContent() { return content; }
-
-    public void setContent(String content) {
-        this.content = content;
+        this.events = events;
     }
 
     public List<Incident> getIncidents() {
@@ -28,5 +26,13 @@ public class SimulationData {
 
     public void setIncidents(List<Incident> incidents) {
         this.incidents = incidents;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 }
