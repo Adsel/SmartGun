@@ -31,7 +31,11 @@ const connect = (data) => {
             if (!(msgData.currentMap != null && msgData.currentMap != undefined)) {
                 // LOG ACCIDENTS AND EVENTS
                 console.log('PORTION OF DATA', msgData);
-                showNotification(msgData.content);
+                const events = msgData.events;
+                const incidents = msgData.incidents;
+                events.forEach(ev => {
+                   showNotification(ev.description) ;
+                });
             }
             else {
                 // INIT SIMULATION DATA (MAP, Timer etc.)

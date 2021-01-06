@@ -3,12 +3,12 @@ package com.smartgun.shared;
 import com.smartgun.model.headquarter.HeadQuarter;
 import com.smartgun.model.headquarter.MainAgent;
 import com.smartgun.model.headquarter.interfaces.IMainAgent;
+import com.smartgun.model.incident.Event;
 import com.smartgun.model.incident.Incident;
 import com.smartgun.model.map.Map;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.policeman.Patrol;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,7 @@ public class ServerSimulationData {
     private HeadQuarter headQuarter;
     private Map map;
     private List<Incident> incidents;
+    private List<Event> events;
 
     public ServerSimulationData() {}
 
@@ -37,6 +38,7 @@ public class ServerSimulationData {
         headQuarter.generatePatrols(patrolsPerDistrict, patrolCount);
         this.map = map;
         incidents = new ArrayList<>();
+        events = new ArrayList<>();
     }
 
 
@@ -54,5 +56,20 @@ public class ServerSimulationData {
 
     public void removeIncident(Incident incident) {
         incidents.remove(incident);
+    }
+
+    public void addEvent(Event event) {
+        events.add(event);
+        System.out.println("Added event " + event);
+    }
+
+    public void removeEvent(Event event) { events.remove(event); }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void restartEvents() {
+        this.events = new ArrayList<>();
     }
 }
