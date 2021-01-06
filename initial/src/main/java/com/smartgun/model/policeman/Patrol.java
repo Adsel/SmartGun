@@ -16,7 +16,6 @@ import com.smartgun.model.policeman.interfaces.IPatrol;
 
 public class Patrol implements IPatrol {
 
-    //unikalne id patrolu
     private int id;
     // Jeden smartwatch na patrol
     private SmartWatch smartWatch;
@@ -31,6 +30,7 @@ public class Patrol implements IPatrol {
     private State state;
     private Map map;
     private Sector sector;
+    private List<Point> currentPathToDrive;
 
     // TODO: posiadać pistolety
     public enum State {
@@ -66,10 +66,27 @@ public class Patrol implements IPatrol {
         this.state = state;
     }
 
+    public void goToIntervention(Point point){
+        this.setState(State.INTERVENTION);
+        ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
+        Point patrolCurrentPoint = this.getCoordinates();
+
+        ShortestPathBFS.Coordinate source =
+                new ShortestPathBFS
+                        .Coordinate(
+                        patrolCurrentPoint.x,
+                        patrolCurrentPoint.y);
+
+        ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
+        currentPathToDrive = shortestPathBFS.solve(source, destination);
+    }
     //TODO: Refactor when simulation implemented
     public void move(){
         if(this.target == null && this.state == State.OBSERVE){
             drawNewTarget();
+        }
+        if(this.state == State.INTERVENTION){
+
         }
     }
 
@@ -128,6 +145,10 @@ public class Patrol implements IPatrol {
 
     public State getState() {
         return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 // TODO: CYKLICZNIE POBIERAJ DANE OD SV
     //public void action

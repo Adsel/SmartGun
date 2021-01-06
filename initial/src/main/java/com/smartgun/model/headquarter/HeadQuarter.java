@@ -55,7 +55,14 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     public Patrol choosePatrolToIntervention(Point point){
+        ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
         List<Patrol> patrols = getAllAvailablePatrols();
+        ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
+        Patrol patrol;
+        int distance;
+        for (int i = 1; i < patrols.size(); i++){
+
+        }
 
         return null;
     }
@@ -65,7 +72,7 @@ public class HeadQuarter implements IHeadQuarter {
                 .collect(Collectors.toList());
     }
 
-    public List<Point> sendPatrolToIntervention(Patrol patrol, Point point){
+    public void sendPatrolToIntervention(Patrol patrol, Point point){
 /*
         Patrol patrol = patrols
                 .stream()
@@ -73,27 +80,7 @@ public class HeadQuarter implements IHeadQuarter {
                 .findFirst()
                 .orElse(null);
 */
-
-        ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
-        Point patrolCurrentPoint = patrol.getCoordinates();
-
-        ShortestPathBFS.Coordinate source =
-                new ShortestPathBFS
-                        .Coordinate(
-                                patrolCurrentPoint.x,
-                                patrolCurrentPoint.y);
-
-        ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
-
-        List<Point> points = shortestPathBFS.solve(source, destination);
-
-        //TODO: set this param according to the simulation time
-        for (int i = 0; i < points.size(); i++){
-            patrol.setCoordinates(points.get(i));
-        }
-        //patrol.setCoordinates(point);
-
-        return points;
+        patrol.goToIntervention(point);
     }
     // TODO in next roadmap: rand position in this sector
     public Point generatePatrolPosition(Sector sector, Map map) {
