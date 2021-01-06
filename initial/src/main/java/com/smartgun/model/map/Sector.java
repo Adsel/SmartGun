@@ -2,6 +2,7 @@ package com.smartgun.model.map;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 
@@ -45,5 +46,17 @@ public class Sector {
     public boolean isInSector(Point point){
         return  point.x < this.getRightBottomCorner().x && point.x >= this.leftUpperCorner.x
         && point.y < this.getRightBottomCorner().y && point.y >= this.leftUpperCorner.y;
+    }
+
+    public Point generateIncidentLocalization(char[][] map) {
+        Random generator = new Random();
+        int x;
+        int y;
+        do {
+            x = generator.nextInt((int) this.rightBottomCorner.getX() - (int) this.leftUpperCorner.getX()) + (int) this.leftUpperCorner.getX();
+            y = generator.nextInt((int) this.rightBottomCorner.getY() - (int) this.leftUpperCorner.getY()) + (int) this.leftUpperCorner.getY();
+        } while (map[x] != null && map[x][y] != Map.WALL_CHARACTER);
+
+        return new Point(x, y);
     }
 }
