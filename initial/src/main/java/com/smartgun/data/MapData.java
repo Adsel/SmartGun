@@ -13,7 +13,7 @@ public class MapData {
 
     public String getMapAsString() { return stringMap.toString(); }
 
-    public Map getStringMap() {
+    public Map recieveStringMap() {
         return stringMap;
     }
 

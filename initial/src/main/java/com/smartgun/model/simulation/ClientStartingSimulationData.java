@@ -18,8 +18,8 @@ public class ClientStartingSimulationData {
 
     public MapData getCurrentMap(){ return currentMap; }
 
-    public List<Point> recieveHospitalList(){return currentMap.getStringMap().recieveHospitalList();}
+    public List<Point> recieveHospitalList(){return currentMap.recieveStringMap().recieveHospitalList();}
 
-    public List<Point> recievePoliceOfficeList(){return currentMap.getStringMap().recievePoliceOfficeList();}
+    public List<Point> recievePoliceOfficeList(){return currentMap.recieveStringMap().recievePoliceOfficeList();}
 
 }
