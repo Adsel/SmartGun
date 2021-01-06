@@ -11,8 +11,11 @@ import com.smartgun.model.simulation.InitialData;
 import java.io.FileNotFoundException;
 
 public class Data {
+    // główne zmienne statyczne do zarządzania danymi
     public static boolean isUser = false;
+    // poprawione dane WE - incjujące symulacją
     public static InitialData data;
+    // pozostałe dane,
     public static ServerSimulationData serverSimulationData;
 
 

@@ -1,6 +1,7 @@
 package com.smartgun.service;
 
 import com.smartgun.model.simulation.SimulationData;
+import com.smartgun.shared.Data;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -13,33 +14,33 @@ import com.smartgun.model.incident.*;
 @Service
 public class SimulationLifeService {
     private final SimpMessagingTemplate simpMessagingTemplate;
-    private List<Incident> incidents;
 
     SimulationLifeService(SimpMessagingTemplate simpMessagingTemplate) {
         this.simpMessagingTemplate = simpMessagingTemplate;
-
-        // STORED INCIDENTS
-        this.incidents = new ArrayList<>();
     }
 
     public void checkIncidents(int currentTime) {
-        for (int i = 0; i < this.incidents.size(); i++) {
-            Incident incident = this.incidents.get(i);
+        for (int i = 0; i < Data.serverSimulationData.getIncidents().size(); i++) {
+            Incident incident = Data.serverSimulationData.getIncidents().get(i);
             if (incident.getEndTime() < currentTime) {
-                this.incidents.remove(incident);
+                Data.serverSimulationData.removeIncident(incident);
                 System.out.println("ENDED AN INCIDENT");
             }
         }
     }
 
     public void addIncident(Incident incident) {
-        this.incidents.add(incident);
+        Data.serverSimulationData.addingIncidents(incident);
     }
 
+    // sending data
     public void sendMessages() {
+//        for (Incident i: Data.serverSimulationData.getIncidents()) {
+//            System.out.println(i.getIncidentPoint());
+//        }
         simpMessagingTemplate.convertAndSend(
                 Config.WS_MESSAGE_TRANSFER_DESTINATION,
-                new SimulationData("Next portion of Data!")
+                new SimulationData("Next portion of Data!", Data.serverSimulationData.getIncidents())
         );
     }
 }

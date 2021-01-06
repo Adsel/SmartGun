@@ -35,6 +35,8 @@ public class Sector {
         return rightBottomCorner;
     }
 
+    public Integer getSectorTypeValue() { return sectorType.ordinal(); }
+
     public List<Point> getSectorPoints(Map map) {
         return map.recieveMapPoints().stream().filter(this::isInSector
         ).collect(Collectors.toList());

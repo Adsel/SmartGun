@@ -27,18 +27,29 @@ const connect = (data) => {
         stompClient.subscribe('/topic/simulation', function (data) {
 
             const msgData = JSON.parse(data.body);
+
             if (!(msgData.currentMap != null && msgData.currentMap != undefined)) {
                 // LOG ACCIDENTS AND EVENTS
+                console.log('PORTION OF DATA', msgData);
                 showNotification(msgData.content);
             }
             else {
-                // INIT SIMULATION DATA (MAP, etc.)
-                console.log(msgData.currentMap.mapAsString);
+                // INIT SIMULATION DATA (MAP, Timer etc.)
+                console.log('START DATA', msgData);
+                let isDayAndNightSystem;
+                if (!!msgData.isDayAndNightSystem) {
+                    isDayAndNightSystem = msgData.isDayAndNightSystem;
+                } else {
+                    isDayAndNightSystem = false;
+                }
+                if (!!msgData.time) {
+                    const startingTime = msgData.time;
+                    console.log('Starting time: ', startingTime);
+                    // TODO:
+                    // INIT TIMER AND CALCULATE PART OF DAY (Night/Day)
+                }
+
                 initiateMonitor(msgData.currentMap.mapAsString).then(updateMonitor()).then($("#loader-wrapper").remove());
-                // TODO:
-                // INIT THIS DATA
-                // @LUIGI
-                // THE CITY NEEDS YOU!
             }
         });
         login(data);
