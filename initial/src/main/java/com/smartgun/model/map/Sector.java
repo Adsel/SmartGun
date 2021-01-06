@@ -1,5 +1,7 @@
 package com.smartgun.model.map;
 
+import com.smartgun.shared.Data;
+
 import java.awt.*;
 import java.util.List;
 import java.util.Random;
@@ -48,7 +50,8 @@ public class Sector {
         && point.y < this.getRightBottomCorner().y && point.y >= this.leftUpperCorner.y;
     }
 
-    public Point generateIncidentLocalization(char[][] map) {
+    public Point generateIncidentLocalization() {
+        char[][] map = Data.serverSimulationData.getMap().getMap();
         Random generator = new Random();
         int x;
         int y;

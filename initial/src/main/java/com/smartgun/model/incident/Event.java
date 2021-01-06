@@ -13,7 +13,10 @@ public class Event {
         AMBULANCE_SENT,
         SUPPORT_SENT,
         INTERVENTION_FINISHED,
-        SHOOTING_FINISHED
+        SHOOTING_FINISHED,
+        INTERVENTION_STARTED,
+        SHOOTING_STARTED,
+        INTERVENTION_TURNED_INTO_SHOOTING
     }
 
     public Event() {

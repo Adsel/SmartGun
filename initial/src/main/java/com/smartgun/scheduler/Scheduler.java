@@ -106,7 +106,7 @@ public class Scheduler {
                             Data.data.getShootingDuration()[1]
                     );
 
-                    Incident shooting = new Shooting(simulationTime, durationTime, new Point(0,0),
+                    Incident shooting = new Shooting(simulationTime, durationTime, sector.generateIncidentLocalization(),
                             Incident.IncidentType.SHOOTING, shootingDuration);
                     addIncident(
                             shooting
@@ -121,7 +121,7 @@ public class Scheduler {
 
                     addIncident(
                             new Incident(
-                                    this.simulationTime, durationTime, sector.generateIncidentLocalization(Data.serverSimulationData.getMap().getMap()),
+                                    this.simulationTime, durationTime, sector.generateIncidentLocalization(),
                                     Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING
                             )
                     );
@@ -137,7 +137,7 @@ public class Scheduler {
                     // GENERATE RANDOM POINT IN CURRENT SECTION
                     addIncident(
                             new Incident(
-                                    this.simulationTime, durationTime, sector.generateIncidentLocalization(Data.serverSimulationData.getMap().getMap()),
+                                    this.simulationTime, durationTime, sector.generateIncidentLocalization(),
                                     Incident.IncidentType.INTERVENTION
                             )
                     );
@@ -159,7 +159,7 @@ public class Scheduler {
                         Data.data.getShootingDuration()[1]
                 );
 
-                Incident nightShooting = new Shooting(simulationTime, durationTime, new Point(0,0),
+                Incident nightShooting = new Shooting(simulationTime, durationTime, sector.generateIncidentLocalization(),
                         Incident.IncidentType.SHOOTING, shootingDuration);
                 addIncident(
                         nightShooting
@@ -175,7 +175,7 @@ public class Scheduler {
                 );
                 addIncident(
                         new Incident(
-                                this.simulationTime, durationTime, sector.generateIncidentLocalization(Data.serverSimulationData.getMap().getMap()),
+                                this.simulationTime, durationTime, sector.generateIncidentLocalization(),
                                 Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING
                         )
                 );
@@ -189,7 +189,7 @@ public class Scheduler {
                     );
                     addIncident(
                             new Incident(
-                                    this.simulationTime, durationTime, sector.generateIncidentLocalization(Data.serverSimulationData.getMap().getMap()),
+                                    this.simulationTime, durationTime, sector.generateIncidentLocalization(),
                                     Incident.IncidentType.SHOOTING
                             )
                     );
