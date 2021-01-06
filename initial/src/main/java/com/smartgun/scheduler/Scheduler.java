@@ -68,7 +68,7 @@ public class Scheduler {
     }
 
     private void generateIncidents(boolean isDay) {
-        for (Sector sector: Data.serverSimulationData.getMap().getSectors()) {
+        for (Sector sector: Data.serverSimulationData.getMap().receiveSectors()) {
            generateIncidentsPerSector(sector, isDay);
         }
     }

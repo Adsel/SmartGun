@@ -54,6 +54,7 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     // TODO in next roadmap: rand position in this sector
+    @Override
     public Point generatePatrolPosition(Sector sector, Map map) {
         int randedX = 0;
         int randedY = 0;
@@ -91,9 +92,7 @@ public class HeadQuarter implements IHeadQuarter {
                 );
 
                 monitoringAgent.addSmartWatch(smartWatch);
-
-                addPatrol(UUID.randomUUID().toString(),smartWatch, navigation);
-                addPatrol(smartWatch, navigation, sector);
+                addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector);
             }
         }
 
@@ -108,8 +107,7 @@ public class HeadQuarter implements IHeadQuarter {
                 );
 
                 monitoringAgent.addSmartWatch(smartWatch);
-                addPatrol(UUID.randomUUID().toString(), smartWatch, navigation);
-                addPatrol(smartWatch, navigation, sector);
+                addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector);
         }
     }
 
@@ -123,8 +121,7 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     @Override
-    public void addPatrol(SmartWatch sw, Navigation nv, Sector sector) {
-    public void addPatrol(String id, SmartWatch sw, Navigation nv) {
+    public void addPatrol(String id,SmartWatch sw, Navigation nv, Sector sector) {
         this.patrols.add(
                 new Patrol(
                         id,
