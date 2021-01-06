@@ -34,8 +34,21 @@ const connect = (data) => {
                 showNotification(msgData.content);
             }
             else {
-                // INIT SIMULATION DATA (MAP, etc.)
+                // INIT SIMULATION DATA (MAP, Timer etc.)
                 console.log('START DATA', msgData);
+                let isDayAndNightSystem;
+                if (!!msgData.isDayAndNightSystem) {
+                    isDayAndNightSystem = msgData.isDayAndNightSystem;
+                } else {
+                    isDayAndNightSystem = false;
+                }
+                if (!!msgData.time) {
+                    const startingTime = msgData.time;
+                    console.log('Starting time: ', startingTime);
+                    // TODO:
+                    // INIT TIMER AND CALCULATE PART OF DAY (Night/Day)
+                }
+
                 initiateMonitor(msgData.currentMap.mapAsString).then(updateMonitor()).then($("#loader-wrapper").remove());
             }
         });

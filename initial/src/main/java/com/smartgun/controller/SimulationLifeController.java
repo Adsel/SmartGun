@@ -28,7 +28,8 @@ public class SimulationLifeController {
 
         // CHECK AFTER SETUP
         return new ClientStartingSimulationData(
-                new MapData(Data.serverSimulationData.getMap())
+                new MapData(Data.serverSimulationData.getMap()),
+                Data.data.getIsDayAndNightSystem()
         );
     }
 }
