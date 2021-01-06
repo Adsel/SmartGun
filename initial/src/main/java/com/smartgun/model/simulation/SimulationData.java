@@ -9,6 +9,9 @@ import java.util.List;
 public class SimulationData {
     private List<Incident> incidents;
     private List<Event> events;
+    public static final int SIMULATION_TIME_UNIT = 10; // 1 sec in real time it's 10 sec in simulation
+    public static final int EVENTS_PROBABILITY_IN_TIME = 60 / SIMULATION_TIME_UNIT;
+    public static final int FIRE_PROBABILITY_IN_TIME = 15 / SIMULATION_TIME_UNIT;
 
     public SimulationData(){}
 

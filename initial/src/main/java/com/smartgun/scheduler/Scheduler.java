@@ -55,9 +55,12 @@ public class Scheduler {
             this.generateEvents();
 
             // DAY
-            this.generateIncidents(!Data.data.getIsDayAndNightSystem()
-                    || (timestamp > TIME_MORNING && timestamp < TIME_EVENING));
+            this.generateIncidents(this.isDay());
         }
+    }
+
+    private boolean isDay() {
+        return !Data.data.getIsDayAndNightSystem() || (timestamp > TIME_MORNING && timestamp < TIME_EVENING);
     }
 
     private boolean isAccident(Integer percentage) {
@@ -112,8 +115,6 @@ public class Scheduler {
                     addIncident(
                             shooting
                     );
-                    System.out.println("SHOOTING!!, time: " + timestamp +
-                            ", sector: "+ sector.getSectorType().toString());
 
                 } else if (checkIfWillBeShooting(Data.data.getInterventionToShootingProbablity()[sector.getSectorTypeValue()])) {
                     // INTERVENTION TURNING INTO SHOOTING
@@ -217,26 +218,18 @@ public class Scheduler {
             } else if (type == Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING) {
 
             } else if (type == Incident.IncidentType.SHOOTING) {
-                if (Data.data.getIsDayAndNightSystem()) {
+                if (this.isDay()) {
                     this.shootingTurn(
                             Data.data.getAccuratePolicemanShootProbablity(),
                             Data.data.getAccurateAggressorShootProbablity(),
                             incident
                     );
                 } else {
-                    if (isAccident(Data.data.getAccuratePolicemanShootProbablityNight())) {
-                        Data.serverSimulationData.addEvent(new Event(
-                                "",
-                                Event.EventType.AGGRESSOR_HURTED,
-                                incident.getIncidentLocalization()
-                        ));
-                    } else if (isAccident(Data.data.getAccurateAggressorShootProbablityNight())) {
-                        Data.serverSimulationData.addEvent(new Event(
-                                "",
-                                Event.EventType.POLICEMAN_HURTED,
-                                incident.getIncidentLocalization()
-                        ));
-                    }
+                    this.shootingTurn(
+                            Data.data.getAccuratePolicemanShootProbablityNight(),
+                            Data.data.getAccurateAggressorShootProbablityNight(),
+                            incident
+                    );
                 }
             }
         }
