@@ -55,17 +55,25 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     public Patrol choosePatrolToIntervention(Point point){
+        ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
         ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
         List<Patrol> patrols = getAllAvailablePatrols();
-        ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
-        Patrol patrol;
-        int distance;
+
+        Patrol patrol = patrols.get(0);
+        int distance = shortestPathBFS.solve(ShortestPathBFS.Coordinate.fromPoint(patrol.getCoordinates()),destination).size();
+
         for (int i = 1; i < patrols.size(); i++){
-
+            int temp = shortestPathBFS
+                    .solve(ShortestPathBFS.Coordinate.fromPoint(patrols.get(i).getCoordinates()),destination)
+                    .size();
+            if(distance > temp){
+                distance = temp;
+                patrol = patrols.get(i);
+            }
         }
-
-        return null;
+        return patrol;
     }
+
     private List<Patrol> getAllAvailablePatrols(){
         return this.patrols.stream()
                 .filter(patrol -> patrol.getState() == Patrol.State.OBSERVE)
