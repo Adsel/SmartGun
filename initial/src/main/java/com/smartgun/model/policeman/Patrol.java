@@ -58,6 +58,7 @@ public class Patrol implements IPatrol {
         this.youngerPoliceman = youngerPoliceman;
         this.map = map;
         this.sector = sector;
+        this.state = State.OBSERVE;
     }
 
     @Override
@@ -91,14 +92,10 @@ public class Patrol implements IPatrol {
     }
 
     //TODO: Refactor when simulation implemented
-    public void move(){
-        if(this.target == null && this.state == State.OBSERVE){
+    public void move() {
+        if (this.target == null && this.state == State.OBSERVE) {
             drawNewTarget();
-        }
-        if(this.state == State.INTERVENTION){
-
-        }
-        if (this.state == State.BACKUP){
+        } else if (this.state == State.INTERVENTION || this.state == State.BACKUP) {
 
         }
     }
