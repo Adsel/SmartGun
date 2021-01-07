@@ -1,5 +1,7 @@
 package com.smartgun.model.map;
 
+import com.smartgun.model.policeman.Patrol;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,6 +93,12 @@ public class ShortestPathBFS implements IShortestPath{
 
         Coordinate getParent() {
             return parent;
+        }
+
+        public static Coordinate fromPoint(Point point){
+            return new Coordinate(
+                    point.x,
+                    point.y);
         }
     }
 }

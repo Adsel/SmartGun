@@ -42,7 +42,8 @@ public class SimulationLifeService {
                 Config.WS_MESSAGE_TRANSFER_DESTINATION,
                 new SimulationData(
                         Data.serverSimulationData.getIncidents(),
-                        Data.serverSimulationData.getEvents()
+                        Data.serverSimulationData.getEvents(),
+                        Data.serverSimulationData.getPatrols()
                 )
         );
     }

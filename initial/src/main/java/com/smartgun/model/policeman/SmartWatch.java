@@ -4,6 +4,7 @@ import java.awt.Point;
 import com.smartgun.model.policeman.interfaces.ISmartWatch;
 
 public class SmartWatch implements ISmartWatch {
+
     private Point coordinates;
     private Navigation navigation;
 
@@ -44,4 +45,7 @@ public class SmartWatch implements ISmartWatch {
 
     public Point getCoordinates(){return this.coordinates;}
 
+    public void setCoordinates(Point coordinates) {
+        this.coordinates = coordinates;
+    }
 }

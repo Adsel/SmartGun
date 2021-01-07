@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import java.util.stream.Collectors;
+
 import com.smartgun.model.headquarter.interfaces.IHeadQuarter;
 import com.smartgun.model.headquarter.interfaces.IMainAgent;
 import com.smartgun.model.map.Map;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.map.SectorType;
+import com.smartgun.model.map.ShortestPathBFS;
 import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.policeman.Navigation;
 import com.smartgun.model.policeman.SmartWatch;
@@ -51,6 +54,40 @@ public class HeadQuarter implements IHeadQuarter {
     @Override
     public void sendPatrolTo(Point point) {
         mainAgent.coordinatesToSendAmbulance();
+    }
+
+    public Patrol choosePatrolToBackup(Point point){
+        return choosePatrolToIntervention(point);
+    }
+
+    public Patrol choosePatrolToIntervention(Point point){
+        ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
+        ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
+        List<Patrol> patrols = getAllAvailablePatrols();
+
+        Patrol patrol = patrols.get(0);
+        int distance = shortestPathBFS.solve(ShortestPathBFS.Coordinate.fromPoint(patrol.getCoordinates()),destination).size();
+
+        for (int i = 1; i < patrols.size(); i++){
+            int temp = shortestPathBFS
+                    .solve(ShortestPathBFS.Coordinate.fromPoint(patrols.get(i).getCoordinates()),destination)
+                    .size();
+            if(distance > temp){
+                distance = temp;
+                patrol = patrols.get(i);
+            }
+        }
+        return patrol;
+    }
+
+    private List<Patrol> getAllAvailablePatrols(){
+        return this.patrols.stream()
+                .filter(patrol -> patrol.getState() == Patrol.State.OBSERVE)
+                .collect(Collectors.toList());
+    }
+
+    public void sendPatrolToIntervention(Patrol patrol, Point point){
+        patrol.goToIntervention(point);
     }
 
     // TODO in next roadmap: rand position in this sector
@@ -135,6 +172,4 @@ public class HeadQuarter implements IHeadQuarter {
                 )
         );
     }
-
-
 }

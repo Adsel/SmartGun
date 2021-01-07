@@ -3,6 +3,7 @@ package com.smartgun.scheduler;
 import com.smartgun.model.incident.Event;
 import com.smartgun.model.map.SectorType;
 import com.smartgun.model.map.Sector;
+import com.smartgun.model.policeman.Patrol;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import com.smartgun.service.SimulationLifeService;
@@ -56,6 +57,11 @@ public class Scheduler {
 
             // DAY
             this.generateIncidents(this.isDay());
+
+            // === MOVING PATROLS ===
+            for (Patrol p: Data.serverSimulationData.getPatrols()) {
+                p.move();
+            }
         }
     }
 

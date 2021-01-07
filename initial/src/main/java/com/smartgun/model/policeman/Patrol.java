@@ -16,7 +16,6 @@ import com.smartgun.model.policeman.interfaces.IPatrol;
 
 public class Patrol implements IPatrol {
 
-    //unikalne id patrolu
     private String id;
     // Jeden smartwatch na patrol
     private SmartWatch smartWatch;
@@ -31,6 +30,7 @@ public class Patrol implements IPatrol {
     private State state;
     private Map map;
     private Sector sector;
+    private List<Point> currentPathToDrive;
 
     // TODO: posiadać pistolety
     public enum State {
@@ -58,6 +58,7 @@ public class Patrol implements IPatrol {
         this.youngerPoliceman = youngerPoliceman;
         this.map = map;
         this.sector = sector;
+        this.state = State.OBSERVE;
     }
 
     @Override
@@ -66,10 +67,36 @@ public class Patrol implements IPatrol {
         this.state = state;
     }
 
+    private void findShortestPath(Point point){
+        ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
+        Point patrolCurrentPoint = this.getCoordinates();
+
+        ShortestPathBFS.Coordinate source =
+                new ShortestPathBFS
+                        .Coordinate(
+                        patrolCurrentPoint.x,
+                        patrolCurrentPoint.y);
+
+        ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
+        currentPathToDrive = shortestPathBFS.solve(source, destination);
+    }
+
+    public void goToInterventionAsBackup(Point point){
+        this.setState(State.BACKUP);
+        findShortestPath(point);
+    }
+
+    public void goToIntervention(Point point){
+        this.setState(State.INTERVENTION);
+        findShortestPath(point);
+    }
+
     //TODO: Refactor when simulation implemented
-    public void move(){
-        if(this.target == null && this.state == State.OBSERVE){
+    public void move() {
+        if (this.target == null && this.state == State.OBSERVE) {
             drawNewTarget();
+        } else if (this.state == State.INTERVENTION || this.state == State.BACKUP) {
+
         }
     }
 
@@ -86,6 +113,7 @@ public class Patrol implements IPatrol {
                 return point;
             }
         }
+
         return list.get(list.size() - 1);
     }
 
@@ -97,6 +125,7 @@ public class Patrol implements IPatrol {
             pointList.add(currentPoint);
             currentPoint = new Point(currentPoint.x + direction.x, currentPoint.y + direction.y);
         }
+
         return pointList;
     }
 
@@ -105,6 +134,7 @@ public class Patrol implements IPatrol {
 
         return directions.get((int) (Math.random() * (directions.size() -1 )));
     }
+
     private List<Direction> availableDirections(Point currentPosition){
 
         return Arrays.stream(Direction.values()).filter(direction ->
@@ -116,6 +146,21 @@ public class Patrol implements IPatrol {
         return availableDirections(currentPosition).size() > 2;
     }
 
-    // TODO: CYKLICZNIE POBIERAJ DANE OD SV
+    public Point getCoordinates(){
+        return this.smartWatch.getCoordinates();
+    }
+
+    public void setCoordinates(Point point){
+        this.smartWatch.setCoordinates(point);
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+// TODO: CYKLICZNIE POBIERAJ DANE OD SV
     //public void action
 }
