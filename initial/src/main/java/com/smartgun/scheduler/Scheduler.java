@@ -85,6 +85,10 @@ public class Scheduler {
         return generator.nextInt(CERTAINTY_PROBABILITY) < percent;
     }
 
+    private boolean isPolicemanKilled() {
+        return generator.nextInt() <= 10;
+    }
+
     private boolean checkIfWillBeShooting(int percent) {
         return generator.nextInt(CERTAINTY_PROBABILITY) < percent;
     }
@@ -239,6 +243,16 @@ public class Scheduler {
                 description += " aggressor has been hurt";
             } else if (type == Event.EventType.POLICEMAN_HURTED) {
                 description += " policeman has been hurt";
+
+                System.out.println(description);
+                if (isPolicemanKilled()) {
+                    if (type == Event.EventType.POLICEMAN_KILLED) {
+                        description += " policeman has been killed";
+                        System.out.println(description);
+                    } else {
+                        description += " policeman has been hurt";
+                    }
+                }
             }
 
             Data.serverSimulationData.addEvent(new Event(
