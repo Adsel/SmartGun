@@ -9,6 +9,7 @@ public class Event {
     public enum EventType {
         MISSED_FIRE,
         POLICEMAN_HURTED,
+        POLICEMAN_KILLED,
         AGGRESSOR_HURTED,
         AMBULANCE_SENT,
         SUPPORT_SENT,

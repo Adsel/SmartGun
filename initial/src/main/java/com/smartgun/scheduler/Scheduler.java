@@ -244,7 +244,11 @@ public class Scheduler {
             if (type == Event.EventType.AGGRESSOR_HURTED) {
                 description += " aggressor has been hurt";
             } else if (type == Event.EventType.POLICEMAN_HURTED) {
-                description += " policeman has been hurt";
+                if (isAccident(Data.serverSimulationData.PROBABILITY_OF_MORTALITY)) {
+                        description += " policeman has been killed";
+                    } else {
+                        description += " policeman has been hurt";
+                    }
             }
 
             Data.serverSimulationData.addEvent(new Event(

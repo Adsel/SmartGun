@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerSimulationData {
+    public static final int PROBABILITY_OF_MORTALITY = 10;
     private HeadQuarter headQuarter;
     private Map map;
     private List<Incident> incidents;
