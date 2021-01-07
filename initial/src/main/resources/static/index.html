@@ -15,17 +15,28 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
     <script src="js/monitor.js"></script>
     <script src="js/app.js"></script>
+
 </head>
 <body onload="preHide();">
 <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
     enabled. Please enable
     Javascript and reload this page!</h2></noscript>
 <div id="mainDataContainer">
+    <div class="btn-group" id="afterConnection" role="group">
+        <img class="iconButton" src="../unit-icons/x-solid.svg" onclick="disableSimulationOptions()">
+        <button id="reconnect" class="btn btn-lg btn-primary" type="submit">
+            Restart simulation
+        </button>
+        <button id="disconnect" class="btn btn-lg btn-danger" type="submit">
+            Stop simulation
+        </button>
+    </div>
     <div id="canvasContainer">
         <div id="monitorPreview"></div>
     </div>
     <div id="dataContainer">
         <div class="dataBox">
+            <img class="iconButton" src="../unit-icons/cog-solid.svg" onclick="enableSimulationOptions()">
             <div class="dataBoxTitle">Simulation time</div>
             <div id="simulationTime">17.12.2020 22:24:55</div>
         </div>
@@ -194,14 +205,6 @@
                             Start simulation
                         </button>
                     </div>
-                </div>
-                <div class="btn-group" id="afterConnection" style="display: none;" role="group">
-                    <button id="reconnect" class="btn btn-lg btn-primary" type="submit">
-                        Restart simulation
-                    </button>
-                    <button id="disconnect" class="btn btn-lg btn-danger" type="submit">
-                        Stop simulation
-                    </button>
                 </div>
             </form>
         </div>

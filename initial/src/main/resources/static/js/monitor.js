@@ -9,11 +9,13 @@ const PATROL_SHOOTING = "#9b7d12";
 const PATROL_WOUNDED = "#b50202";
 const AMBULANCE_PRIMARY = "#fa1111";
 const AMBULANCE_SECONDARY = "#EEEEEE";
-const INCIDENT_PRIMARY = "#bd213766";
+const INCIDENT_PRIMARY = "rgba(191,33,55,0.4)";
+const INCIDENT_INTERVENSION = "rgba(210,139,30,0.4)";
 const INCIDENT_OUTLINE = "#bd2137BD";
 const STATION_PRIMARY = "#2740e2";
 const STATION_SECONDARY = "#f4fd0e";
 const STATION_TERITARY = "#c3ca22";
+const NIGHT_COLOR = "rgba(3,3,21,0.25)";
 
 const CHARACTER_WALL = "#";
 const CHARACTER_HOSPITAL = "H";
@@ -30,7 +32,14 @@ function preHide(){
     $("#mainDataContainer").children().hide();
     $("#mainDataContainer").hide();
 }
-
+function enableSimulationOptions(){
+    $("#afterConnection").children().show();
+    $("#afterConnection").show();
+}
+function disableSimulationOptions(){
+    $("#afterConnection").children().hide();
+    $("#afterConnection").hide();
+}
 async function initiateMonitor(serverMap) {
     $('#conversation-row').toggle();
     document.getElementById("mainDataContainer").setAttribute("display","inline");
@@ -238,6 +247,8 @@ async function initiateMonitor(serverMap) {
     cont.setAttribute("style", "width: 100%");
     cont.setAttribute("style", "height: " + (monitorParent.clientHeight + (window.innerHeight * 2 / 100)) + "px");
     console.log(monitorParent.clientHeight);
+    $("#afterConnection").children().hide();
+    $("#afterConnection").hide();
 }
 
 function deleteMonitor() {
@@ -254,16 +265,26 @@ function deleteMonitor() {
     document.getElementById("monitorDataPreview").innerHTML = "";
 }
 
-async function updateMonitor() {
+async function updateMonitor(dataFromServer) {
     clearData();
     serverData = getServerData();
     drawData();
-    drawIncident(23,11);
     /*$('#monitorDataPreview').innerHTML="";
     let ta = document.createElement("table");
     ta.id = "monitorDataTable";
     $('#monitorDataPreview').appendChild(ta);*/
 
+    drawNight();
+
+    dataFromServer.incidents.forEach(element => {
+        drawIncident(element.incidentLocalization.x,element.incidentLocalization.y,element.incidentType);
+    });
+
+
+    function drawNight(){
+        dataContext.fillStyle = NIGHT_COLOR;
+        dataContext.fillRect(0, 0, boxSize*(map[0].length), boxSize*(map.length));
+    }
 
     function drawAmbulance(x, y) {
         let drawSize = parseInt(boxSize / 2.2);
@@ -323,11 +344,15 @@ async function updateMonitor() {
         dataContext.clearRect(boxSize * x + boxSize, boxSize * y, -outlineSize, boxSize);
     }
 
-    function drawIncident(x,y){
+    function drawIncident(x,y,type){
+        if (type=="INTERVENTION_TURNING_INTO_SHOOTING"){
+            dataContext.fillStyle = INCIDENT_PRIMARY;
+        }else{
+            dataContext.fillStyle = INCIDENT_INTERVENSION;
+        }
         dataContext.strokeStyle=INCIDENT_OUTLINE;
-        dataContext.fillStyle = INCIDENT_PRIMARY;
         dataContext.beginPath();
-        dataContext.arc(x*boxSize+(boxSize/2), y*boxSize+(boxSize/2), boxSize*2, 0, 2 * Math.PI);
+        dataContext.arc(x*boxSize+(boxSize/2), y*boxSize+(boxSize/2), boxSize*0.8, 0, 2 * Math.PI);
         dataContext.stroke();
         dataContext.fill();
     }
@@ -400,19 +425,19 @@ async function updateMonitor() {
     }
 
     //TRIGGER ON DATA CANVAS CLICK
-    document.getElementById("dataMonitor").addEventListener("mousemove", function (e) {
+    document.getElementById("dataMonitor").addEventListener("click", function (e) {
         let cRect = document.getElementById("monitor").getBoundingClientRect();        // Gets CSS pos, and width/height
         let mouseX = parseInt(Math.round(e.clientX - cRect.left) / boxSize);  // Subtract the 'left' of the canvas
         let mouseY = parseInt(Math.round(e.clientY - cRect.top) / boxSize);   // from the X/Y positions to make
-        dataContext.clearRect(0, 0, 200, 33);  // (0,0) the top left of the canvas
+        //dataContext.clearRect(0, 0, 200, 33);  // (0,0) the top left of the canvas
         dataContext.fillStyle = "#FFF";
         dataContext.font = "16px Roboto";
-        dataContext.fillText("X: " + mouseX + ", Y: " + mouseY, 10, 20);
+        dataContext.fillText("X: " + mouseX + ", Y: " + mouseY, mouseX*boxSize, mouseY*boxSize);
 
     });
     let data = [
             {
-                'id':0,
+                'id':21,
                 'type':"ambulance",
                 'x': 21,
                 'y': 21,
