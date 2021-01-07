@@ -113,6 +113,7 @@ public class Patrol implements IPatrol {
                 return point;
             }
         }
+
         return list.get(list.size() - 1);
     }
 
@@ -124,6 +125,7 @@ public class Patrol implements IPatrol {
             pointList.add(currentPoint);
             currentPoint = new Point(currentPoint.x + direction.x, currentPoint.y + direction.y);
         }
+
         return pointList;
     }
 
@@ -132,6 +134,7 @@ public class Patrol implements IPatrol {
 
         return directions.get((int) (Math.random() * (directions.size() -1 )));
     }
+
     private List<Direction> availableDirections(Point currentPosition){
 
         return Arrays.stream(Direction.values()).filter(direction ->
@@ -146,6 +149,7 @@ public class Patrol implements IPatrol {
     public Point getCoordinates(){
         return this.smartWatch.getCoordinates();
     }
+
     public void setCoordinates(Point point){
         this.smartWatch.setCoordinates(point);
     }
