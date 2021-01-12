@@ -268,17 +268,25 @@ function deleteMonitor() {
 async function updateMonitor(dataFromServer) {
     clearData();
     serverData = getServerData();
-    drawData();
+    //drawData();
     /*$('#monitorDataPreview').innerHTML="";
     let ta = document.createElement("table");
     ta.id = "monitorDataTable";
     $('#monitorDataPreview').appendChild(ta);*/
 
-    drawNight();
+    console.log(dataFromServer);
 
+    //DRAW PATROLS
+    dataFromServer.patrols.forEach(element => {
+       drawPatrol(element.coordinates.x,element.coordinates.y,"patroling");
+    });
+
+    //DRAW INCIDENTS
     dataFromServer.incidents.forEach(element => {
         drawIncident(element.incidentLocalization.x,element.incidentLocalization.y,element.incidentType);
     });
+
+    drawNight();
 
 
     function drawNight(){
@@ -316,7 +324,7 @@ async function updateMonitor(dataFromServer) {
         let outlineSizeUnit = parseInt(boxSize / 2.7);
 
         switch (type) {
-            case "patrolling": {
+            case "patroling": {
                 dataContext.fillStyle = PATROL_PATROLLING;
                 break;
             }
@@ -474,6 +482,8 @@ async function updateMonitor(dataFromServer) {
     $('#monitorDataTable').DataTable( {
         destroy: true,
         data: data,
+        paging: false,
+        searching: false,
         columns: [
             { data: 'id', name: "ID" },
             { data: 'type', name: "Type"},
