@@ -266,6 +266,7 @@ function deleteMonitor() {
 async function updateMonitor(dataFromServer) {
     clearData();
     serverData = getServerData();
+    let data = [];
     //drawData();
     /*$('#monitorDataPreview').innerHTML="";
     let ta = document.createElement("table");
@@ -275,9 +276,14 @@ async function updateMonitor(dataFromServer) {
     console.log(dataFromServer);
 
     //DRAW PATROLS
+    let i=0;
     dataFromServer.patrols.forEach(element => {
-       drawPatrol(element.coordinates.x,element.coordinates.y,"patroling");
+        let unit = {status:element.state.toString(), type:"Patrol", x:element.coordinates.y, y:element.coordinates.x};
+        data[i] = unit;
+       drawPatrol(element.coordinates.y,element.coordinates.x,"patroling");
+       i++;
     });
+    console.log(data);
 
     //DRAW INCIDENTS
     dataFromServer.incidents.forEach(element => {
@@ -441,41 +447,7 @@ async function updateMonitor(dataFromServer) {
         dataContext.fillText("X: " + mouseX + ", Y: " + mouseY, mouseX*boxSize, mouseY*boxSize);
 
     });
-    let data = [
-            {
-                'id':21,
-                'type':"ambulance",
-                'x': 21,
-                'y': 21,
-                'status': "patrolling",
-                "info": "Some additional info to display"
-            },
-            {
-                'id':1,
-                "type":"patrol",
-                "x": 62,
-                "y": 27,
-                "status": "intervention",
-                "info": "Some additional info to display"
-            },
-            {
-                'id':2,
-                "type":"patrol",
-                "x": 4,
-                "y": 48,
-                "status": "shooting",
-                "info": "Some additional info to display"
-            },
-            {
-                'id':3,
-                "type":"patrol",
-                "x": 29,
-                "y": 49,
-                "status": "wounded",
-                "info": "Some additional info to display"
-            }
-
-    ]
+    console.log("chuj", data[0]);
 
     $('#monitorDataTable').DataTable( {
         destroy: true,
@@ -483,20 +455,16 @@ async function updateMonitor(dataFromServer) {
         paging: false,
         searching: false,
         columns: [
-            { data: 'id', name: "ID" },
             { data: 'type', name: "Type"},
             { data: 'x', name: "X" },
             { data: 'y', name: "Y" },
             { data: 'status', name: "Status" },
-            { data: 'info', name: "Info" }
         ],
         //paging: false
     } );
     let columns= document.getElementsByTagName("th");
-    columns[0].innerText="ID";
-    columns[1].innerText="Type";
-    columns[2].innerText="X";
-    columns[3].innerText="Y";
-    columns[4].innerText="Status";
-    columns[5].innerText="Info";
+    columns[0].innerText="Type";
+    columns[1].innerText="X";
+    columns[2].innerText="Y";
+    columns[3].innerText="Status";
 }
