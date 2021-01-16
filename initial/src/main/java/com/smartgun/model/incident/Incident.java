@@ -13,6 +13,7 @@ public class Incident {
     private int startTime;
     private int endTime;
     private IncidentType incidentType;
+    private int durationTime;
 
     public Incident(){}
 
@@ -40,5 +41,13 @@ public class Incident {
 
     public IncidentType getIncidentType() {
         return incidentType;
+    }
+
+    public void setIncidentType(IncidentType incidentType) {
+        this.incidentType = incidentType;
+    }
+
+    public int getDurationTime() {
+        return durationTime;
     }
 }

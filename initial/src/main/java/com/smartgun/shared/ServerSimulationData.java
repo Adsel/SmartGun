@@ -14,11 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerSimulationData {
-    public static final int PROBABILITY_OF_MORTALITY = 10;
+
     private HeadQuarter headQuarter;
     private Map map;
     private List<Incident> incidents;
     private List<Event> events;
+    private Integer simulationTime;
 
     public ServerSimulationData() {}
 
@@ -72,5 +73,13 @@ public class ServerSimulationData {
 
     public void restartEvents() {
         this.events = new ArrayList<>();
+    }
+
+    public Integer getSimulationTime() {
+        return simulationTime;
+    }
+
+    public void setSimulationTime(Integer simulationTime) {
+        this.simulationTime = simulationTime;
     }
 }
