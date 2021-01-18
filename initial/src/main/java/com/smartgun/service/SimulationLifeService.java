@@ -1,6 +1,7 @@
 package com.smartgun.service;
 
 import com.smartgun.model.simulation.SimulationData;
+import com.smartgun.model.simulation.SimulationTime;
 import com.smartgun.shared.Data;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class SimulationLifeService {
         Data.serverSimulationData.addingIncidents(incident);
     }
 
-    public void setSimulationTime(Integer simulationTime) {
+    public void setSimulationTime(SimulationTime simulationTime) {
         Data.serverSimulationData.setSimulationTime(simulationTime);
     }
 

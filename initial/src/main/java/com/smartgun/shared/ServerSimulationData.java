@@ -8,6 +8,7 @@ import com.smartgun.model.incident.Incident;
 import com.smartgun.model.map.Map;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.policeman.Patrol;
+import com.smartgun.model.simulation.SimulationTime;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class ServerSimulationData {
     private Map map;
     private List<Incident> incidents;
     private List<Event> events;
-    private Integer simulationTime;
+    private SimulationTime simulationTime;
 
     public ServerSimulationData() {}
 
@@ -75,11 +76,11 @@ public class ServerSimulationData {
         this.events = new ArrayList<>();
     }
 
-    public Integer getSimulationTime() {
+    public SimulationTime getSimulationTime() {
         return simulationTime;
     }
 
-    public void setSimulationTime(Integer simulationTime) {
+    public void setSimulationTime(SimulationTime simulationTime) {
         this.simulationTime = simulationTime;
     }
 }

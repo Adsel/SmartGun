@@ -4,6 +4,7 @@ import com.smartgun.model.incident.Event;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.simulation.SimulationData;
+import com.smartgun.model.simulation.SimulationTime;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import com.smartgun.service.SimulationLifeService;
@@ -119,7 +120,8 @@ public class Scheduler {
                             Incident.IncidentType.SHOOTING, shootingDuration);
 
                     addIncident(shooting);
-                    setSimulationTime(timestamp);
+                    setSimulationTime(SimulationTime.recieveStartingTime());
+
 
                 } else if (checkIfWillBeShooting(
                         Data.data.getInterventionToShootingProbablity()[sector.getSectorTypeValue()])) {
@@ -157,7 +159,7 @@ public class Scheduler {
                     }
 
                     addIncident(incidentIntoShooting);
-                    setSimulationTime(timestamp);
+                    setSimulationTime(SimulationTime.recieveStartingTime());
 
 
                 } else {
@@ -173,7 +175,7 @@ public class Scheduler {
                                     Incident.IncidentType.INTERVENTION
                             )
                     );
-                    setSimulationTime(timestamp);
+                    setSimulationTime(SimulationTime.recieveStartingTime());
 
                     System.out.println("CASUAL INTERVENTION, day: " + nmbrOfSimulationDays +
                             ", time: " + timestamp +
@@ -199,7 +201,7 @@ public class Scheduler {
                 addIncident(
                         nightShooting
                 );
-                setSimulationTime(timestamp);
+                setSimulationTime(SimulationTime.recieveStartingTime());
 
                 System.out.println("NIGHT SHOOTING!!, day: " + nmbrOfSimulationDays +
                         ", time: " + timestamp +
@@ -233,7 +235,7 @@ public class Scheduler {
                 }
 
                 addIncident(incidentIntoShootingNight);
-                setSimulationTime(timestamp);
+                setSimulationTime(SimulationTime.recieveStartingTime());
 
                 System.out.println("TURNING INTO SHOOTING IN THE NIGHT, day: " + nmbrOfSimulationDays +
                         ", time: " + timestamp +
@@ -250,7 +252,7 @@ public class Scheduler {
                                     Incident.IncidentType.SHOOTING
                             )
                     );
-                    setSimulationTime(timestamp);
+                    setSimulationTime(SimulationTime.recieveStartingTime());
 
                     System.out.println("CASUAL NIGHT INTERVENTION, day: " + nmbrOfSimulationDays +
                             ", time: " + timestamp +
@@ -264,7 +266,7 @@ public class Scheduler {
         simulationLifeService.addIncident(incident);
     }
 
-    private void setSimulationTime(Integer simulationTime) {
+    private void setSimulationTime(SimulationTime simulationTime) {
         simulationLifeService.setSimulationTime(simulationTime);
     }
 

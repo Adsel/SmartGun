@@ -8,7 +8,7 @@ import com.smartgun.shared.Data;
 import java.util.List;
 
 public class SimulationData {
-    private Integer simulationTime;
+    private SimulationTime simulationTime;
     private List<Incident> incidents;
     private List<Event> events;
     private List<Patrol> patrols;
@@ -21,7 +21,7 @@ public class SimulationData {
 
     public SimulationData(){}
 
-    public SimulationData(Integer simulationTime, List<Incident> incidents, List<Event> events, List<Patrol> patrols) {
+    public SimulationData(SimulationTime simulationTime, List<Incident> incidents, List<Event> events, List<Patrol> patrols) {
         this.simulationTime = simulationTime;
         this.incidents = incidents;
         this.events = events;
@@ -46,11 +46,11 @@ public class SimulationData {
 
     public List<Patrol> getPatrols() { return this.patrols; }
 
-    public Integer getSimulationTime() {
+    public SimulationTime getSimulationTime() {
         return simulationTime;
     }
 
-    public void setSimulationTime(Integer simulationTime) {
+    public void setSimulationTime(SimulationTime simulationTime) {
         this.simulationTime = simulationTime;
     }
 }

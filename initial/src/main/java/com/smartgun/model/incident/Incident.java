@@ -25,6 +25,7 @@ public class Incident {
         this.endTime = startTime + durationTime;
         this.incidentLocalization = incidentPoint;
         this.incidentType = incidentType;
+        this.durationTime = durationTime;
     }
 
     public Point getIncidentLocalization() {
