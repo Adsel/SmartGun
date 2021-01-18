@@ -8,17 +8,19 @@ import com.smartgun.model.incident.Incident;
 import com.smartgun.model.map.Map;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.policeman.Patrol;
+import com.smartgun.model.simulation.SimulationTime;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServerSimulationData {
-    public static final int PROBABILITY_OF_MORTALITY = 10;
+
     private HeadQuarter headQuarter;
     private Map map;
     private List<Incident> incidents;
     private List<Event> events;
+    private SimulationTime simulationTime;
 
     public ServerSimulationData() {}
 
@@ -72,5 +74,13 @@ public class ServerSimulationData {
 
     public void restartEvents() {
         this.events = new ArrayList<>();
+    }
+
+    public SimulationTime getSimulationTime() {
+        return simulationTime;
+    }
+
+    public void setSimulationTime(SimulationTime simulationTime) {
+        this.simulationTime = simulationTime;
     }
 }
