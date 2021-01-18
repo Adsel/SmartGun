@@ -144,6 +144,7 @@ public class HeadQuarter implements IHeadQuarter {
                 );
 
                 monitoringAgent.addSmartWatch(smartWatch);
+
                 addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector);
         }
     }
