@@ -15,9 +15,9 @@ public class ClientStartingSimulationData {
     public ClientStartingSimulationData() {
     }
 
-    public ClientStartingSimulationData(MapData map, boolean isDayAndNightSystem) {
+    public ClientStartingSimulationData(MapData map, boolean isDayAndNightSystem, SimulationTime time) {
         this.currentMap = map;
-        this.time = SimulationTime.recieveStartingTime();
+        this.time = time;
         this.isDayAndNightSystem = isDayAndNightSystem;
     }
 

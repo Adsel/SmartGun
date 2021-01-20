@@ -3,6 +3,9 @@ package com.smartgun.scheduler;
 import com.smartgun.model.incident.Event;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.policeman.Patrol;
+import com.smartgun.shared.Config;
+import com.smartgun.shared.file.CsvRow;
+import com.smartgun.shared.file.FileManager;
 import com.smartgun.model.simulation.SimulationData;
 import com.smartgun.model.simulation.SimulationTime;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -10,6 +13,9 @@ import org.springframework.stereotype.Component;
 import com.smartgun.service.SimulationLifeService;
 import com.smartgun.shared.Data;
 import com.smartgun.model.incident.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Component
@@ -22,39 +28,48 @@ public class Scheduler {
     private final int TIME_EVENING = 21;
     private final boolean FLAG_POLICEMAN_STARTING_FIRE = true;
     private int timestamp;
-    private int nmbrOfSimulationDays;
     private int simulationTime;
     private Random generator;
     private Integer CERTAINTY_PROBABILITY = 100;
-
+    private FileManager fileManager;
+    private boolean sentStartingData = false;
+    private List<CsvRow> csvData;
 
     public Scheduler(SimulationLifeService simulationLifeService) {
         this.timestamp = 0;
         this.simulationTime = 0;
-        this.nmbrOfSimulationDays = 1;
         this.simulationLifeService = simulationLifeService;
         this.generator = new Random();
+        this.fileManager = new FileManager();
+        this.csvData = new ArrayList<>();
     }
 
-    @Scheduled(fixedRateString = "1000", initialDelayString = "0")
-    public void schedulingTask() {
-        if (Data.isUser) {
-            simulationLifeService.sendMessages();
+    private void exportManager() {
+        if (!sentStartingData) {
+            // MAYBE IN FUTURE:
+            // TODO: export data about initial probability in Data.data
+            sentStartingData = true;
+        } else if (this.simulationTime != 0 && this.simulationTime % Config.EXPORT_TO_CSV_INTERVAL == 0) {
+            fileManager.exportToCsv(
+                    Data.serverSimulationData.recieveTimeString(),
+                    this.csvData
+            );
+            this.csvData = new ArrayList<>();
         }
     }
 
     @Scheduled(fixedRateString = "1000", initialDelayString = "0")
     public void lifeCycleTask() {
         if (Data.isUser) {
+            Data.serverSimulationData.increaseSimulationTime();
             timestamp += TIME_UNIT;
             simulationTime += TIME_UNIT;
             if (timestamp > TIME_LIMIT) {
                 timestamp = 0;
-                nmbrOfSimulationDays += TIME_UNIT_DAYS;
             }
 
             // === CHECKS IF ANY INCIDENTS HAS BEEN OUTDATED ===
-            simulationLifeService.checkIncidents(this.timestamp);
+            checkIncidents(this.simulationTime);
 
             // === GENERATE EVENTS (LIKE POLICEMAN FIRED, etc.) ===
             this.generateEvents();
@@ -65,6 +80,26 @@ public class Scheduler {
             // === MOVING PATROLS ===
             for (Patrol p: Data.serverSimulationData.getPatrols()) {
                 p.move();
+            }
+
+            // == SEND AND SAVE RESULTS ===
+            simulationLifeService.sendMessages();
+            exportManager();
+        }
+    }
+
+    private void checkIncidents(int currentTime) {
+        for (int i = 0; i < Data.serverSimulationData.getIncidents().size(); i++) {
+            Incident incident = Data.serverSimulationData.getIncidents().get(i);
+            if (incident.getEndTime() < currentTime) {
+                Data.serverSimulationData.removeIncident(incident);
+                this.csvData.add(new CsvRow(
+                        incident.getIncidentType().name(),
+                        "Ended incident",
+                        "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
+                        Data.serverSimulationData.recieveTimeString()
+                ));
+                System.out.println("ENDED AN INCIDENT");
             }
         }
     }
@@ -120,7 +155,7 @@ public class Scheduler {
                             Incident.IncidentType.SHOOTING, shootingDuration);
 
                     addIncident(shooting);
-                    setSimulationTime(SimulationTime.recieveStartingTime());
+                    
 
 
                 } else if (checkIfWillBeShooting(
@@ -136,7 +171,7 @@ public class Scheduler {
                             Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING
                     );
 
-                    System.out.println("TURNING INTO SHOOTING, day: " + nmbrOfSimulationDays +
+                    System.out.println("TURNING INTO SHOOTING" +
                             ", time: " + timestamp +
                             ", sector: "+ sector.getSectorType().toString());
 
@@ -151,7 +186,7 @@ public class Scheduler {
                         );
 
                         incidentIntoShooting.setIncidentType(Incident.IncidentType.SHOOTING);
-                        System.out.println("TURNED INTO SHOOTING, day: " + nmbrOfSimulationDays +
+                        System.out.println("TURNED INTO SHOOTING, day: " +
                                 ", time: " + timestamp +
                                 ", sector: "+ sector.getSectorType().toString());
 
@@ -159,7 +194,7 @@ public class Scheduler {
                     }
 
                     addIncident(incidentIntoShooting);
-                    setSimulationTime(SimulationTime.recieveStartingTime());
+                    
 
 
                 } else {
@@ -175,9 +210,9 @@ public class Scheduler {
                                     Incident.IncidentType.INTERVENTION
                             )
                     );
-                    setSimulationTime(SimulationTime.recieveStartingTime());
+                    
 
-                    System.out.println("CASUAL INTERVENTION, day: " + nmbrOfSimulationDays +
+                    System.out.println("CASUAL INTERVENTION," +
                             ", time: " + timestamp +
                             ", sector: "+ sector.getSectorType().toString());
                 }
@@ -201,9 +236,9 @@ public class Scheduler {
                 addIncident(
                         nightShooting
                 );
-                setSimulationTime(SimulationTime.recieveStartingTime());
+                
 
-                System.out.println("NIGHT SHOOTING!!, day: " + nmbrOfSimulationDays +
+                System.out.println("NIGHT SHOOTING!! " +
                         ", time: " + timestamp +
                         ", sector: "+ sector.getSectorType().toString());
             } else if (checkIfWillBeShooting(Data.data.getInterventionToShootingProbablity()[sector.getSectorTypeValue()])) {
@@ -228,16 +263,15 @@ public class Scheduler {
                     );
 
                     incidentIntoShootingNight.setIncidentType(Incident.IncidentType.SHOOTING);
-                    System.out.println("TURNED INTO SHOOTING IN THE NIGHT, day: " + nmbrOfSimulationDays +
+                    System.out.println("TURNED INTO SHOOTING IN THE NIGHT " +
                             ", time: " + timestamp +
                             ", sector: "+ sector.getSectorType().toString());
                     incidentIntoShootingNight = new Shooting(incidentIntoShootingNight, shootingDuration);
                 }
 
                 addIncident(incidentIntoShootingNight);
-                setSimulationTime(SimulationTime.recieveStartingTime());
 
-                System.out.println("TURNING INTO SHOOTING IN THE NIGHT, day: " + nmbrOfSimulationDays +
+                System.out.println("TURNING INTO SHOOTING IN THE NIGHT " +
                         ", time: " + timestamp +
                         ", sector: "+ sector.getSectorType().toString());
             } else {
@@ -252,9 +286,8 @@ public class Scheduler {
                                     Incident.IncidentType.SHOOTING
                             )
                     );
-                    setSimulationTime(SimulationTime.recieveStartingTime());
 
-                    System.out.println("CASUAL NIGHT INTERVENTION, day: " + nmbrOfSimulationDays +
+                    System.out.println("CASUAL NIGHT INTERVENTION " +
                             ", time: " + timestamp +
                             ", sector: "+ sector.getSectorType().toString());
                 }
@@ -264,6 +297,12 @@ public class Scheduler {
 
     private void addIncident(Incident incident) {
         simulationLifeService.addIncident(incident);
+        this.csvData.add(new CsvRow(
+                incident.getIncidentType().name(),
+                "Started incident",
+                "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
+                Data.serverSimulationData.recieveTimeString()
+        ));
     }
 
     private void setSimulationTime(SimulationTime simulationTime) {
@@ -299,15 +338,19 @@ public class Scheduler {
 
     private boolean isFiredSuccessfully(Integer probability, Incident incident, Event.EventType type) {
         if (isAccident(probability)) {
+            String csvDesc = "";
             String description = "(" + (int)incident.getIncidentLocalization().getX() + "," +
                      + (int)incident.getIncidentLocalization().getY() + ")";
             if (type == Event.EventType.AGGRESSOR_HURTED) {
-                description += " aggressor has been hurt";
+                csvDesc = "aggressor has been hurt";
+                description += " " + csvDesc;
             } else if (type == Event.EventType.POLICEMAN_HURTED) {
                 if (isAccident(SimulationData.PROBABILITY_OF_MORTALITY)) {
-                        description += " policeman has been killed";
+                        csvDesc = "policeman has been killed";
+                        description += " " + csvDesc;
                     } else {
-                        description += " policeman has been hurt";
+                        csvDesc = "policeman has been hurt";
+                        description += " " + csvDesc;
                     }
             }
 
@@ -317,6 +360,12 @@ public class Scheduler {
                     incident.getIncidentLocalization()
             ));
             Data.serverSimulationData.removeIncident(incident);
+            this.csvData.add(new CsvRow(
+                    type.name(),
+                    csvDesc,
+                    "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
+                    Data.serverSimulationData.recieveTimeString()
+            ));
 
             return true;
         }

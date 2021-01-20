@@ -6,7 +6,6 @@ import com.smartgun.shared.Data;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-
 import com.smartgun.shared.Config;
 import com.smartgun.model.incident.*;
 
@@ -16,16 +15,6 @@ public class SimulationLifeService {
 
     SimulationLifeService(SimpMessagingTemplate simpMessagingTemplate) {
         this.simpMessagingTemplate = simpMessagingTemplate;
-    }
-
-    public void checkIncidents(int currentTime) {
-        for (int i = 0; i < Data.serverSimulationData.getIncidents().size(); i++) {
-            Incident incident = Data.serverSimulationData.getIncidents().get(i);
-            if (incident.getEndTime() < currentTime) {
-                Data.serverSimulationData.removeIncident(incident);
-                System.out.println("ENDED AN INCIDENT");
-            }
-        }
     }
 
     public void addIncident(Incident incident) {

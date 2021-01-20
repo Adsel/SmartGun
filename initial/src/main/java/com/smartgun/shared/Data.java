@@ -7,6 +7,7 @@ import com.smartgun.model.map.Sector;
 import com.smartgun.model.map.SectorType;
 import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.simulation.InitialData;
+import com.smartgun.model.simulation.SimulationTime;
 
 import java.io.FileNotFoundException;
 
@@ -209,7 +210,13 @@ public class Data {
         System.out.println("STOP");
         Data.data = data;
         Data.isUser = true;
+    }
 
+    public static String getDataInCsvFormat() {
+        String resultInCsv = "";
 
+        // MAYBE IN FUTURE ...
+
+        return resultInCsv;
     }
 }

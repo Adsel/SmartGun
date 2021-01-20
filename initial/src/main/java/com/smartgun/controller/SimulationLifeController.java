@@ -1,6 +1,7 @@
 package com.smartgun.controller;
 
 import com.smartgun.data.MapData;
+import com.smartgun.model.simulation.SimulationTime;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -27,9 +28,11 @@ public class SimulationLifeController {
         Data.setupData(data);
 
         // CHECK AFTER SETUP
+        Data.serverSimulationData.setSimulationTime(SimulationTime.recieveStartingTime());
         return new ClientStartingSimulationData(
                 new MapData(Data.serverSimulationData.getMap()),
-                Data.data.getIsDayAndNightSystem()
+                Data.data.getIsDayAndNightSystem(),
+                Data.serverSimulationData.getSimulationTime()
         );
     }
 }
