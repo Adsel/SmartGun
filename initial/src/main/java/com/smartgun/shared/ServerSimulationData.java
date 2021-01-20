@@ -83,4 +83,8 @@ public class ServerSimulationData {
     public void setSimulationTime(SimulationTime simulationTime) {
         this.simulationTime = simulationTime;
     }
+
+    public void increaseSimulationTime() {
+        this.simulationTime.increaseSimulationTime();
+    }
 }

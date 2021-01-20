@@ -6,7 +6,6 @@ import com.smartgun.shared.Data;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-
 import com.smartgun.shared.Config;
 import com.smartgun.model.incident.*;
 
