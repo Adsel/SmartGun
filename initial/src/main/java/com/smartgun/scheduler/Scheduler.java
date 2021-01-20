@@ -289,9 +289,8 @@ public class Scheduler {
         this.csvData.add(new CsvRow(
                 incident.getIncidentType().name(),
                 "Started incident",
-                "(" + (int) incident.getIncidentLocalization().getX() + ", " + (int) incident.getIncidentLocalization().getY() + ")",
+                "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
                 Data.serverSimulationData.recieveTimeString()
-                // JUMP HERE
         ));
     }
 
@@ -346,6 +345,12 @@ public class Scheduler {
                     incident.getIncidentLocalization()
             ));
             Data.serverSimulationData.removeIncident(incident);
+            this.csvData.add(new CsvRow(
+                    incident.getIncidentType().name(),
+                    type.name(),
+                    "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
+                    Data.serverSimulationData.recieveTimeString()
+            ));
 
             return true;
         }

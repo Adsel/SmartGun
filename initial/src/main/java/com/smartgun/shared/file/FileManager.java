@@ -18,21 +18,18 @@ public class FileManager {
         if (csvData.size() > 0) {
             try (PrintWriter writer = new PrintWriter(FILENAME_PREFIX + filename + ".csv")) {
                 StringBuilder sb = new StringBuilder();
+                addHeader(sb);
                 for (CsvRow data: csvData) {
                     System.out.println(data);
-                    // TIME
                     sb.append(data.getTime());
                     sb.append(this.fieldSeparator);
 
-                    // NAME
                     sb.append(data.getName());
                     sb.append(this.fieldSeparator);
 
-                    // DESCRIPTION
                     sb.append(data.getDesc());
                     sb.append(this.fieldSeparator);
 
-                    // POINT
                     sb.append(data.getPoint());
                     sb.append(this.fieldSeparator);
 
@@ -43,5 +40,21 @@ public class FileManager {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    private void addHeader(StringBuilder sb) {
+        sb.append("Time");
+        sb.append(this.fieldSeparator);
+
+        sb.append("Name");
+        sb.append(this.fieldSeparator);
+
+        sb.append("Description");
+        sb.append(this.fieldSeparator);
+
+        sb.append("Localization");
+        sb.append(this.fieldSeparator);
+
+        sb.append(this.delimiter);
     }
 }
