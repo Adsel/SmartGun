@@ -44,15 +44,6 @@ public class Scheduler {
         this.csvData = new ArrayList<>();
     }
 
-    @Scheduled(fixedRateString = "1000", initialDelayString = "0")
-    public void schedulingTask() {
-        if (Data.isUser) {
-            simulationLifeService.sendMessages();
-        }
-
-        exportManager();
-    }
-
     private void exportManager() {
         if (!sentStartingData) {
             // MAYBE IN FUTURE:
@@ -90,6 +81,10 @@ public class Scheduler {
             for (Patrol p: Data.serverSimulationData.getPatrols()) {
                 p.move();
             }
+
+            // == SEND AND SAVE RESULTS ===
+            simulationLifeService.sendMessages();
+            exportManager();
         }
     }
 
