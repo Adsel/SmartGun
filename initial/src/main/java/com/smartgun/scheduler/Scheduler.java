@@ -4,12 +4,17 @@ import com.smartgun.model.incident.Event;
 import com.smartgun.model.map.SectorType;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.policeman.Patrol;
+import com.smartgun.shared.Config;
+import com.smartgun.shared.file.CsvRow;
+import com.smartgun.shared.file.FileManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import com.smartgun.service.SimulationLifeService;
 import com.smartgun.shared.Data;
 import com.smartgun.model.incident.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Component
@@ -24,19 +29,39 @@ public class Scheduler {
     private int simulationTime;
     private Random generator;
     private Integer CERTAINTY_PROBABILITY = 100;
-
+    private FileManager fileManager;
+    private boolean sentStartingData = false;
+    private List<CsvRow> csvData;
 
     public Scheduler(SimulationLifeService simulationLifeService) {
         this.timestamp = 0;
         this.simulationTime = 0;
         this.simulationLifeService = simulationLifeService;
         this.generator = new Random();
+        this.fileManager = new FileManager();
+        this.csvData = new ArrayList<>();
     }
 
     @Scheduled(fixedRateString = "1000", initialDelayString = "0")
     public void schedulingTask() {
         if (Data.isUser) {
             simulationLifeService.sendMessages();
+        }
+
+        exportManager();
+    }
+
+    private void exportManager() {
+        if (!sentStartingData) {
+            // MAYBE IN FUTURE:
+            // TODO: export data about initial probability in Data.data
+            sentStartingData = true;
+        } else if (this.timestamp % Config.EXPORT_TO_CSV_INTERVAL == 0) {
+            fileManager.exportToCsv(
+                    "TIME",
+                    this.csvData
+            );
+            this.csvData = new ArrayList<>();
         }
     }
 
@@ -208,6 +233,7 @@ public class Scheduler {
 
     private void addIncident(Incident incident) {
         simulationLifeService.addIncident(incident);
+        this.csvData.add()
     }
 
     private void generateEvents() {

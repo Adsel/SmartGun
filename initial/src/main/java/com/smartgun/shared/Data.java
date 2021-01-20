@@ -209,7 +209,13 @@ public class Data {
         System.out.println("STOP");
         Data.data = data;
         Data.isUser = true;
+    }
 
+    public static String getDataInCsvFormat() {
+        String resultInCsv = "";
 
+        // MAYBE IN FUTURE ...
+
+        return resultInCsv;
     }
 }
