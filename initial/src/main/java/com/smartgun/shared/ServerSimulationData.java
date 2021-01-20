@@ -87,4 +87,8 @@ public class ServerSimulationData {
     public void increaseSimulationTime() {
         this.simulationTime.increaseSimulationTime();
     }
+
+    public String recieveTimeString() {
+        return simulationTime.recieveTimeString();
+    }
 }

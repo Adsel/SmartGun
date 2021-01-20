@@ -1,5 +1,7 @@
 package com.smartgun.model.simulation;
 
+import com.smartgun.shared.Data;
+
 import java.util.Calendar;
 import java.util.Random;
 
@@ -8,6 +10,8 @@ public class SimulationTime {
     public static final int MINUTES_IN_HOUR = 60;
     public static final int SECONDS_IN_MINUTE = 60;
     public static final int TIME_IN_REALITY_PER_SECOND = 15; // in minutes
+    private static String DATE_SEPARATOR = "-";
+    private static String TIME_SEPARATOR = ":";
 
     private int hours;
     private int minutes;
@@ -65,5 +69,36 @@ public class SimulationTime {
                 this.date.add(Calendar.DATE, 1);
             }
         }
+    }
+
+    public String recieveMonthWithPrefix() {
+        return getMonth() >= 10 ? String.valueOf(getMonth()) : "0" + getMonth();
+    }
+
+    public String recieveDayWithPrefix() {
+        return getDay() >= 10 ? String.valueOf(getDay()) : "0" + getDay();
+    }
+
+    public String recieveHourWithPrefix() {
+        return hours >= 10 ? String.valueOf(hours) : "0" + hours;
+    }
+
+    public String recieveMinutesWithPrefix() {
+        return minutes >= 10 ? String.valueOf(minutes) : "0" + minutes;
+    }
+
+    public String recieveSecondsWithPrefix() {
+        return seconds >= 10 ? String.valueOf(seconds) : "0" + seconds;
+    }
+
+    public static String recieveTimeString() {
+        SimulationTime time = Data.serverSimulationData.getSimulationTime();
+
+        return time.getYear() + DATE_SEPARATOR +
+                time.recieveMonthWithPrefix() + DATE_SEPARATOR +
+                time.recieveDayWithPrefix() + " " +
+                time.recieveHourWithPrefix() + TIME_SEPARATOR +
+                time.recieveMinutesWithPrefix() + TIME_SEPARATOR +
+                time.recieveSecondsWithPrefix();
     }
 }

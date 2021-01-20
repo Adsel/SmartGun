@@ -58,9 +58,9 @@ public class Scheduler {
             // MAYBE IN FUTURE:
             // TODO: export data about initial probability in Data.data
             sentStartingData = true;
-        } else if (this.timestamp % Config.EXPORT_TO_CSV_INTERVAL == 0) {
+        } else if (this.simulationTime != 0 && this.simulationTime % Config.EXPORT_TO_CSV_INTERVAL == 0) {
             fileManager.exportToCsv(
-                    "TIME",
+                    Data.serverSimulationData.recieveTimeString(),
                     this.csvData
             );
             this.csvData = new ArrayList<>();
@@ -69,8 +69,8 @@ public class Scheduler {
 
     @Scheduled(fixedRateString = "1000", initialDelayString = "0")
     public void lifeCycleTask() {
-        Data.serverSimulationData.increaseSimulationTime();
         if (Data.isUser) {
+            Data.serverSimulationData.increaseSimulationTime();
             timestamp += TIME_UNIT;
             simulationTime += TIME_UNIT;
             if (timestamp > TIME_LIMIT) {
@@ -288,9 +288,9 @@ public class Scheduler {
         simulationLifeService.addIncident(incident);
         this.csvData.add(new CsvRow(
                 incident.getIncidentType().name(),
-                " ",
-                "(" + incident.getIncidentLocalization().getX() + "," + incident.getIncidentLocalization().getY() + ")",
-                ""
+                "Started incident",
+                "(" + (int) incident.getIncidentLocalization().getX() + ", " + (int) incident.getIncidentLocalization().getY() + ")",
+                Data.serverSimulationData.recieveTimeString()
                 // JUMP HERE
         ));
     }
