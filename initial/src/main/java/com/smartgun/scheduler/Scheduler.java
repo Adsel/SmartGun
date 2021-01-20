@@ -78,7 +78,7 @@ public class Scheduler {
             }
 
             // === CHECKS IF ANY INCIDENTS HAS BEEN OUTDATED ===
-            simulationLifeService.checkIncidents(this.timestamp);
+            checkIncidents(this.simulationTime);
 
             // === GENERATE EVENTS (LIKE POLICEMAN FIRED, etc.) ===
             this.generateEvents();
@@ -89,6 +89,22 @@ public class Scheduler {
             // === MOVING PATROLS ===
             for (Patrol p: Data.serverSimulationData.getPatrols()) {
                 p.move();
+            }
+        }
+    }
+
+    private void checkIncidents(int currentTime) {
+        for (int i = 0; i < Data.serverSimulationData.getIncidents().size(); i++) {
+            Incident incident = Data.serverSimulationData.getIncidents().get(i);
+            if (incident.getEndTime() < currentTime) {
+                Data.serverSimulationData.removeIncident(incident);
+                this.csvData.add(new CsvRow(
+                        incident.getIncidentType().name(),
+                        "Ended incident",
+                        "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
+                        Data.serverSimulationData.recieveTimeString()
+                ));
+                System.out.println("ENDED AN INCIDENT");
             }
         }
     }
@@ -327,15 +343,19 @@ public class Scheduler {
 
     private boolean isFiredSuccessfully(Integer probability, Incident incident, Event.EventType type) {
         if (isAccident(probability)) {
+            String csvDesc = "";
             String description = "(" + (int)incident.getIncidentLocalization().getX() + "," +
                      + (int)incident.getIncidentLocalization().getY() + ")";
             if (type == Event.EventType.AGGRESSOR_HURTED) {
-                description += " aggressor has been hurt";
+                csvDesc = "aggressor has been hurt";
+                description += " " + csvDesc;
             } else if (type == Event.EventType.POLICEMAN_HURTED) {
                 if (isAccident(SimulationData.PROBABILITY_OF_MORTALITY)) {
-                        description += " policeman has been killed";
+                        csvDesc = "policeman has been killed";
+                        description += " " + csvDesc;
                     } else {
-                        description += " policeman has been hurt";
+                        csvDesc = "policeman has been hurt";
+                        description += " " + csvDesc;
                     }
             }
 
@@ -346,8 +366,8 @@ public class Scheduler {
             ));
             Data.serverSimulationData.removeIncident(incident);
             this.csvData.add(new CsvRow(
-                    incident.getIncidentType().name(),
                     type.name(),
+                    csvDesc,
                     "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
                     Data.serverSimulationData.recieveTimeString()
             ));

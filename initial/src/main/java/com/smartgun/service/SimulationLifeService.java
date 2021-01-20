@@ -17,16 +17,6 @@ public class SimulationLifeService {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    public void checkIncidents(int currentTime) {
-        for (int i = 0; i < Data.serverSimulationData.getIncidents().size(); i++) {
-            Incident incident = Data.serverSimulationData.getIncidents().get(i);
-            if (incident.getEndTime() < currentTime) {
-                Data.serverSimulationData.removeIncident(incident);
-                System.out.println("ENDED AN INCIDENT");
-            }
-        }
-    }
-
     public void addIncident(Incident incident) {
         Data.serverSimulationData.addingIncidents(incident);
     }
