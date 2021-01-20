@@ -37,6 +37,13 @@ public class Map implements IMap {
         this.policeOfficeList = new ArrayList<>();
     }
 
+    public void cleanVisited() {
+        int xLength = this.map.length;
+        int yLength = this.map[0].length;
+
+        visited = new boolean[xLength][yLength];
+    }
+
     public void loadMap() throws FileNotFoundException {
         int xSize = 0;
 
@@ -75,19 +82,19 @@ public class Map implements IMap {
         this.mapOfInt = new int[xLength][yLength];
 
         //Set 0 1 int[][] map from char[][] map
-        for (int i = 0; i < xLength; i++) {
-            for (int j = 0; j < yLength; j++) {
+        for (int x = 0; x < xLength; x++) {
+            for (int y = 0; y < yLength; y++) {
 
-                if (this.map[i][j] == WALL_CHARACTER) {
-                    this.mapOfInt[i][j] = 0;
-                } else if (this.map[i][j] == HOSPITAL_CHARACTER) {
-                    hospitalList.add(new Point(i, j));
-                    this.mapOfInt[i][j] = 0;
-                } else if (this.map[i][j] == POLICE_CHARACTER) {
-                    policeOfficeList.add(new Point(i, j));
-                    this.mapOfInt[i][j] = 0;
+                if (this.map[x][y] == WALL_CHARACTER) {
+                    this.mapOfInt[x][y] = 0;
+                } else if (this.map[x][y] == HOSPITAL_CHARACTER) {
+                    hospitalList.add(new Point(x, y));
+                    this.mapOfInt[x][y] = 0;
+                } else if (this.map[x][y] == POLICE_CHARACTER) {
+                    policeOfficeList.add(new Point(x, y));
+                    this.mapOfInt[x][y] = 0;
                 } else {
-                    this.mapOfInt[i][j] = 1;
+                    this.mapOfInt[x][y] = 1;
                 }
             }
         }
@@ -144,14 +151,14 @@ public class Map implements IMap {
 
     //This method is just for check if the path is correctly solved
     public void printPath() {
-        for (int i = 0; i < 30; i++) {
-            for (int j = 0; j < 60; j++) {
-                a = i;
-                b = j;
+        for (int x = 0; x < this.map.length; x++) {
+            for (int y = 0; y < this.map[0].length; y++) {
+                a = x;
+                b = y;
                 if (new Point(a, b).equals(path.stream().filter(point -> point.x == a && point.y == b).findFirst().orElse(null))) {
-                    System.out.print(GREEN + mapOfInt[i][j] + RESET);
+                    System.out.print(GREEN + mapOfInt[x][y] + RESET);
                 } else {
-                    System.out.print(mapOfInt[i][j]);
+                    System.out.print(mapOfInt[x][y]);
                 }
             }
             System.out.println();

@@ -1,12 +1,11 @@
 package com.smartgun.service;
 
 import com.smartgun.model.simulation.SimulationData;
+import com.smartgun.model.simulation.SimulationTime;
 import com.smartgun.shared.Data;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import com.smartgun.shared.Config;
 import com.smartgun.model.incident.*;
@@ -33,6 +32,10 @@ public class SimulationLifeService {
         Data.serverSimulationData.addingIncidents(incident);
     }
 
+    public void setSimulationTime(SimulationTime simulationTime) {
+        Data.serverSimulationData.setSimulationTime(simulationTime);
+    }
+
     // sending data
     public void sendMessages() {
 //        for (Incident i: Data.serverSimulationData.getIncidents()) {
@@ -41,6 +44,7 @@ public class SimulationLifeService {
         simpMessagingTemplate.convertAndSend(
                 Config.WS_MESSAGE_TRANSFER_DESTINATION,
                 new SimulationData(
+                        Data.serverSimulationData.getSimulationTime(),
                         Data.serverSimulationData.getIncidents(),
                         Data.serverSimulationData.getEvents(),
                         Data.serverSimulationData.getPatrols()
