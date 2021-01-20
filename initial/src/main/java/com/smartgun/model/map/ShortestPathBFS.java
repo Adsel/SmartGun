@@ -14,6 +14,7 @@ public class ShortestPathBFS implements IShortestPath{
     private Map map;
     public ShortestPathBFS(Map map) {
         this.map = map;
+        this.map.cleanVisited();
     }
 
     public List<Point> solve(Coordinate source, Coordinate destination) {
