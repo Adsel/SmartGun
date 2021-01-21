@@ -42,7 +42,7 @@ public class ServerSimulationData {
         );
         headQuarter.generatePatrols(patrolsPerDistrict, patrolCount);
         this.map = map;
-        this.ambulanceBase = new AmbulanceBase();
+        this.ambulanceBase = new AmbulanceBase(map, 6);
         incidents = new ArrayList<>();
         events = new ArrayList<>();
     }

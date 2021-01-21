@@ -7,6 +7,7 @@ import com.smartgun.model.headquarter.interfaces.IAmbulances;
 import com.smartgun.model.map.Map;
 import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.simulation.InitialData;
+import com.smartgun.shared.Data;
 
 /*Klasa będzie przechowaywała listę wszytkich ambulansów. Domyślnie ustawia lokalizację na 0,0 (centrum ambulasów)
 * oraz domyślnie ambulans jest pusty.
@@ -20,17 +21,17 @@ public class AmbulanceBase {
     private List<Ambulance> ambulances;
     private MainAgent mainAgent;
     private Map map;
-    private InitialData initialData;
 
 
-    public AmbulanceBase() {
+    public AmbulanceBase(Map map, Integer countOfAmbulances) {
         ambulances = new ArrayList<>();
-        initAmbulances();
+        this.map = map;
+        initAmbulances(countOfAmbulances);
     }
 
-    void initAmbulances() {
+    void initAmbulances(Integer countOfAmbulances) {
         Point point = map.recieveHospitalList().get(0);
-        for (int i = 0; i < initialData.getAmbulancesCount(); i++){
+        for (int i = 0; i < countOfAmbulances; i++){
             ambulances.add(new Ambulance(i, point, map));
         }
     }

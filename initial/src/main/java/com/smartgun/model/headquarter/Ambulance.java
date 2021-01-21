@@ -15,25 +15,20 @@ public class Ambulance {
     private Stack<Point> currentPathToDrive;
     private Map map;
 
-    public Ambulance(int id, Point actualPosition) {
-        this.id = id;
-        this.actualPosition = actualPosition;
-    }
-
     public Ambulance(int id, Point basePosition, Map map) {
         this.id = id;
         this.actualPosition = basePosition;
         this.basePosition = basePosition;
         this.state = State.WAITING;
         this.map = map;
+        this.currentPathToDrive = new Stack<>();
     }
 
     public void move() {
         try {
             actualPosition.setLocation(currentPathToDrive.pop());
+        } catch (EmptyStackException e){
 
-        }catch (EmptyStackException e){
-            currentPathToDrive = null;
         }
     }
 

@@ -75,9 +75,6 @@ public class Map implements IMap {
         int xLength = this.map.length;
         int yLength = this.map[0].length;
 
-        this.hospitalList = new ArrayList<>();
-        this.policeOfficeList = new ArrayList<>();
-
         //int[][] mapInt = new int[xLength][yLength];
         this.mapOfInt = new int[xLength][yLength];
 
