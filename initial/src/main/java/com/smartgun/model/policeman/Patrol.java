@@ -35,7 +35,8 @@ public class Patrol implements IPatrol {
         OBSERVE,
         INTERVENTION,
         BACK_TO_PATROL,
-        BACKUP
+        BACKUP,
+        BASE
     }
 
     public Patrol(
@@ -45,7 +46,8 @@ public class Patrol implements IPatrol {
             Policeman headPoliceman,
             Policeman youngerPoliceman,
             Map map,
-            Sector sector
+            Sector sector,
+            State state
      //      , X connector
     ) {
      //   smartWatch.addConnectior(connector);
@@ -56,7 +58,7 @@ public class Patrol implements IPatrol {
         this.youngerPoliceman = youngerPoliceman;
         this.map = map;
         this.sector = sector;
-        this.state = State.OBSERVE;
+        this.state = state;
         this.lastObservePoint = smartWatch.getCoordinates();
     }
 
@@ -102,18 +104,24 @@ public class Patrol implements IPatrol {
         target = lastObservePoint;
         setUpCurrentPathToDrive(lastObservePoint);
     }
+
     public void move() {
         if (this.target == null && this.state == State.OBSERVE) {
+            // NORMAL PATROLLING
             drawNewTarget();
             setUpCurrentPathToDrive(this.target);
         }
-        try {
-            smartWatch.setCoordinates(currentPathToDrive.pop());
 
-        }catch (EmptyStackException e){
-            target = null;
+        if (this.state != State.BASE) {
+            try {
+                smartWatch.setCoordinates(currentPathToDrive.pop());
+
+            } catch (EmptyStackException e) {
+                target = null;
+            }
         }
-        if(state == State.OBSERVE){
+
+        if (state == State.OBSERVE){
             lastObservePoint = smartWatch.getCoordinates();
         }
     }

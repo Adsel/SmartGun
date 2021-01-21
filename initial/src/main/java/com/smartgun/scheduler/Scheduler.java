@@ -1,5 +1,6 @@
 package com.smartgun.scheduler;
 
+import com.smartgun.model.headquarter.Ambulance;
 import com.smartgun.model.incident.Event;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.policeman.Patrol;
@@ -61,30 +62,38 @@ public class Scheduler {
     @Scheduled(fixedRateString = "1000", initialDelayString = "0")
     public void lifeCycleTask() {
         if (Data.isUser) {
-            Data.serverSimulationData.increaseSimulationTime();
-            timestamp += TIME_UNIT;
-            simulationTime += TIME_UNIT;
-            if (timestamp > TIME_LIMIT) {
-                timestamp = 0;
-            }
+            // === CHANGING SIMULATION TIME
+            increaseSimulationTime();
 
             // === CHECKS IF ANY INCIDENTS HAS BEEN OUTDATED ===
             checkIncidents(this.simulationTime);
 
-            // === GENERATE EVENTS (LIKE POLICEMAN FIRED, etc.) ===
-            this.generateEvents();
+            if (simulationTime % 10 == 0) {
+                // === GENERATE EVENTS (LIKE POLICEMAN FIRED, etc.) ===
+                this.generateEvents();
 
-            // DAY
-            this.generateIncidents(this.isDay());
+                // === GENERATE INCIDENTS ===
+                this.generateIncidents(this.isDay());
+            }
 
             // === MOVING PATROLS ===
-            for (Patrol p: Data.serverSimulationData.getPatrols()) {
-                p.move();
-            }
+            Data.serverSimulationData.movePatrols();
+
+            // === MOVING AMBULANCES ===
+            Data.serverSimulationData.moveAmbulances();
 
             // == SEND AND SAVE RESULTS ===
             simulationLifeService.sendMessages();
             exportManager();
+        }
+    }
+
+    private void increaseSimulationTime() {
+        Data.serverSimulationData.increaseSimulationTime();
+        timestamp += TIME_UNIT;
+        simulationTime += TIME_UNIT;
+        if (timestamp > TIME_LIMIT) {
+            timestamp = 0;
         }
     }
 
@@ -99,6 +108,7 @@ public class Scheduler {
                         "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
                         Data.serverSimulationData.recieveTimeString()
                 ));
+                incident.recieveChoosedPatrol().sendToObserve();
                 System.out.println("ENDED AN INCIDENT");
             }
         }
@@ -141,22 +151,15 @@ public class Scheduler {
             if (isAccident(interventionProbability)) {
                 if (isShooting(Data.data.getShootingProbablity()[sector.getSectorTypeValue()])) {
                     // SHOOTING
-                    int durationTime = genDurationTime(
-                            Data.data.getInterventionDuration()[0],
-                            Data.data.getInterventionDuration()[1]
-                    );
-
                     int shootingDuration = genDurationTime(
                             Data.data.getShootingDuration()[0],
                             Data.data.getShootingDuration()[1]
                     );
 
-                    Incident shooting = new Shooting(simulationTime, durationTime, sector.generateIncidentLocalization(),
-                            Incident.IncidentType.SHOOTING, shootingDuration);
-
-                    addIncident(shooting);
-                    
-
+                    addIncident(new Shooting(
+                            simulationTime, sector.generateIncidentLocalization(),
+                            Incident.IncidentType.SHOOTING, shootingDuration
+                    ));
 
                 } else if (checkIfWillBeShooting(
                         Data.data.getInterventionToShootingProbablity()[sector.getSectorTypeValue()])) {
@@ -171,10 +174,6 @@ public class Scheduler {
                             Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING
                     );
 
-                    System.out.println("TURNING INTO SHOOTING" +
-                            ", time: " + timestamp +
-                            ", sector: "+ sector.getSectorType().toString());
-
                     if (checkIfWillBeShooting(
                             // icnreased probability of the shooting becouse of started accident - TURNING INTO SHOOTING
                             Data.data.getInterventionToShootingProbablity()[sector.getSectorTypeValue()] +
@@ -186,10 +185,6 @@ public class Scheduler {
                         );
 
                         incidentIntoShooting.setIncidentType(Incident.IncidentType.SHOOTING);
-                        System.out.println("TURNED INTO SHOOTING, day: " +
-                                ", time: " + timestamp +
-                                ", sector: "+ sector.getSectorType().toString());
-
                         incidentIntoShooting = new Shooting(incidentIntoShooting, shootingDuration);
                     }
 
@@ -210,37 +205,23 @@ public class Scheduler {
                                     Incident.IncidentType.INTERVENTION
                             )
                     );
-                    
-
-                    System.out.println("CASUAL INTERVENTION," +
-                            ", time: " + timestamp +
-                            ", sector: "+ sector.getSectorType().toString());
                 }
             }
-        } else {
+        }
+        else {
             // NIGHT
             if (isShooting(Data.data.getShootingProbablity()[sector.getSectorTypeValue()])) {
                 // SHOOTING
-                int durationTime = genDurationTime(
-                        Data.data.getInterventionDuration()[0],
-                        Data.data.getInterventionDuration()[1]
-                );
-
                 int shootingDuration = genDurationTime(
                         Data.data.getShootingDuration()[0],
                         Data.data.getShootingDuration()[1]
                 );
 
-                Incident nightShooting = new Shooting(simulationTime, durationTime, sector.generateIncidentLocalization(),
+                Incident nightShooting = new Shooting(simulationTime, sector.generateIncidentLocalization(),
                         Incident.IncidentType.SHOOTING, shootingDuration);
                 addIncident(
                         nightShooting
                 );
-                
-
-                System.out.println("NIGHT SHOOTING!! " +
-                        ", time: " + timestamp +
-                        ", sector: "+ sector.getSectorType().toString());
             } else if (checkIfWillBeShooting(Data.data.getInterventionToShootingProbablity()[sector.getSectorTypeValue()])) {
                 // INTERVENTION TURNING INTO SHOOTING
                 int durationTime = genDurationTime(
@@ -263,17 +244,10 @@ public class Scheduler {
                     );
 
                     incidentIntoShootingNight.setIncidentType(Incident.IncidentType.SHOOTING);
-                    System.out.println("TURNED INTO SHOOTING IN THE NIGHT " +
-                            ", time: " + timestamp +
-                            ", sector: "+ sector.getSectorType().toString());
                     incidentIntoShootingNight = new Shooting(incidentIntoShootingNight, shootingDuration);
                 }
 
                 addIncident(incidentIntoShootingNight);
-
-                System.out.println("TURNING INTO SHOOTING IN THE NIGHT " +
-                        ", time: " + timestamp +
-                        ", sector: "+ sector.getSectorType().toString());
             } else {
                 if (isAccident(Data.data.getNightInterventionProbablity()[sector.getSectorTypeValue()])) {
                     int durationTime = genDurationTime(
@@ -286,16 +260,18 @@ public class Scheduler {
                                     Incident.IncidentType.SHOOTING
                             )
                     );
-
-                    System.out.println("CASUAL NIGHT INTERVENTION " +
-                            ", time: " + timestamp +
-                            ", sector: "+ sector.getSectorType().toString());
                 }
             }
         }
     }
 
     private void addIncident(Incident incident) {
+        Patrol choosed = Data.serverSimulationData.choosePatrolToIntervention(incident.getIncidentLocalization());
+        if (choosed != null) {
+            choosed.goToIntervention(incident.getIncidentLocalization());
+            incident.setPatrolToIncident(choosed);
+        }
+
         simulationLifeService.addIncident(incident);
         this.csvData.add(new CsvRow(
                 incident.getIncidentType().name(),

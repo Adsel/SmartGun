@@ -19,6 +19,7 @@ import com.smartgun.model.policeman.SmartWatch;
 import com.smartgun.model.policeman.Policeman;
 import com.smartgun.model.headquarter.MainAgent;
 import com.smartgun.model.headquarter.MonitoringAgent;
+import com.smartgun.shared.Data;
 
 public class HeadQuarter implements IHeadQuarter {
     private List<Patrol> patrols;
@@ -65,25 +66,37 @@ public class HeadQuarter implements IHeadQuarter {
         ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
         List<Patrol> patrols = getAllAvailablePatrols();
 
-        Patrol patrol = patrols.get(0);
-        int distance = shortestPathBFS.solve(ShortestPathBFS.Coordinate.fromPoint(patrol.getCoordinates()),destination).size();
+        if (patrols != null && patrols.size() > 0) {
+            Patrol patrol = patrols.get(0);
+            int distance = shortestPathBFS.solve(ShortestPathBFS.Coordinate.fromPoint(patrol.getCoordinates()),destination).size();
 
-        for (int i = 1; i < patrols.size(); i++){
-            int temp = shortestPathBFS
-                    .solve(ShortestPathBFS.Coordinate.fromPoint(patrols.get(i).getCoordinates()),destination)
-                    .size();
-            if(distance > temp){
-                distance = temp;
-                patrol = patrols.get(i);
+            for (int i = 1; i < patrols.size(); i++){
+                int temp = shortestPathBFS
+                        .solve(ShortestPathBFS.Coordinate.fromPoint(patrols.get(i).getCoordinates()), destination)
+                        .size();
+                if (distance > temp) {
+                    distance = temp;
+                    patrol = patrols.get(i);
+                }
             }
+
+            return patrol;
         }
-        return patrol;
+
+        return null;
     }
 
     private List<Patrol> getAllAvailablePatrols(){
-        return this.patrols.stream()
-                .filter(patrol -> patrol.getState() == Patrol.State.OBSERVE)
+        List<Patrol> availablePatrols = this.patrols.stream()
+                .filter(patrol -> patrol.getState() == Patrol.State.OBSERVE )
                 .collect(Collectors.toList());
+        if (availablePatrols == null || availablePatrols.size() <= 0) {
+            availablePatrols = this.patrols.stream()
+                    .filter(patrol -> patrol.getState() == Patrol.State.BASE )
+                    .collect(Collectors.toList());
+        }
+
+        return availablePatrols;
     }
 
     public void sendPatrolToIntervention(Patrol patrol, Point point){
@@ -129,7 +142,7 @@ public class HeadQuarter implements IHeadQuarter {
                 );
 
                 monitoringAgent.addSmartWatch(smartWatch);
-                addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector);
+                addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector, false);
             }
         }
 
@@ -137,15 +150,14 @@ public class HeadQuarter implements IHeadQuarter {
         List<Sector> sectors = receiveSectorsForAdditionalPatrols(additionalPatrols);
 
         for (Sector sector : sectors) {
-                Navigation navigation = new Navigation();
-                SmartWatch smartWatch = new SmartWatch(
-                        this.generatePatrolPosition(sector, this.map),
-                        navigation
-                );
+            Navigation navigation = new Navigation();
+            SmartWatch smartWatch = new SmartWatch(
+                    this.generatePatrolPosition(sector, this.map),
+                    navigation
+            );
 
-                monitoringAgent.addSmartWatch(smartWatch);
-
-                addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector);
+            monitoringAgent.addSmartWatch(smartWatch);
+            addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector, true);
         }
     }
 
@@ -159,7 +171,7 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     @Override
-    public void addPatrol(String id,SmartWatch sw, Navigation nv, Sector sector) {
+    public void addPatrol(String id, SmartWatch sw, Navigation nv, Sector sector, boolean isAdditional) {
         this.patrols.add(
                 new Patrol(
                         id,
@@ -168,9 +180,28 @@ public class HeadQuarter implements IHeadQuarter {
                         new Policeman(true),
                         new Policeman(false),
                         this.map,
-                        sector
+                        sector,
+                        isAdditional ? Patrol.State.BASE : Patrol.State.OBSERVE
                         // TODO WHEN X WILL BE ADDED: X connector;
                 )
         );
+    }
+
+    public void movePatrols() {
+
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
+        for (Patrol p: this.patrols) {
+            p.move();
+            System.out.println("STATE" + p.getState());
+        }
+
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
     }
 }

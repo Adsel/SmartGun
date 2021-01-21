@@ -1,5 +1,6 @@
 package com.smartgun.shared;
 
+import com.smartgun.model.headquarter.AmbulanceBase;
 import com.smartgun.model.headquarter.HeadQuarter;
 import com.smartgun.model.headquarter.MainAgent;
 import com.smartgun.model.headquarter.interfaces.IMainAgent;
@@ -17,6 +18,7 @@ import java.util.List;
 public class ServerSimulationData {
 
     private HeadQuarter headQuarter;
+    private AmbulanceBase ambulanceBase;
     private Map map;
     private List<Incident> incidents;
     private List<Event> events;
@@ -40,6 +42,7 @@ public class ServerSimulationData {
         );
         headQuarter.generatePatrols(patrolsPerDistrict, patrolCount);
         this.map = map;
+        this.ambulanceBase = new AmbulanceBase(map, 6);
         incidents = new ArrayList<>();
         events = new ArrayList<>();
     }
@@ -90,5 +93,17 @@ public class ServerSimulationData {
 
     public String recieveTimeString() {
         return simulationTime.recieveTimeString();
+    }
+
+    public void moveAmbulances() {
+        this.ambulanceBase.moveAmbulances();
+    }
+
+    public void movePatrols() {
+        this.headQuarter.movePatrols();
+    }
+
+    public Patrol choosePatrolToIntervention(Point target){
+        return this.headQuarter.choosePatrolToIntervention(target);
     }
 }
