@@ -53,6 +53,7 @@ const connect = (data) => {
                 }
                 if (!!msgData.time) {
                     const startingTime = msgData.time;
+                    updateSimulationTime(startingTime);
                     console.log('Starting time: ', startingTime);
                     // TODO:
                     // INIT TIMER AND CALCULATE PART OF DAY (Night/Day)
