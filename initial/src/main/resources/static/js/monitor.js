@@ -9,13 +9,14 @@ const PATROL_SHOOTING = "#9b7d12";
 const PATROL_WOUNDED = "#b50202";
 const AMBULANCE_PRIMARY = "#fa1111";
 const AMBULANCE_SECONDARY = "#EEEEEE";
-const INCIDENT_PRIMARY = "rgba(191,33,55,0.4)";
-const INCIDENT_INTERVENSION = "rgba(210,139,30,0.4)";
+const INCIDENT_SHOOTING = "rgba(191,33,55,0.4)";
+const INCIDENT_TURNING_INTO_SHOOTING = "rgba(210,139,30,0.4)";
+const INCIDENT_INCIDENT = "rgba(53,234,255,0.4)"
 const INCIDENT_OUTLINE = "#bd2137BD";
 const STATION_PRIMARY = "#2740e2";
 const STATION_SECONDARY = "#f4fd0e";
 const STATION_TERITARY = "#c3ca22";
-const NIGHT_COLOR = "rgba(3,3,21,0.25)";
+const NIGHT_COLOR = "rgba(3,3,21,0.3)";
 
 const CHARACTER_WALL = "#";
 const CHARACTER_HOSPITAL = "H";
@@ -27,6 +28,8 @@ let context;
 let dataContext;
 
 let serverData;
+
+let dataTableMode = "patrols";
 
 function preHide(){
     $("#mainDataContainer").children().hide();
@@ -40,6 +43,50 @@ function disableSimulationOptions(){
     $("#afterConnection").children().hide();
     $("#afterConnection").hide();
 }
+function tableDrawPatrols(){
+    dataTableMode = "patrols";
+    $('#monitorDataTable').show();
+    $('#monitorDataTableIncidents').hide();
+    document.getElementById('patrolsTab').style.backgroundColor = "#303030";
+    document.getElementById('incidentsTab').style.backgroundColor = "#e5e5e5";
+    document.getElementById('patrolsTab').style.color = "#e5e5e5";
+    document.getElementById('incidentsTab').style.color = "#303030";
+}
+function tableDrawIncidents(){
+    dataTableMode = "incidents";
+    $('#monitorDataTable').hide();
+    $('#monitorDataTableIncidents').show();
+    document.getElementById('patrolsTab').style.backgroundColor = "#e5e5e5";
+    document.getElementById('incidentsTab').style.backgroundColor = "#303030";
+    document.getElementById('patrolsTab').style.color = "#303030";
+    document.getElementById('incidentsTab').style.color = "#e5e5e5";
+}
+function updateSimulationTime(time){
+    let h = time.hours - 1;
+    let m = time.minutes;
+    let s = time.seconds;
+    let mth = time.month;
+    let d = time.day;
+
+    if(h<10){
+        h = "0" + h;
+    }
+    if(m<10){
+        m = "0" + m;
+    }
+    if(s<10){
+        s = "0" + s;
+    }
+    if(mth<10){
+        mth = "0" + mth;
+    }
+    if(d<10){
+        d = "0" + d;
+    }
+
+    document.getElementById("simulationTime").innerText = d + "-" + mth + "-" + time.year + "    " + h + ":" + m + ":" + s;
+}
+
 async function initiateMonitor(serverMap) {
     $('#conversation-row').toggle();
     document.getElementById("mainDataContainer").setAttribute("display","inline");
@@ -54,6 +101,7 @@ async function initiateMonitor(serverMap) {
     map = loadMapFromServer();
     let mapY = map.length;
     let mapX = map[0].length;
+
 
     //SETTING UP SIZE OF SINGLE ELEMENT IN MONITOR
     if (mapX > mapY) {
@@ -91,84 +139,6 @@ async function initiateMonitor(serverMap) {
     function loadMapFromServer() {
         let arrayMap = [];
         let len = 0;
-        // let loadedMap =
-        //     "##############################\n" +
-        //     "#........#######.............#\n" +
-        //     "####.###..#####..####.######.#\n" +
-        //     "####.####.##H#..#####......#.#\n" +
-        //     "##.............######.####.#.#\n" +
-        //     "####.########.###.....####.#.#\n" +
-        //     "####.########.###.###.####.#.#\n" +
-        //     "#............................#\n" +
-        //     "####.##############.###.####.#\n" +
-        //     "####.##############.###.####.#\n" +
-        //     "##............#.....###.####.#\n" +
-        //     "##.####.###########.......##.#\n" +
-        //     "##.####.####........#####....#\n" +
-        //     "##...##......######.......####\n" +
-        //     "##############################";
-        /*let loadedMap = "##############################################################################\n" +
-            "##...................................#########....###############.....#####.##\n" +
-            "##.#####.######.#############.######...........##.###.......#####.#########.##\n" +
-            "##.#####..###......####.......###################.#########.................##\n" +
-            "##.######.###.####......#####.###################.##########.##.##########.###\n" +
-            "##.##.###.###.#########.####.................................##.#########..###\n" +
-            "##.##.###....................####.#####.################.######.#########.####\n" +
-            "##.##.###.#######################.#####.#####.....######.######.##........####\n" +
-            "##.##.###........######.................#########..................#.####.####\n" +
-            "##.##.##########..#####.#########.#####...........##################.####.####\n" +
-            "##.##.###########.#####.#########.#####.################...............##.####\n" +
-            "##...........................####.#####.#.##.............#######.###.#.##.####\n" +
-            "#####.#######.#########.#########.#####.#.##.###.###.###.#######..........####\n" +
-            "#####.#....##.#########.#########.......#................#######.########.####\n" +
-            "###...#.##.##.....................#####.#.######.###.###.#######.########.####\n" +
-            "###.#.#.###############################.#...####.....###.####H##.########.####\n" +
-            "###.#.#.###H###########################.################...............#####.#\n" +
-            "###.#....................................................#############.#####.#\n" +
-            "###.#############.#############.#######.######.#############...........##....#\n" +
-            "###.###########.................#######.######.###.##.###.####.###.###.##.####\n" +
-            "###.###########.#######################.....##.###.##.###.####.###.###.##.####\n" +
-            "###.........................###########.###..#.###..........................##\n" +
-            "###.##.##############.#####.............###.##.####.##.###.###.###.###.####.##\n" +
-            "###..#.........##.....###.########.##.#.....##.####.##.###.###.###.###.####.##\n" +
-            "####.#########.######.###.########.##.##.##.##.####.##.............###.####.##\n" +
-            "####...............................##.##.##.##.###################.....####.##\n" +
-            "####.######.#######.##############.##.##.#####..............##########.####.##\n" +
-            "####.######.#######.##############.##.##.#####.####.#######.....#............#\n" +
-            "####...............................##.##.#####.####.#######.#####.####.#####.#\n" +
-            "####.#########.##########.########.##.##.#####.####.........#####.####.#####.#\n" +
-            "####.#########.##########.########.##.##.#####.#######.####.#####.####.#####.#\n" +
-            "###..............########..........##.##.#####...............................#\n" +
-            "################..........########.##.##.#####.###############################\n" +
-            "#....###########.########.########.##.##.#####.###############################\n" +
-            "####..................................##.#####.###############################\n" +
-            "##############.#########################.#####.###############################\n" +
-            "###............#########################.#####.###############################\n" +
-            "#####.#############......................#####.###############################\n" +
-            "#####.#############.##########################.###############################\n" +
-            "#.....#############.##########################..##############################\n" +
-            "###################.###########################.##############################\n" +
-            "#########...........###########################.##############################\n" +
-            "#########.##.###.##.##################.....................................###\n" +
-            "#########.##.#......##############.....########.######.###.########.###.##.###\n" +
-            "#########.##...####.##############.###..........######.###.####.....###.##.###\n" +
-            "#########.##.#......##############.###.#####.#########.###.####.##.####..#.###\n" +
-            "#............######.##############.###.#####...............####.##.#####...###\n" +
-            "#.###.#.##.#.....##.##############.###.###########.#######.........##....#.###\n" +
-            "#.....#.##.#.###.##.##############.###.....................#####.####.####.###\n" +
-            "#.###..................................######.##########H#######....#.####.###\n" +
-            "#.###.##.##.####.##.###.#####################....###############.##.#.####.###\n" +
-            "#.######.##......##.###.########################.###############.##.#.####.###\n" +
-            "#....##.....####.##.###.########################...........................###\n" +
-            "####.##.#####.......###.###########################.###########.####.#####.###\n" +
-            "####....#####.##.##..............#################......................##.###\n" +
-            "####.##..........##.############...........#######.######.#####.#######.##.###\n" +
-            "####.##.#####.##.##.############.#########.#######.######.#####............###\n" +
-            "####................############.#########.#######.#####........##############\n" +
-            "###..##############........................#######....########################\n" +
-            "##############################################################################";*/
-
-        console.log("CHUJ: ", serverMap);
         serverMap.split('\n').forEach(function (line) {
             arrayMap[len++] = line;
         });
@@ -265,20 +235,43 @@ function deleteMonitor() {
     document.getElementById("monitorDataPreview").innerHTML = "";
 }
 
+
+
 async function updateMonitor(dataFromServer) {
     clearData();
     serverData = getServerData();
-    drawData();
+    let data = [];
+    let incidentsData = [];
+    //drawData();
     /*$('#monitorDataPreview').innerHTML="";
     let ta = document.createElement("table");
     ta.id = "monitorDataTable";
     $('#monitorDataPreview').appendChild(ta);*/
 
-    drawNight();
 
+    updateSimulationTime(dataFromServer.simulationTime);
+    //DRAW PATROLS
+    let i=0;
+    dataFromServer.patrols.forEach(element => {
+        let unit = {status:element.state.toString(), type:"Patrol", x:element.coordinates.y, y:element.coordinates.x};
+        data[i] = unit;
+       drawPatrol(element.coordinates.y,element.coordinates.x,"patroling");
+       i++;
+    });
+    i=0;
+    dataFromServer.incidents.forEach(element => {
+        let incident = {x:element.incidentLocalization.x, y:element.incidentLocalization.y, type: element.incidentType}
+    })
+    //DRAW INCIDENTS
     dataFromServer.incidents.forEach(element => {
         drawIncident(element.incidentLocalization.x,element.incidentLocalization.y,element.incidentType);
+        let incident = {x:element.incidentLocalization.x, y:element.incidentLocalization.y, type: element.incidentType.replaceAll("_"," ")};
+        incidentsData[i] = incident;
+        i++;
     });
+    if(dataFromServer.simulationTime.hours >22 || dataFromServer.simulationTime.hours<7){
+        drawNight();
+    }
 
 
     function drawNight(){
@@ -316,7 +309,7 @@ async function updateMonitor(dataFromServer) {
         let outlineSizeUnit = parseInt(boxSize / 2.7);
 
         switch (type) {
-            case "patrolling": {
+            case "patroling": {
                 dataContext.fillStyle = PATROL_PATROLLING;
                 break;
             }
@@ -346,10 +339,13 @@ async function updateMonitor(dataFromServer) {
 
     function drawIncident(x,y,type){
         if (type=="INTERVENTION_TURNING_INTO_SHOOTING"){
-            dataContext.fillStyle = INCIDENT_PRIMARY;
+            dataContext.fillStyle = INCIDENT_INCIDENT;
+        }else if(type=="SHOOTING"){
+            dataContext.fillStyle = INCIDENT_SHOOTING;
         }else{
-            dataContext.fillStyle = INCIDENT_INTERVENSION;
+            dataContext.fillStyle = INCIDENT_INCIDENT;
         }
+
         dataContext.strokeStyle=INCIDENT_OUTLINE;
         dataContext.beginPath();
         dataContext.arc(x*boxSize+(boxSize/2), y*boxSize+(boxSize/2), boxSize*0.8, 0, 2 * Math.PI);
@@ -435,60 +431,43 @@ async function updateMonitor(dataFromServer) {
         dataContext.fillText("X: " + mouseX + ", Y: " + mouseY, mouseX*boxSize, mouseY*boxSize);
 
     });
-    let data = [
-            {
-                'id':21,
-                'type':"ambulance",
-                'x': 21,
-                'y': 21,
-                'status': "patrolling",
-                "info": "Some additional info to display"
-            },
-            {
-                'id':1,
-                "type":"patrol",
-                "x": 62,
-                "y": 27,
-                "status": "intervention",
-                "info": "Some additional info to display"
-            },
-            {
-                'id':2,
-                "type":"patrol",
-                "x": 4,
-                "y": 48,
-                "status": "shooting",
-                "info": "Some additional info to display"
-            },
-            {
-                'id':3,
-                "type":"patrol",
-                "x": 29,
-                "y": 49,
-                "status": "wounded",
-                "info": "Some additional info to display"
-            }
-
-    ]
-
-    $('#monitorDataTable').DataTable( {
-        destroy: true,
-        data: data,
-        columns: [
-            { data: 'id', name: "ID" },
-            { data: 'type', name: "Type"},
-            { data: 'x', name: "X" },
-            { data: 'y', name: "Y" },
-            { data: 'status', name: "Status" },
-            { data: 'info', name: "Info" }
-        ],
-        //paging: false
-    } );
-    let columns= document.getElementsByTagName("th");
-    columns[0].innerText="ID";
-    columns[1].innerText="Type";
-    columns[2].innerText="X";
-    columns[3].innerText="Y";
-    columns[4].innerText="Status";
-    columns[5].innerText="Info";
+    if(dataTableMode == "patrols"){
+        $('#monitorDataTable').DataTable( {
+            destroy: true,
+            data: data,
+            paging: false,
+            searching: false,
+            "ordering": false,
+            info: false,
+            columns: [
+                { data: 'type', name: "Type"},
+                { data: 'x', name: "X" },
+                { data: 'y', name: "Y" },
+                { data: 'status', name: "Status" },
+            ],
+        } );
+        let columns= document.getElementsByTagName("th");
+        columns[0].innerText="Type";
+        columns[1].innerText="X";
+        columns[2].innerText="Y";
+        columns[3].innerText="Status";
+    }else{
+        $('#monitorDataTableIncidents').DataTable( {
+            destroy: true,
+            data: incidentsData,
+            paging: false,
+            "ordering": false,
+            searching: false,
+            info: false,
+            columns: [
+                { data: 'x', name: "X" },
+                { data: 'y', name: "Y" },
+                { data: 'type', name: "Type"},
+            ],
+        } );
+        let columns= document.getElementsByTagName("th");
+        columns[4].innerText="X";
+        columns[5].innerText="Y";
+        columns[6].innerText="Type";
+    }
 }
