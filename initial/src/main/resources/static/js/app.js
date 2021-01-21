@@ -34,8 +34,11 @@ const connect = (data) => {
                 const incidents = msgData.incidents;
                 events.forEach(ev => {
                     //TODO: ADD SIMULATION TIME TO NOTIFICATION
-                    //REPLACE (X,Y) WITH X: Y:
-                   showNotification(ev.description) ;
+                    let t = ev.description;
+                    t = t.replace('(','<b>X:');
+                    t = t.replace(',',' Y:');
+                    t = t.replace(')','</b> -');
+                    showNotification(t) ;
                 });
                 updateMonitor(msgData).then($("#loader-wrapper").remove());
             }
@@ -50,6 +53,7 @@ const connect = (data) => {
                 }
                 if (!!msgData.time) {
                     const startingTime = msgData.time;
+                    updateSimulationTime(startingTime);
                     console.log('Starting time: ', startingTime);
                     // TODO:
                     // INIT TIMER AND CALCULATE PART OF DAY (Night/Day)
