@@ -101,6 +101,7 @@ public class Scheduler {
                         "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
                         Data.serverSimulationData.recieveTimeString()
                 ));
+                incident.recieveChoosedPatrol().sendToObserve();
                 System.out.println("ENDED AN INCIDENT");
             }
         }
@@ -258,6 +259,12 @@ public class Scheduler {
     }
 
     private void addIncident(Incident incident) {
+        Patrol choosed = Data.serverSimulationData.choosePatrolToIntervention(incident.getIncidentLocalization());
+        if (choosed != null) {
+            choosed.goToIntervention(incident.getIncidentLocalization());
+            incident.setPatrolToIncident(choosed);
+        }
+
         simulationLifeService.addIncident(incident);
         this.csvData.add(new CsvRow(
                 incident.getIncidentType().name(),
@@ -265,7 +272,6 @@ public class Scheduler {
                 "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
                 Data.serverSimulationData.recieveTimeString()
         ));
-        Data.serverSimulationData.sendPatrol(incident.getIncidentLocalization());
     }
 
     private void setSimulationTime(SimulationTime simulationTime) {

@@ -103,7 +103,7 @@ public class ServerSimulationData {
         this.headQuarter.movePatrols();
     }
 
-    public void sendPatrol(Point target){
-        this.headQuarter.choosePatrolToIntervention(target);
+    public Patrol choosePatrolToIntervention(Point target){
+        return this.headQuarter.choosePatrolToIntervention(target);
     }
 }

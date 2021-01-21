@@ -66,20 +66,24 @@ public class HeadQuarter implements IHeadQuarter {
         ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
         List<Patrol> patrols = getAllAvailablePatrols();
 
-        Patrol patrol = patrols.get(0);
-        int distance = shortestPathBFS.solve(ShortestPathBFS.Coordinate.fromPoint(patrol.getCoordinates()),destination).size();
+        if (patrols != null && patrols.size() > 0) {
+            Patrol patrol = patrols.get(0);
+            int distance = shortestPathBFS.solve(ShortestPathBFS.Coordinate.fromPoint(patrol.getCoordinates()),destination).size();
 
-        for (int i = 1; i < patrols.size(); i++){
-            int temp = shortestPathBFS
-                    .solve(ShortestPathBFS.Coordinate.fromPoint(patrols.get(i).getCoordinates()), destination)
-                    .size();
-            if (distance > temp) {
-                distance = temp;
-                patrol = patrols.get(i);
+            for (int i = 1; i < patrols.size(); i++){
+                int temp = shortestPathBFS
+                        .solve(ShortestPathBFS.Coordinate.fromPoint(patrols.get(i).getCoordinates()), destination)
+                        .size();
+                if (distance > temp) {
+                    distance = temp;
+                    patrol = patrols.get(i);
+                }
             }
+
+            return patrol;
         }
 
-        return patrol;
+        return null;
     }
 
     private List<Patrol> getAllAvailablePatrols(){
@@ -177,8 +181,17 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     public void movePatrols() {
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
         for (Patrol p: this.patrols) {
             p.move();
+            System.out.println("STATE" + p.getState());
         }
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
     }
 }

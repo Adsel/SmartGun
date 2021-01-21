@@ -1,5 +1,7 @@
 package com.smartgun.model.incident;
 
+import com.smartgun.model.policeman.Patrol;
+
 import java.awt.Point;
 
 public class Incident {
@@ -14,6 +16,7 @@ public class Incident {
     private int endTime;
     private IncidentType incidentType;
     private int durationTime;
+    private Patrol patrol;
 
     public Incident(){}
 
@@ -51,4 +54,10 @@ public class Incident {
     public int getDurationTime() {
         return durationTime;
     }
+    
+    public void setPatrolToIncident(Patrol patrol) {
+        this.patrol = patrol;
+    }
+
+    public Patrol recieveChoosedPatrol() { return patrol; }
 }
