@@ -16,7 +16,7 @@ const INCIDENT_OUTLINE = "#bd2137BD";
 const STATION_PRIMARY = "#2740e2";
 const STATION_SECONDARY = "#f4fd0e";
 const STATION_TERITARY = "#c3ca22";
-const NIGHT_COLOR = "rgba(3,3,21,0.2)";
+const NIGHT_COLOR = "rgba(3,3,21,0.3)";
 
 const CHARACTER_WALL = "#";
 const CHARACTER_HOSPITAL = "H";
@@ -62,25 +62,29 @@ function tableDrawIncidents(){
     document.getElementById('incidentsTab').style.color = "#e5e5e5";
 }
 function updateSimulationTime(time){
-    let h;
-    let m;
-    let s;
-    if(time.hours<10){
-        h = "0" + time.hours;
-    }else{
-        h = time.hours;
+    let h = time.hours - 1;
+    let m = time.minutes;
+    let s = time.seconds;
+    let mth = time.month;
+    let d = time.day;
+
+    if(h<10){
+        h = "0" + h;
     }
-    if(time.minutes<10){
-        m = "0" + time.minutes;
-    }else{
-        m = time.minutes;
+    if(m<10){
+        m = "0" + m;
     }
-    if(time.seconds<10){
-        s = "0" + time.seconds;
-    }else{
-        s = time.seconds;
+    if(s<10){
+        s = "0" + s;
     }
-    document.getElementById("simulationTime").innerText = h + ":" + m + ":" + s;
+    if(mth<10){
+        mth = "0" + mth;
+    }
+    if(d<10){
+        d = "0" + d;
+    }
+
+    document.getElementById("simulationTime").innerText = d + "-" + mth + "-" + time.year + "    " + h + ":" + m + ":" + s;
 }
 
 async function initiateMonitor(serverMap) {
@@ -265,8 +269,9 @@ async function updateMonitor(dataFromServer) {
         incidentsData[i] = incident;
         i++;
     });
-
-    //drawNight();
+    if(dataFromServer.simulationTime.hours >22 || dataFromServer.simulationTime.hours<7){
+        drawNight();
+    }
 
 
     function drawNight(){
@@ -334,7 +339,7 @@ async function updateMonitor(dataFromServer) {
 
     function drawIncident(x,y,type){
         if (type=="INTERVENTION_TURNING_INTO_SHOOTING"){
-            dataContext.fillStyle = INCIDENT_TURNING_INTO_SHOOTING;
+            dataContext.fillStyle = INCIDENT_INCIDENT;
         }else if(type=="SHOOTING"){
             dataContext.fillStyle = INCIDENT_SHOOTING;
         }else{
