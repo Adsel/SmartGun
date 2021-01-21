@@ -3,7 +3,7 @@
 # QuickStart
 1. Clone the repository
 2. Go to initial folder `cd initial`
-3. # TODO: show how mark as Maven Project
+3. In the IntelliJ, go to the root of the project right click on the `pom.xml` and select the option `+ Add Maven Project`
 4. Serve application:
 
     5.1. Linux: `./mvnw spring-boot:run`
