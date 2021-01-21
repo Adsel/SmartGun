@@ -19,6 +19,7 @@ import com.smartgun.model.policeman.SmartWatch;
 import com.smartgun.model.policeman.Policeman;
 import com.smartgun.model.headquarter.MainAgent;
 import com.smartgun.model.headquarter.MonitoringAgent;
+import com.smartgun.shared.Data;
 
 public class HeadQuarter implements IHeadQuarter {
     private List<Patrol> patrols;
@@ -172,5 +173,11 @@ public class HeadQuarter implements IHeadQuarter {
                         // TODO WHEN X WILL BE ADDED: X connector;
                 )
         );
+    }
+
+    public void movePatrols() {
+        for (Patrol p: this.patrols) {
+            p.move();
+        }
     }
 }

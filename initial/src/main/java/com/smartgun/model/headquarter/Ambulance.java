@@ -20,9 +20,9 @@ public class Ambulance {
         this.actualPosition = actualPosition;
     }
 
-    public Ambulance(int id, Point actualPosition, Point basePosition, Map map) {
+    public Ambulance(int id, Point basePosition, Map map) {
         this.id = id;
-        this.actualPosition = actualPosition;
+        this.actualPosition = basePosition;
         this.basePosition = basePosition;
         this.state = State.WAITING;
         this.map = map;

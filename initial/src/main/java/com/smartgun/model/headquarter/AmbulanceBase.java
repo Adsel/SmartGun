@@ -24,25 +24,24 @@ public class AmbulanceBase {
 
 
     public AmbulanceBase() {
+        ambulances = new ArrayList<>();
         initAmbulances();
     }
 
-    void initAmbulances(){
-        ambulances = new ArrayList<>();
-        int id = 0;
+    void initAmbulances() {
         Point point = map.recieveHospitalList().get(0);
-        for (int i=0; i<initialData.getAmbulancesCount(); i++){
-            ambulances.add(new Ambulance(id, point, point, map));
-            id++;
+        for (int i = 0; i < initialData.getAmbulancesCount(); i++){
+            ambulances.add(new Ambulance(i, point, map));
         }
     }
 
-    public Ambulance chooseAmbulanceToIntervention(){
+    public Ambulance chooseAmbulanceToIntervention() {
         return ambulances.stream().
                 filter(ambulance -> ambulance.getState() == Ambulance.State.WAITING)
                 .findFirst()
                 .orElse(null);
     }
+
     public void sendAmbulanceIntervention(Point point, Ambulance ambulance) {
         ambulance.goToIntervention(point);
     }
@@ -62,5 +61,11 @@ public class AmbulanceBase {
     Ambulance getAmbulanceById(int id){
         return ambulances.stream().filter(ambulance -> ambulance.getId() == id).findFirst().orElse(null);
         //optionalDouble
+    }
+
+    public void moveAmbulances() {
+        for (Ambulance ambulance: ambulances) {
+            ambulance.move();
+        }
     }
 }

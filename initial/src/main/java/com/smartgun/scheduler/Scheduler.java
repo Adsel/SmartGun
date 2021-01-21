@@ -1,5 +1,6 @@
 package com.smartgun.scheduler;
 
+import com.smartgun.model.headquarter.Ambulance;
 import com.smartgun.model.incident.Event;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.policeman.Patrol;
@@ -78,9 +79,10 @@ public class Scheduler {
             this.generateIncidents(this.isDay());
 
             // === MOVING PATROLS ===
-            for (Patrol p: Data.serverSimulationData.getPatrols()) {
-                p.move();
-            }
+            Data.serverSimulationData.movePatrols();
+
+            // === MOVING AMBULANCES ===
+            Data.serverSimulationData.moveAmbulances();
 
             // == SEND AND SAVE RESULTS ===
             simulationLifeService.sendMessages();
