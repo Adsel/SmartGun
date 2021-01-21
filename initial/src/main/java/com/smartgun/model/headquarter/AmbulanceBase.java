@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.Point;
 import com.smartgun.model.headquarter.interfaces.IAmbulances;
+import com.smartgun.model.map.Map;
 import com.smartgun.model.policeman.Patrol;
+import com.smartgun.model.simulation.InitialData;
 
 /*Klasa będzie przechowaywała listę wszytkich ambulansów. Domyślnie ustawia lokalizację na 0,0 (centrum ambulasów)
 * oraz domyślnie ambulans jest pusty.
@@ -14,44 +16,45 @@ import com.smartgun.model.policeman.Patrol;
 * Trzeba by się zastanowić jeszcze nad statusem ambulansu (w akcji, wolny, zepsuty ??)
 * */
 
-public class Ambulances implements IAmbulances {
+public class AmbulanceBase {
     private List<Ambulance> ambulances;
     private MainAgent mainAgent;
-    private Point point = new Point(0,0);//domyślna lokalizacja ambulasów
+    private Map map;
+    private InitialData initialData;
 
-    public Ambulances() {
+
+    public AmbulanceBase() {
         initAmbulances();
     }
 
     void initAmbulances(){
         ambulances = new ArrayList<>();
         int id = 0;
-        for (int i=0; i<mainAgent.getPolicePatrols().size(); i++){
-            ambulances.add(new Ambulance(id,point));
+        Point point = map.recieveHospitalList().get(0);
+        for (int i=0; i<initialData.getAmbulancesCount(); i++){
+            ambulances.add(new Ambulance(id, point, point, map));
             id++;
         }
     }
 
-    void addPatrolToAmbulance(Patrol patrol, int ambulanceId){
-        getAmbulanceById(ambulanceId).setPatrol(patrol);
+    public Ambulance chooseAmbulanceToIntervention(){
+        return ambulances.stream().
+                filter(ambulance -> ambulance.getState() == Ambulance.State.WAITING)
+                .findFirst()
+                .orElse(null);
+    }
+    public void sendAmbulanceIntervention(Point point, Ambulance ambulance) {
+        ambulance.goToIntervention(point);
     }
 
-    @Override
-    public void sendAmbulanceTo(Point point, int ambulanceId) {
-        getAmbulanceById(ambulanceId).setPoint(point);
-    }
-
-    @Override
     public Point whereIsAmbulance(int ambulanceId) {
-        return getAmbulanceById(ambulanceId).getPoint();
+        return getAmbulanceById(ambulanceId).getActualPosition();
     }
 
-    @Override
     public void addAmbulance(Ambulance ambulance) {
         ambulances.add(ambulance);
     }
 
-    @Override
     public void removeAmbulance(int id) {
         ambulances.remove(getAmbulanceById(id));
     }
