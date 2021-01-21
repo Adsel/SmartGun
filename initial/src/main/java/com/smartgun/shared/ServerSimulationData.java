@@ -102,4 +102,8 @@ public class ServerSimulationData {
     public void movePatrols() {
         this.headQuarter.movePatrols();
     }
+
+    public void sendPatrol(Point target){
+        this.headQuarter.choosePatrolToIntervention(target);
+    }
 }

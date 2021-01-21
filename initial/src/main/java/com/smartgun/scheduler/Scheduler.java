@@ -265,6 +265,7 @@ public class Scheduler {
                 "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
                 Data.serverSimulationData.recieveTimeString()
         ));
+        Data.serverSimulationData.sendPatrol(incident.getIncidentLocalization());
     }
 
     private void setSimulationTime(SimulationTime simulationTime) {

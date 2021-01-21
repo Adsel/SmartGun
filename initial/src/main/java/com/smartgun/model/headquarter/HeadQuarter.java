@@ -71,13 +71,14 @@ public class HeadQuarter implements IHeadQuarter {
 
         for (int i = 1; i < patrols.size(); i++){
             int temp = shortestPathBFS
-                    .solve(ShortestPathBFS.Coordinate.fromPoint(patrols.get(i).getCoordinates()),destination)
+                    .solve(ShortestPathBFS.Coordinate.fromPoint(patrols.get(i).getCoordinates()), destination)
                     .size();
-            if(distance > temp){
+            if (distance > temp) {
                 distance = temp;
                 patrol = patrols.get(i);
             }
         }
+
         return patrol;
     }
 
