@@ -134,7 +134,6 @@ async function initiateMonitor(serverMap) {
     dataContext = dataCanvas.getContext("2d");
 
     initiateWalls();
-    drawPoliceStation(10,10);
     //END OF MONITOR LOGIC
     function loadMapFromServer() {
         let arrayMap = [];
