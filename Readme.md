@@ -12,7 +12,18 @@
 5. Visit `localhost:8080` and try this app
 
 # Demo Usage
-# TODO: show demo usage
+1. Select `ON` button to set your own starting data
+![alt text](initial/src/main/resources/static/demoUsaageIcons/startingScreen.png)
+   
+   
+2. Enter your data of interventions. If you'll don't do it, client will set automatically grey numbers as starting data 
+![alt text](initial/src/main/resources/static/demoUsaageIcons/interventionData.png)
+    -The colors above indicate the level of danger in the sector. The green sector is the safest and the red sector is the most dangerous
+
+
+3. Get do the same with each other parameters you want to change and select `Start simulation` green button
+![alt text](initial/src/main/resources/static/demoUsaageIcons/startSimulation.png)
+    -The `Day nad Night system` means at the night probability of intervention is higher.
 
 # Websocket for Java and Javascript documentation
 https://spring.io/guides/gs/messaging-stomp-websocket/
