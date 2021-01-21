@@ -5,6 +5,12 @@ import java.awt.*;
 public class Shooting extends Incident {
     private int shootingDuration;
 
+    public Shooting(Incident incident, int shootingDuration) {
+        super(incident.getStartTime(), incident.getDurationTime(),incident.getIncidentLocalization(),
+                incident.getIncidentType());
+        this.shootingDuration = shootingDuration;
+    }
+
     public Shooting(int startTime, int durationTime, Point incidentPoint, IncidentType incidentType, int shootingDuration) {
         super(startTime, durationTime, incidentPoint, incidentType);
         this.shootingDuration = shootingDuration;

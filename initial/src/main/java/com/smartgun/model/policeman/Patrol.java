@@ -1,17 +1,14 @@
 package com.smartgun.model.policeman;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import com.smartgun.model.map.Map;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.map.ShortestPathBFS;
-import com.smartgun.model.policeman.SmartWatch;
-import com.smartgun.model.policeman.Policeman;
-import com.smartgun.model.policeman.Navigation;
 import com.smartgun.model.policeman.interfaces.IPatrol;
 
 public class Patrol implements IPatrol {
@@ -30,7 +27,8 @@ public class Patrol implements IPatrol {
     private State state;
     private Map map;
     private Sector sector;
-    private List<Point> currentPathToDrive;
+    private Stack<Point> currentPathToDrive;
+    private Point lastObservePoint;
 
     // TODO: posiadać pistolety
     public enum State {
@@ -59,6 +57,7 @@ public class Patrol implements IPatrol {
         this.map = map;
         this.sector = sector;
         this.state = State.OBSERVE;
+        this.lastObservePoint = smartWatch.getCoordinates();
     }
 
     @Override
@@ -67,7 +66,7 @@ public class Patrol implements IPatrol {
         this.state = state;
     }
 
-    private void findShortestPath(Point point){
+    private void setUpCurrentPathToDrive(Point point){
         ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
         Point patrolCurrentPoint = this.getCoordinates();
 
@@ -78,25 +77,44 @@ public class Patrol implements IPatrol {
                         patrolCurrentPoint.y);
 
         ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
-        currentPathToDrive = shortestPathBFS.solve(source, destination);
+
+        List<Point> reversedPath = shortestPathBFS.solve(source,destination);
+        Collections.reverse(reversedPath);
+
+        currentPathToDrive = new Stack<>();
+        currentPathToDrive.addAll(reversedPath);
     }
 
     public void goToInterventionAsBackup(Point point){
         this.setState(State.BACKUP);
-        findShortestPath(point);
+        target = point;
+        setUpCurrentPathToDrive(point);
     }
 
     public void goToIntervention(Point point){
         this.setState(State.INTERVENTION);
-        findShortestPath(point);
+        target = point;
+        setUpCurrentPathToDrive(point);
     }
 
-    //TODO: Refactor when simulation implemented
+    public void sendToObserve(){
+        this.setState(State.OBSERVE);
+        target = lastObservePoint;
+        setUpCurrentPathToDrive(lastObservePoint);
+    }
     public void move() {
         if (this.target == null && this.state == State.OBSERVE) {
             drawNewTarget();
-        } else if (this.state == State.INTERVENTION || this.state == State.BACKUP) {
+            setUpCurrentPathToDrive(this.target);
+        }
+        try {
+            smartWatch.setCoordinates(currentPathToDrive.pop());
 
+        }catch (EmptyStackException e){
+            target = null;
+        }
+        if(state == State.OBSERVE){
+            lastObservePoint = smartWatch.getCoordinates();
         }
     }
 
@@ -126,13 +144,17 @@ public class Patrol implements IPatrol {
             currentPoint = new Point(currentPoint.x + direction.x, currentPoint.y + direction.y);
         }
 
+        if (pointList.size() == 0) {
+            pointList.add(startingPosition);
+        }
+
         return pointList;
     }
 
     private Direction drawAvailableDirection(Point currentPosition){
         List<Direction> directions = availableDirections(currentPosition);
 
-        return directions.get((int) (Math.random() * (directions.size() -1 )));
+        return directions.get(ThreadLocalRandom.current().nextInt(0, directions.size()));
     }
 
     private List<Direction> availableDirections(Point currentPosition){
