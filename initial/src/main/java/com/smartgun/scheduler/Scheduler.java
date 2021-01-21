@@ -62,21 +62,19 @@ public class Scheduler {
     @Scheduled(fixedRateString = "1000", initialDelayString = "0")
     public void lifeCycleTask() {
         if (Data.isUser) {
-            Data.serverSimulationData.increaseSimulationTime();
-            timestamp += TIME_UNIT;
-            simulationTime += TIME_UNIT;
-            if (timestamp > TIME_LIMIT) {
-                timestamp = 0;
-            }
+            // === CHANGING SIMULATION TIME
+            increaseSimulationTime();
 
             // === CHECKS IF ANY INCIDENTS HAS BEEN OUTDATED ===
             checkIncidents(this.simulationTime);
 
-            // === GENERATE EVENTS (LIKE POLICEMAN FIRED, etc.) ===
-            this.generateEvents();
+            if (simulationTime % 10 == 0) {
+                // === GENERATE EVENTS (LIKE POLICEMAN FIRED, etc.) ===
+                this.generateEvents();
 
-            // DAY
-            this.generateIncidents(this.isDay());
+                // === GENERATE INCIDENTS ===
+                this.generateIncidents(this.isDay());
+            }
 
             // === MOVING PATROLS ===
             Data.serverSimulationData.movePatrols();
@@ -87,6 +85,15 @@ public class Scheduler {
             // == SEND AND SAVE RESULTS ===
             simulationLifeService.sendMessages();
             exportManager();
+        }
+    }
+
+    private void increaseSimulationTime() {
+        Data.serverSimulationData.increaseSimulationTime();
+        timestamp += TIME_UNIT;
+        simulationTime += TIME_UNIT;
+        if (timestamp > TIME_LIMIT) {
+            timestamp = 0;
         }
     }
 
