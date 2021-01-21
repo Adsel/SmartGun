@@ -143,22 +143,15 @@ public class Scheduler {
             if (isAccident(interventionProbability)) {
                 if (isShooting(Data.data.getShootingProbablity()[sector.getSectorTypeValue()])) {
                     // SHOOTING
-                    int durationTime = genDurationTime(
-                            Data.data.getInterventionDuration()[0],
-                            Data.data.getInterventionDuration()[1]
-                    );
-
                     int shootingDuration = genDurationTime(
                             Data.data.getShootingDuration()[0],
                             Data.data.getShootingDuration()[1]
                     );
 
-                    Incident shooting = new Shooting(simulationTime, durationTime, sector.generateIncidentLocalization(),
-                            Incident.IncidentType.SHOOTING, shootingDuration);
-
-                    addIncident(shooting);
-                    
-
+                    addIncident(new Shooting(
+                            simulationTime, sector.generateIncidentLocalization(),
+                            Incident.IncidentType.SHOOTING, shootingDuration
+                    ));
 
                 } else if (checkIfWillBeShooting(
                         Data.data.getInterventionToShootingProbablity()[sector.getSectorTypeValue()])) {
@@ -173,10 +166,6 @@ public class Scheduler {
                             Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING
                     );
 
-                    System.out.println("TURNING INTO SHOOTING" +
-                            ", time: " + timestamp +
-                            ", sector: "+ sector.getSectorType().toString());
-
                     if (checkIfWillBeShooting(
                             // icnreased probability of the shooting becouse of started accident - TURNING INTO SHOOTING
                             Data.data.getInterventionToShootingProbablity()[sector.getSectorTypeValue()] +
@@ -188,10 +177,6 @@ public class Scheduler {
                         );
 
                         incidentIntoShooting.setIncidentType(Incident.IncidentType.SHOOTING);
-                        System.out.println("TURNED INTO SHOOTING, day: " +
-                                ", time: " + timestamp +
-                                ", sector: "+ sector.getSectorType().toString());
-
                         incidentIntoShooting = new Shooting(incidentIntoShooting, shootingDuration);
                     }
 
@@ -212,37 +197,23 @@ public class Scheduler {
                                     Incident.IncidentType.INTERVENTION
                             )
                     );
-                    
-
-                    System.out.println("CASUAL INTERVENTION," +
-                            ", time: " + timestamp +
-                            ", sector: "+ sector.getSectorType().toString());
                 }
             }
-        } else {
+        }
+        else {
             // NIGHT
             if (isShooting(Data.data.getShootingProbablity()[sector.getSectorTypeValue()])) {
                 // SHOOTING
-                int durationTime = genDurationTime(
-                        Data.data.getInterventionDuration()[0],
-                        Data.data.getInterventionDuration()[1]
-                );
-
                 int shootingDuration = genDurationTime(
                         Data.data.getShootingDuration()[0],
                         Data.data.getShootingDuration()[1]
                 );
 
-                Incident nightShooting = new Shooting(simulationTime, durationTime, sector.generateIncidentLocalization(),
+                Incident nightShooting = new Shooting(simulationTime, sector.generateIncidentLocalization(),
                         Incident.IncidentType.SHOOTING, shootingDuration);
                 addIncident(
                         nightShooting
                 );
-                
-
-                System.out.println("NIGHT SHOOTING!! " +
-                        ", time: " + timestamp +
-                        ", sector: "+ sector.getSectorType().toString());
             } else if (checkIfWillBeShooting(Data.data.getInterventionToShootingProbablity()[sector.getSectorTypeValue()])) {
                 // INTERVENTION TURNING INTO SHOOTING
                 int durationTime = genDurationTime(
@@ -265,17 +236,10 @@ public class Scheduler {
                     );
 
                     incidentIntoShootingNight.setIncidentType(Incident.IncidentType.SHOOTING);
-                    System.out.println("TURNED INTO SHOOTING IN THE NIGHT " +
-                            ", time: " + timestamp +
-                            ", sector: "+ sector.getSectorType().toString());
                     incidentIntoShootingNight = new Shooting(incidentIntoShootingNight, shootingDuration);
                 }
 
                 addIncident(incidentIntoShootingNight);
-
-                System.out.println("TURNING INTO SHOOTING IN THE NIGHT " +
-                        ", time: " + timestamp +
-                        ", sector: "+ sector.getSectorType().toString());
             } else {
                 if (isAccident(Data.data.getNightInterventionProbablity()[sector.getSectorTypeValue()])) {
                     int durationTime = genDurationTime(
@@ -288,10 +252,6 @@ public class Scheduler {
                                     Incident.IncidentType.SHOOTING
                             )
                     );
-
-                    System.out.println("CASUAL NIGHT INTERVENTION " +
-                            ", time: " + timestamp +
-                            ", sector: "+ sector.getSectorType().toString());
                 }
             }
         }

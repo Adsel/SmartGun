@@ -11,8 +11,8 @@ public class Shooting extends Incident {
         this.shootingDuration = shootingDuration;
     }
 
-    public Shooting(int startTime, int durationTime, Point incidentPoint, IncidentType incidentType, int shootingDuration) {
-        super(startTime, durationTime, incidentPoint, incidentType);
+    public Shooting(int startTime, Point incidentPoint, IncidentType incidentType, int shootingDuration) {
+        super(startTime, shootingDuration, incidentPoint, incidentType);
         this.shootingDuration = shootingDuration;
     }
 
