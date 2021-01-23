@@ -134,31 +134,26 @@ public class HeadQuarter implements IHeadQuarter {
         for (Sector sector: this.sectors) {
             Integer patrols = patrolsPerDistrict[SectorType.valueOf(sector.getSectorType().toString()).ordinal()];
             for (int i = 0; i < patrols; i++) {
-
-                Navigation navigation = new Navigation();
-                SmartWatch smartWatch = new SmartWatch(
-                        this.generatePatrolPosition(sector, this.map),
-                        navigation
-                );
-
-                monitoringAgent.addSmartWatch(smartWatch);
-                addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector, false);
+                addPatrolWithEquipment(sector, this.generatePatrolPosition(sector, this.map), false);
             }
         }
 
-        Integer additionalPatrols = patrolsCount - this.patrols.size();
-        List<Sector> sectors = receiveSectorsForAdditionalPatrols(additionalPatrols);
-
+        // ADDITIONAL PATROLS
+        List<Sector> sectors = receiveSectorsForAdditionalPatrols(Data.ADDITIONAL_PATROLS);
         for (Sector sector : sectors) {
-            Navigation navigation = new Navigation();
-            SmartWatch smartWatch = new SmartWatch(
-                    ambulanceBasePosition,
-                    navigation
-            );
-
-            monitoringAgent.addSmartWatch(smartWatch);
-            addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector, true);
+            addPatrolWithEquipment(sector, map.recievePoliceOfficeList().get(0), true);
         }
+    }
+
+    private void addPatrolWithEquipment(Sector sector, Point position, boolean isAdditional) {
+        Navigation navigation = new Navigation();
+        SmartWatch smartWatch = new SmartWatch(
+                position,
+                navigation
+        );
+
+        monitoringAgent.addSmartWatch(smartWatch);
+        addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector, isAdditional);
     }
 
     private List<Sector> receiveSectorsForAdditionalPatrols(int numberOfPatrols){
