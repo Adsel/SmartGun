@@ -143,6 +143,73 @@ public class Patrol implements IPatrol {
         return list.get(list.size() - 1);
     }
 
+    public void sendToIntervention(Point incidentLocalization) {
+        Point destination = null;
+
+        Point left = getFirstAvailablePointInDirection(incidentLocalization, Direction.LEFT);
+        Point right = getFirstAvailablePointInDirection(incidentLocalization, Direction.RIGHT);
+        Point up = getFirstAvailablePointInDirection(incidentLocalization, Direction.UP);
+        Point down = getFirstAvailablePointInDirection(incidentLocalization, Direction.DOWN);
+
+        List<Point> availablePoints = new ArrayList<>();
+        if (left != null) {
+            availablePoints.add(left);
+        }
+
+        if (right != null) {
+            availablePoints.add(right);
+        }
+
+        if (up != null) {
+            availablePoints.add(up);
+        }
+
+        if (down != null) {
+            availablePoints.add(down);
+        }
+
+        ShortestPathBFS shortestPathBFS = new ShortestPathBFS(map);
+        List<Point> pathLength = shortestPathBFS.solve(
+                ShortestPathBFS.Coordinate.fromPoint(incidentLocalization),
+                ShortestPathBFS.Coordinate.fromPoint(availablePoints.get(0))
+        );
+
+        for (int i = 1; i < availablePoints.size(); i++) {
+            Point comparedPoint = availablePoints.get(i);
+            List<Point> comparedPath = shortestPathBFS.solve(
+                    ShortestPathBFS.Coordinate.fromPoint(incidentLocalization),
+                    ShortestPathBFS.Coordinate.fromPoint(comparedPoint)
+            );
+            if (pathLength.size() > comparedPath.size()) {
+                pathLength = comparedPath;
+                destination = comparedPoint;
+            }
+        }
+
+        if (destination != null) {
+            this.goToIntervention(destination);
+            System.out.println("GO TO " + destination);
+        }
+    }
+
+    private Point getFirstAvailablePointInDirection(Point startingPosition, Direction direction){
+        Point currentPoint = new Point(startingPosition.x + direction.x, startingPosition.y + direction.y);
+
+        System.out.println("OBECNY PUNKT " + currentPoint);
+        while (map.isWall(currentPoint.x, currentPoint.y)){
+            currentPoint = new Point(currentPoint.x + direction.x, currentPoint.y + direction.y);
+            if (
+                    currentPoint.getX() >= map.recieveNumberOfColumns() ||
+                    currentPoint.getX() < 0 || currentPoint.getY() < 0 ||
+                    currentPoint.getY() >= map.recieveNumbersOfRows()
+            ) {
+                return null;
+            }
+        }
+
+        return currentPoint;
+    }
+
     private List<Point> getRouteWithinSectorForDirection(Point startingPosition, Direction direction){
         List<Point> pointList = new ArrayList<>();
         Point currentPoint = new Point(startingPosition.x + direction.x, startingPosition.y + direction.y);

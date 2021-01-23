@@ -268,7 +268,7 @@ public class Scheduler {
     private void addIncident(Incident incident) {
         Patrol choosed = Data.serverSimulationData.choosePatrolToIntervention(incident.getIncidentLocalization());
         if (choosed != null) {
-            choosed.goToIntervention(incident.getIncidentLocalization());
+            choosed.sendToIntervention(incident.getIncidentLocalization());
             incident.setPatrolToIncident(choosed);
         }
 
