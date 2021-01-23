@@ -22,6 +22,7 @@ const CHARACTER_WALL = "#";
 const CHARACTER_HOSPITAL = "H";
 const CHARACTER_ROAD = ".";
 const CHARACTER_STATION = "S";
+const BASE_STATE = 'BASE';
 
 
 let context;
@@ -254,7 +255,7 @@ async function updateMonitor(dataFromServer) {
     dataFromServer.patrols.forEach(element => {
         let unit = {status:element.state.toString(), type:"Patrol", x:element.coordinates.y, y:element.coordinates.x};
         data[i] = unit;
-       drawPatrol(element.coordinates.y,element.coordinates.x,"patroling");
+       drawPatrol(element.coordinates.y,element.coordinates.x,"patroling", element.state);
        i++;
     });
     i=0;
@@ -302,38 +303,39 @@ async function updateMonitor(dataFromServer) {
         dataContext.clearRect(boxSize * x + boxSize, boxSize * y, -outlineSizeUnitOut, boxSize);
     }
 
-    function drawPatrol(x, y, type) {
+    function drawPatrol(x, y, type, state) {
+        if (state != BASE_STATE) {
+            let outlineSize = parseInt(boxSize / 6);
+            let outlineSizeUnit = parseInt(boxSize / 2.7);
 
-        let outlineSize = parseInt(boxSize / 6);
-        let outlineSizeUnit = parseInt(boxSize / 2.7);
+            switch (type) {
+                case "patroling": {
+                    dataContext.fillStyle = PATROL_PATROLLING;
+                    break;
+                }
+                case "intervention": {
+                    dataContext.fillStyle = PATROL_INTERVENTION;
+                    break;
+                }
+                case "shooting": {
+                    dataContext.fillStyle = PATROL_SHOOTING;
+                    break;
+                }
+                case "wounded": {
+                    dataContext.fillStyle = PATROL_WOUNDED;
+                    break;
+                }
+            }
 
-        switch (type) {
-            case "patroling": {
-                dataContext.fillStyle = PATROL_PATROLLING;
-                break;
-            }
-            case "intervention": {
-                dataContext.fillStyle = PATROL_INTERVENTION;
-                break;
-            }
-            case "shooting": {
-                dataContext.fillStyle = PATROL_SHOOTING;
-                break;
-            }
-            case "wounded": {
-                dataContext.fillStyle = PATROL_WOUNDED;
-                break;
-            }
+            dataContext.fillRect((boxSize * x) + outlineSize, (boxSize * y) + outlineSize, boxSize - (2 * outlineSize), boxSize - (2 * outlineSize));
+
+            dataContext.fillStyle = PATROL_PRIMARY;
+            dataContext.fillRect((boxSize * x) + outlineSizeUnit, (boxSize * y) + outlineSizeUnit, boxSize - (2 * outlineSizeUnit), boxSize - (2 * outlineSizeUnit));
+            dataContext.clearRect(boxSize * x, boxSize * y, boxSize, outlineSize);
+            dataContext.clearRect(boxSize * x, boxSize * y + boxSize, boxSize, -outlineSize);
+            dataContext.clearRect(boxSize * x, boxSize * y, outlineSize, boxSize);
+            dataContext.clearRect(boxSize * x + boxSize, boxSize * y, -outlineSize, boxSize);
         }
-
-        dataContext.fillRect((boxSize * x) + outlineSize, (boxSize * y) + outlineSize, boxSize - (2 * outlineSize), boxSize - (2 * outlineSize));
-
-        dataContext.fillStyle = PATROL_PRIMARY;
-        dataContext.fillRect((boxSize * x) + outlineSizeUnit, (boxSize * y) + outlineSizeUnit, boxSize - (2 * outlineSizeUnit), boxSize - (2 * outlineSizeUnit));
-        dataContext.clearRect(boxSize * x, boxSize * y, boxSize, outlineSize);
-        dataContext.clearRect(boxSize * x, boxSize * y + boxSize, boxSize, -outlineSize);
-        dataContext.clearRect(boxSize * x, boxSize * y, outlineSize, boxSize);
-        dataContext.clearRect(boxSize * x + boxSize, boxSize * y, -outlineSize, boxSize);
     }
 
     function drawIncident(x,y,type){
