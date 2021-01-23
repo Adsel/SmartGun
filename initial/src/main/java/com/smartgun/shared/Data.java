@@ -28,9 +28,9 @@ public class Data {
     private static Integer ADDITIONAL_PATROLS = 3;
 
     private static Integer[] PATROLS_PER_DISTRICT = {
-            1,
+            3,
             2,
-            3
+            1
     };
 
     private static Integer RADIUS_UNIT = 1;
@@ -198,8 +198,10 @@ public class Data {
         System.out.println(map.receiveSectors());
 
         Data.serverSimulationData = new ServerSimulationData(
-                map.receiveSectors(), data.getPatrolsPerDistrict(),
-                map, data.getPatrolRadius(), data.getAmbulancesCount(),
+                data.getPatrolsPerDistrict(),
+                map,
+                data.getPatrolRadius(),
+                data.getAmbulancesCount(),
                 data.getPatrolsCount()
         );
 

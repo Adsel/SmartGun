@@ -85,7 +85,7 @@ public class Map implements IMap {
                 if (this.map[x][y] == WALL_CHARACTER) {
                     this.mapOfInt[x][y] = 0;
                 } else if (this.map[x][y] == HOSPITAL_CHARACTER) {
-                    hospitalList.add(new Point(x, y));
+                    this.hospitalList.add(new Point(x, y));
                     this.mapOfInt[x][y] = 0;
                 } else if (this.map[x][y] == POLICE_CHARACTER) {
                     policeOfficeList.add(new Point(x, y));

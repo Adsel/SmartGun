@@ -189,7 +189,7 @@ public class Scheduler {
                     }
 
                     addIncident(incidentIntoShooting);
-                    
+
 
 
                 } else {

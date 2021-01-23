@@ -33,13 +33,13 @@ public class HeadQuarter implements IHeadQuarter {
     private MonitoringAgent monitoringAgent;
 
     public HeadQuarter(
-            List<Sector> sectors, Integer ambulancesCount,
+            Integer ambulancesCount,
             Integer[] patrolsPerDistrict, Map map,
             IMainAgent mainAgent, Point ambulanceBasePosition,
             double patrolRadius, Integer patrolCount
     ) {
         this.monitoringAgent = new MonitoringAgent();
-        this.sectors = sectors;
+        this.sectors = map.receiveSectors();
         this.ambulancesCount = ambulancesCount;
         this.map = map;
         this.mainAgent = mainAgent;
