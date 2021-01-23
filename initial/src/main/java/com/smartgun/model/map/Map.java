@@ -72,30 +72,30 @@ public class Map implements IMap {
             e.printStackTrace();
         }
 
-        int xLength = this.map.length;
-        int yLength = this.map[0].length;
+        int xLength = this.map[0].length;
+        int yLength = this.map.length;
 
         //int[][] mapInt = new int[xLength][yLength];
-        this.mapOfInt = new int[xLength][yLength];
+        this.mapOfInt = new int[yLength][xLength];
 
         //Set 0 1 int[][] map from char[][] map
-        for (int x = 0; x < xLength; x++) {
-            for (int y = 0; y < yLength; y++) {
+        for (int y = 0; y < yLength; y++) {
+            for (int x = 0; x < xLength; x++) {
 
-                if (this.map[x][y] == WALL_CHARACTER) {
-                    this.mapOfInt[x][y] = 0;
-                } else if (this.map[x][y] == HOSPITAL_CHARACTER) {
+                if (this.map[y][x] == WALL_CHARACTER) {
+                    this.mapOfInt[y][x] = 0;
+                } else if (this.map[y][x] == HOSPITAL_CHARACTER) {
                     this.hospitalList.add(new Point(x, y));
-                    this.mapOfInt[x][y] = 0;
-                } else if (this.map[x][y] == POLICE_CHARACTER) {
+                    this.mapOfInt[y][x] = 0;
+                } else if (this.map[y][x] == POLICE_CHARACTER) {
                     policeOfficeList.add(new Point(x, y));
-                    this.mapOfInt[x][y] = 0;
+                    this.mapOfInt[y][x] = 0;
                 } else {
-                    this.mapOfInt[x][y] = 1;
+                    this.mapOfInt[y][x] = 1;
                 }
             }
         }
-        visited = new boolean[xLength][yLength];
+        visited = new boolean[yLength][xLength];
     }
 
     public char[][] getMap() {
