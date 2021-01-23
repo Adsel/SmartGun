@@ -146,8 +146,7 @@ public class HeadQuarter implements IHeadQuarter {
             }
         }
 
-        Integer additionalPatrols = patrolsCount - this.patrols.size();
-        List<Sector> sectors = receiveSectorsForAdditionalPatrols(additionalPatrols);
+        List<Sector> sectors = receiveSectorsForAdditionalPatrols(Data.ADDITIONAL_PATROLS);
 
         for (Sector sector : sectors) {
             Navigation navigation = new Navigation();
