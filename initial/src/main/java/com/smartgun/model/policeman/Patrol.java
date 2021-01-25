@@ -145,11 +145,11 @@ public class Patrol implements IPatrol {
 
     private List<Point> getRouteWithinSectorForDirection(Point startingPosition, Direction direction){
         List<Point> pointList = new ArrayList<>();
-        Point currentPoint = new Point(startingPosition.x + direction.x, startingPosition.y + direction.y);
+        Point currentPoint = new Point(startingPosition.x + direction.y, startingPosition.y + direction.x);
 
-        while (sector.isInSector(currentPoint) && !map.isWall(currentPoint.x, currentPoint.y)){
+        while (sector.isInSector(currentPoint) && !map.isWall(currentPoint.y, currentPoint.x)){
             pointList.add(currentPoint);
-            currentPoint = new Point(currentPoint.x + direction.x, currentPoint.y + direction.y);
+            currentPoint = new Point(currentPoint.x + direction.y, currentPoint.y + direction.x);
         }
 
         if (pointList.size() == 0) {
@@ -166,10 +166,15 @@ public class Patrol implements IPatrol {
     }
 
     private List<Direction> availableDirections(Point currentPosition){
-
+        /*
+                LEFT (0,-1),
+                RIGHT (0,1 ),
+                DOWN (1,0),
+                UP (-1,0);              */
         return Arrays.stream(Direction.values()).filter(direction ->
-             !map.isWall(currentPosition.x + direction.x, currentPosition.y + direction.y)
+             !map.isWall(currentPosition.y + direction.x, currentPosition.x + direction.y)
          ).collect(Collectors.toList());
+
     }
 
     private boolean isCross(Point currentPosition){
