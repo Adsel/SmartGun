@@ -245,7 +245,7 @@ async function updateMonitor(dataFromServer) {
     //DRAW PATROLS
     let i=0;
     dataFromServer.patrols.forEach(element => {
-        let unit = {status:element.state.toString(), type:"Patrol", x:element.coordinates.y, y:element.coordinates.x};
+        let unit = {status:element.state.toString(), type:"Patrol", x:element.coordinates.x, y:element.coordinates.y};
         data[i] = unit;
        drawPatrol(element.coordinates.y,element.coordinates.x,element.state.toString());
        i++;
