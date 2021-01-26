@@ -46,8 +46,8 @@ public class Sector {
     }
 
     public boolean isInSector(Point point){
-        return  point.x < this.getRightBottomCorner().x && point.x >= this.leftUpperCorner.x
-        && point.y < this.getRightBottomCorner().y && point.y >= this.leftUpperCorner.y;
+        return  point.x < this.getRightBottomCorner().y && point.x >= this.leftUpperCorner.y
+        && point.y < this.getRightBottomCorner().x && point.y >= this.leftUpperCorner.x;
     }
 
     public Point generateIncidentLocalization() {

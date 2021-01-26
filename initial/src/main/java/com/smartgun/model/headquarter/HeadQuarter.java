@@ -62,7 +62,7 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     public Patrol choosePatrolToIntervention(Point point){
-        ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
+        ShortestPathBFS.Coordinate destination = ShortestPathBFS.Coordinate.fromPoint(point);
         ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
         List<Patrol> patrols = getAllAvailablePatrols();
 
@@ -124,7 +124,7 @@ public class HeadQuarter implements IHeadQuarter {
 //        Integer randedX = (int) this.ambulanceBasePosition.getX();
 //        Integer randedY = (int) this.ambulanceBasePosition.getY();
 
-        return new Point(randedX, randedY);
+        return new Point(randedY, randedX);
     }
 
     @Override
@@ -138,8 +138,9 @@ public class HeadQuarter implements IHeadQuarter {
             }
         }
 
-        // ADDITIONAL PATROLS
-        List<Sector> sectors = receiveSectorsForAdditionalPatrols(Data.ADDITIONAL_PATROLS);
+        Integer additionalPatrols = patrolsCount - this.patrols.size();
+        List<Sector> sectors = receiveSectorsForAdditionalPatrols(additionalPatrols);
+
         for (Sector sector : sectors) {
             addPatrolWithEquipment(sector, map.recievePoliceOfficeList().get(0), true);
         }

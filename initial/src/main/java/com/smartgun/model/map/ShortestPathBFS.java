@@ -18,8 +18,14 @@ public class ShortestPathBFS implements IShortestPath{
     }
 
     public List<Point> solve(Coordinate source, Coordinate destination) {
+
+        // source x=2 y=1  destination x=15 y=1
+
+        Coordinate s1 = new Coordinate(source.y, source.x);
+        Coordinate d1 = new Coordinate(destination.y, destination.x);
+
         LinkedList<Coordinate> nextToVisit = new LinkedList<>();
-        Coordinate start = source;
+        Coordinate start = s1;
         nextToVisit.add(start);
 
         while (!nextToVisit.isEmpty()) {
@@ -34,13 +40,13 @@ public class ShortestPathBFS implements IShortestPath{
                 continue;
             }
 
-            if (destination.getX() == cur.getX() && destination.getY() ==  cur.getY()) {
+            if (d1.getX() == cur.getX() && d1.getY() ==  cur.getY()) {
                 List<Point> list = new ArrayList<>();
                 List<Coordinate> path = backtrackPath(cur);
                 Collections.reverse(path);
 
                 for (int i = 0; i < backtrackPath(cur).size(); i++){
-                    list.add(new Point(path.get(i).getX(), path.get(i).getY()));
+                    list.add(new Point(path.get(i).getY(), path.get(i).getX()));
                 }
                 map.setPath(list);
                 return list;

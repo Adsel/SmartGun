@@ -21,8 +21,8 @@ public class Application {
 			map.loadMap();
 			map.printMap();
 			ShortestPathBFS shortestPathBFS = new ShortestPathBFS(map);
-			List<Point> list = shortestPathBFS.solve(new ShortestPathBFS.Coordinate(1,2), new ShortestPathBFS.Coordinate(1,15));
-			map.printPath();
+			List<Point> list = shortestPathBFS.solve(new ShortestPathBFS.Coordinate(2,1), new ShortestPathBFS.Coordinate(15,1));
+			//map.printPath();
 			System.out.println(list);
 
 		} catch (Exception e){

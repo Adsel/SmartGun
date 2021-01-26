@@ -96,7 +96,7 @@ public class Patrol implements IPatrol {
     public void goToIntervention(Point point){
         this.setState(State.INTERVENTION);
         target = point;
-        setUpCurrentPathToDrive(point);
+        setUpCurrentPathToDrive(sendToIntervention(point));
     }
 
     public void sendToObserve(){
@@ -143,8 +143,8 @@ public class Patrol implements IPatrol {
         return list.get(list.size() - 1);
     }
 
-    public void sendToIntervention(Point incidentLocalization) {
-        Point destination = null;
+    private Point sendToIntervention(Point incidentLocalization) {
+        Point destination = new Point();
 
         Point left = getFirstAvailablePointInDirection(incidentLocalization, Direction.LEFT);
         Point right = getFirstAvailablePointInDirection(incidentLocalization, Direction.RIGHT);
@@ -168,16 +168,16 @@ public class Patrol implements IPatrol {
             availablePoints.add(down);
         }
 
-        ShortestPathBFS shortestPathBFS = new ShortestPathBFS(map);
+        ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
         List<Point> pathLength = shortestPathBFS.solve(
-                ShortestPathBFS.Coordinate.fromPoint(incidentLocalization),
+                ShortestPathBFS.Coordinate.fromPoint(this.smartWatch.getCoordinates()),
                 ShortestPathBFS.Coordinate.fromPoint(availablePoints.get(0))
         );
 
         for (int i = 1; i < availablePoints.size(); i++) {
             Point comparedPoint = availablePoints.get(i);
             List<Point> comparedPath = shortestPathBFS.solve(
-                    ShortestPathBFS.Coordinate.fromPoint(incidentLocalization),
+                    ShortestPathBFS.Coordinate.fromPoint(this.smartWatch.getCoordinates()),
                     ShortestPathBFS.Coordinate.fromPoint(comparedPoint)
             );
             if (pathLength.size() > comparedPath.size()) {
@@ -187,36 +187,50 @@ public class Patrol implements IPatrol {
         }
 
         if (destination != null) {
-            this.goToIntervention(destination);
+            //this.goToIntervention(destination);
             System.out.println("GO TO " + destination);
+            return destination;
         }
+        return null;
     }
 
     private Point getFirstAvailablePointInDirection(Point startingPosition, Direction direction){
-        Point currentPoint = new Point(startingPosition.x + direction.x, startingPosition.y + direction.y);
+        Point currentPoint = new Point(startingPosition.x + direction.y, startingPosition.y + direction.x);
 
         System.out.println("OBECNY PUNKT " + currentPoint);
-        while (map.isWall(currentPoint.x, currentPoint.y)){
-            currentPoint = new Point(currentPoint.x + direction.x, currentPoint.y + direction.y);
-            if (
-                    currentPoint.getX() >= map.recieveNumberOfColumns() ||
-                    currentPoint.getX() < 0 || currentPoint.getY() < 0 ||
-                    currentPoint.getY() >= map.recieveNumbersOfRows()
-            ) {
+        while (map.isWall(currentPoint.y, currentPoint.x)){
+            currentPoint = new Point(currentPoint.x + direction.y, currentPoint.y + direction.x);
+            if(currentPoint.x >= map.recieveNumberOfColumns() ||
+                    currentPoint.x < 0 || currentPoint.y < 0 ||
+                    currentPoint.y >= map.recieveNumbersOfRows()){
                 return null;
             }
         }
-
         return currentPoint;
     }
 
+    /*private Point getFirstAvailablePointForDirection(Point incidentPoint, Direction direction){
+        Point currentPoint = new Point(incidentPoint.x + direction.y, incidentPoint.y + direction.x);
+
+        while (map.isWall(currentPoint.y, currentPoint.x)
+                && currentPoint.x < map.recieveNumberOfColumns() && currentPoint.x >= 0
+                && currentPoint.y < map.recieveNumbersOfRows() && currentPoint.y >=0){
+            currentPoint = new Point(currentPoint.x + direction.y, currentPoint.y + direction.x);
+        }
+
+        if(!map.isWall(currentPoint.y, currentPoint.x)){
+            return currentPoint;
+        }
+
+        return null;
+    }*/
     private List<Point> getRouteWithinSectorForDirection(Point startingPosition, Direction direction){
         List<Point> pointList = new ArrayList<>();
-        Point currentPoint = new Point(startingPosition.x + direction.x, startingPosition.y + direction.y);
+        Point currentPoint = new Point(startingPosition.x + direction.y, startingPosition.y + direction.x);
 
-        while (sector.isInSector(currentPoint) && !map.isWall(currentPoint.x, currentPoint.y)){
+        while (sector.isInSector(currentPoint) && !map.isWall(currentPoint.y, currentPoint.x)){
             pointList.add(currentPoint);
-            currentPoint = new Point(currentPoint.x + direction.x, currentPoint.y + direction.y);
+            currentPoint = new Point(currentPoint.x + direction.y, currentPoint.y + direction.x);
         }
 
         if (pointList.size() == 0) {
@@ -235,7 +249,7 @@ public class Patrol implements IPatrol {
     private List<Direction> availableDirections(Point currentPosition){
 
         return Arrays.stream(Direction.values()).filter(direction ->
-             !map.isWall(currentPosition.x + direction.x, currentPosition.y + direction.y)
+             !map.isWall(currentPosition.y + direction.x, currentPosition.x + direction.y)
          ).collect(Collectors.toList());
     }
 
