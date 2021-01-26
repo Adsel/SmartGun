@@ -62,7 +62,7 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     public Patrol choosePatrolToIntervention(Point point){
-        ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
+        ShortestPathBFS.Coordinate destination = ShortestPathBFS.Coordinate.fromPoint(point);
         ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
         List<Patrol> patrols = getAllAvailablePatrols();
 
