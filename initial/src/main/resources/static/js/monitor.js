@@ -3,10 +3,10 @@ let boxSize;
 let backgroundColor = "#B6B6B6";
 let wallColor = "#222";
 const PATROL_PRIMARY = "#29ff00";
-const PATROL_PATROLLING = "#374F6B";
-const PATROL_INTERVENTION = "#2137BD";
-const PATROL_SHOOTING = "#9b7d12";
-const PATROL_WOUNDED = "#b50202";
+const PATROL_PATROLLING = "#2137BD";
+const PATROL_INTERVENTION = "#374F6B";
+const PATROL_WOUNDED = "#9b7d12";
+const PATROL_SHOOTING = "#d20000";
 const AMBULANCE_PRIMARY = "#fa1111";
 const AMBULANCE_SECONDARY = "#EEEEEE";
 const INCIDENT_SHOOTING = "rgba(191,33,55,0.4)";
@@ -16,7 +16,7 @@ const INCIDENT_OUTLINE = "#bd2137BD";
 const STATION_PRIMARY = "#2740e2";
 const STATION_SECONDARY = "#f4fd0e";
 const STATION_TERITARY = "#c3ca22";
-const NIGHT_COLOR = "rgba(3,3,21,0.3)";
+const NIGHT_COLOR = "rgba(3,3,21,0.20)";
 
 const CHARACTER_WALL = "#";
 const CHARACTER_HOSPITAL = "H";
@@ -238,23 +238,16 @@ function deleteMonitor() {
 
 async function updateMonitor(dataFromServer) {
     clearData();
-    serverData = getServerData();
     let data = [];
     let incidentsData = [];
-    //drawData();
-    /*$('#monitorDataPreview').innerHTML="";
-    let ta = document.createElement("table");
-    ta.id = "monitorDataTable";
-    $('#monitorDataPreview').appendChild(ta);*/
-
 
     updateSimulationTime(dataFromServer.simulationTime);
     //DRAW PATROLS
     let i=0;
     dataFromServer.patrols.forEach(element => {
-        let unit = {status:element.state.toString(), type:"Patrol", x:element.coordinates.y, y:element.coordinates.x};
+        let unit = {status:element.state.toString(), type:"Patrol", x:element.coordinates.x, y:element.coordinates.y};
         data[i] = unit;
-       drawPatrol(element.coordinates.y,element.coordinates.x,"patroling");
+       drawPatrol(element.coordinates.x,element.coordinates.y,element.state.toString());
        i++;
     });
     i=0;
@@ -268,8 +261,11 @@ async function updateMonitor(dataFromServer) {
         incidentsData[i] = incident;
         i++;
     });
-    if(dataFromServer.simulationTime.hours >22 || dataFromServer.simulationTime.hours<7){
+    if(dataFromServer.simulationTime.hours >21 || dataFromServer.simulationTime.hours<7){
         drawNight();
+        if(dataFromServer.simulationTime.hours >=0 && dataFromServer.simulationTime.hours<=3){
+            drawNight();
+        }
     }
 
 
@@ -308,26 +304,20 @@ async function updateMonitor(dataFromServer) {
         let outlineSizeUnit = parseInt(boxSize / 2.7);
 
         switch (type) {
-            case "patroling": {
+            case "OBSERVE": {
                 dataContext.fillStyle = PATROL_PATROLLING;
                 break;
             }
-            case "intervention": {
-                dataContext.fillStyle = PATROL_INTERVENTION;
-                break;
-            }
-            case "shooting": {
+            case "INTERVENTION": {
                 dataContext.fillStyle = PATROL_SHOOTING;
                 break;
             }
-            case "wounded": {
-                dataContext.fillStyle = PATROL_WOUNDED;
-                break;
+            case "BASE": {
+                return 0;
             }
         }
 
         dataContext.fillRect((boxSize * x) + outlineSize, (boxSize * y) + outlineSize, boxSize - (2 * outlineSize), boxSize - (2 * outlineSize));
-
         dataContext.fillStyle = PATROL_PRIMARY;
         dataContext.fillRect((boxSize * x) + outlineSizeUnit, (boxSize * y) + outlineSizeUnit, boxSize - (2 * outlineSizeUnit), boxSize - (2 * outlineSizeUnit));
         dataContext.clearRect(boxSize * x, boxSize * y, boxSize, outlineSize);
@@ -356,54 +346,6 @@ async function updateMonitor(dataFromServer) {
         dataContext.clearRect(0, 0, document.getElementById("dataMonitor").clientWidth, document.getElementById("dataMonitor").clientHeight);
     }
 
-    function getServerData() {
-        //SOME SAMPLE DATA
-        let data = {
-            "ambulances": {
-                "0": {
-                    "x": 5,
-                    "y": 7,
-                    "status": "intervention",
-                    "info": "Some additional info to display"
-                },
-                "1": {
-                    "x": 46,
-                    "y": 36,
-                    "status": "intervention",
-                    "info": "Some additional info to display"
-                },
-            },
-            "patrols": {
-                "0": {
-                    "x": 21,
-                    "y": 21,
-                    "status": "patrolling",
-                    "info": "Some additional info to display"
-                },
-                "1": {
-                    "x": 62,
-                    "y": 27,
-                    "status": "intervention",
-                    "info": "Some additional info to display"
-                },
-                "2": {
-                    "x": 4,
-                    "y": 48,
-                    "status": "shooting",
-                    "info": "Some additional info to display"
-                },
-                "3": {
-                    "x": 29,
-                    "y": 49,
-                    "status": "wounded",
-                    "info": "Some additional info to display"
-                },
-            },
-
-        }
-        return data;
-    }
-
     function drawData() {
         console.log(serverData["patrols"]["0"]);
         for (let obj in serverData["patrols"]) {
@@ -413,10 +355,6 @@ async function updateMonitor(dataFromServer) {
             drawAmbulance(serverData["ambulances"][obj]["x"], serverData["ambulances"][obj]["y"]);
         }
 
-    }
-
-    function changeSimulationTime(time){
-        document.getElementById("simulationTime").innerText = time;
     }
 
     //TRIGGER ON DATA CANVAS CLICK
