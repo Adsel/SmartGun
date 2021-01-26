@@ -33,17 +33,17 @@ public class HeadQuarter implements IHeadQuarter {
     private MonitoringAgent monitoringAgent;
 
     public HeadQuarter(
-            List<Sector> sectors, Integer ambulancesCount,
+            Integer ambulancesCount,
             Integer[] patrolsPerDistrict, Map map,
-            IMainAgent mainAgent, Point ambulanceBasePosition,
+            IMainAgent mainAgent,
             double patrolRadius, Integer patrolCount
     ) {
         this.monitoringAgent = new MonitoringAgent();
-        this.sectors = sectors;
+        this.sectors = map.receiveSectors();
         this.ambulancesCount = ambulancesCount;
         this.map = map;
         this.mainAgent = mainAgent;
-        this.ambulanceBasePosition = ambulanceBasePosition;
+        this.ambulanceBasePosition = map.recieveHospitalList().get(0);
         this.patrolRadius = patrolRadius;
         this.generatePatrols(patrolsPerDistrict, patrolCount);
     }
@@ -131,25 +131,10 @@ public class HeadQuarter implements IHeadQuarter {
     public void generatePatrols(Integer[] patrolsPerDistrict, Integer patrolsCount) {
         // init Patrols and starting position
         this.patrols = new ArrayList<>();
-
-/*        Navigation navigation = new Navigation();
-        SmartWatch smartWatch = new SmartWatch(
-                this.generatePatrolPosition(sectors.get(0), this.map),
-                navigation
-        );
-        addPatrol("1", smartWatch, navigation , sectors.get(0), false);*/
-
         for (Sector sector: this.sectors) {
             Integer patrols = patrolsPerDistrict[SectorType.valueOf(sector.getSectorType().toString()).ordinal()];
             for (int i = 0; i < patrols; i++) {
-                Navigation navigation = new Navigation();
-                SmartWatch smartWatch = new SmartWatch(
-                        this.generatePatrolPosition(sector, this.map),
-                        navigation
-                );
-
-                monitoringAgent.addSmartWatch(smartWatch);
-                addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector, false);
+                addPatrolWithEquipment(sector, this.generatePatrolPosition(sector, this.map), false);
             }
         }
 
@@ -157,15 +142,19 @@ public class HeadQuarter implements IHeadQuarter {
         List<Sector> sectors = receiveSectorsForAdditionalPatrols(additionalPatrols);
 
         for (Sector sector : sectors) {
-            Navigation navigation = new Navigation();
-            SmartWatch smartWatch = new SmartWatch(
-                    this.generatePatrolPosition(sector, this.map),
-                    navigation
-            );
-
-            monitoringAgent.addSmartWatch(smartWatch);
-            addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector, true);
+            addPatrolWithEquipment(sector, map.recievePoliceOfficeList().get(0), true);
         }
+    }
+
+    private void addPatrolWithEquipment(Sector sector, Point position, boolean isAdditional) {
+        Navigation navigation = new Navigation();
+        SmartWatch smartWatch = new SmartWatch(
+                position,
+                navigation
+        );
+
+        monitoringAgent.addSmartWatch(smartWatch);
+        addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector, isAdditional);
     }
 
     private List<Sector> receiveSectorsForAdditionalPatrols(int numberOfPatrols){

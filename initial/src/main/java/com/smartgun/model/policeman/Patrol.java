@@ -143,7 +143,7 @@ public class Patrol implements IPatrol {
         return list.get(list.size() - 1);
     }
 
-    private Point sendToIntervention(Point incidentLocalization) {
+    public Point sendToIntervention(Point incidentLocalization) {
         Point destination = new Point();
 
         Point left = getFirstAvailablePointInDirection(incidentLocalization, Direction.LEFT);
@@ -240,7 +240,6 @@ public class Patrol implements IPatrol {
         return pointList;
     }
 
-
     private Direction drawAvailableDirection(Point currentPosition){
         List<Direction> directions = availableDirections(currentPosition);
 
@@ -248,11 +247,7 @@ public class Patrol implements IPatrol {
     }
 
     private List<Direction> availableDirections(Point currentPosition){
-        /*
-                LEFT (0,-1),
-                RIGHT (0,1 ),
-                DOWN (1,0),
-                UP (-1,0);              */
+
         return Arrays.stream(Direction.values()).filter(direction ->
              !map.isWall(currentPosition.y + direction.x, currentPosition.x + direction.y)
          ).collect(Collectors.toList());

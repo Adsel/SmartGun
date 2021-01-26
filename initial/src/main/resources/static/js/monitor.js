@@ -22,6 +22,7 @@ const CHARACTER_WALL = "#";
 const CHARACTER_HOSPITAL = "H";
 const CHARACTER_ROAD = ".";
 const CHARACTER_STATION = "S";
+const BASE_STATE = 'BASE';
 
 
 let context;
