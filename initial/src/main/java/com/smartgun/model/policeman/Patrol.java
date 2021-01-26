@@ -143,7 +143,7 @@ public class Patrol implements IPatrol {
         return list.get(list.size() - 1);
     }
 
-    private Point sendToIntervention(Point incidentLocalization) {
+    public Point sendToIntervention(Point incidentLocalization) {
         Point destination = new Point();
 
         Point left = getFirstAvailablePointInDirection(incidentLocalization, Direction.LEFT);
