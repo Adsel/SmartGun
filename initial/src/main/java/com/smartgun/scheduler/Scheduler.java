@@ -68,7 +68,8 @@ public class Scheduler {
             // === CHECKS IF ANY INCIDENTS HAS BEEN OUTDATED ===
             checkIncidents(this.simulationTime);
 
-            if (simulationTime % 10 == 0) {
+            // === delay generating events ===
+            if (simulationTime % 15 == 0) {
                 // === GENERATE EVENTS (LIKE POLICEMAN FIRED, etc.) ===
                 this.generateEvents();
 
@@ -268,6 +269,7 @@ public class Scheduler {
     private void addIncident(Incident incident) {
         Patrol choosed = Data.serverSimulationData.choosePatrolToIntervention(incident.getIncidentLocalization());
         if (choosed != null) {
+            System.out.println("Choosed patrol");
             choosed.sendToIntervention(incident.getIncidentLocalization());
             incident.setPatrolToIncident(choosed);
         }
