@@ -345,16 +345,21 @@ public class Scheduler {
             String description = "(" + (int)incident.getIncidentLocalization().getX() + "," +
                      + (int)incident.getIncidentLocalization().getY() + ")";
             if (type == Event.EventType.AGGRESSOR_HURTED) {
-                csvDesc = "Aggressor has been hurt";
+                if (isAccident(SimulationData.PROBABILITY_OF_MORTALITY)) {
+                    type = Event.EventType.POLICEMAN_KILLED;
+                    csvDesc = "Aggressor has been killed";
+                } else {
+                    csvDesc = "Aggressor has been hurt";
+                }
                 description += " " + csvDesc;
             } else if (type == Event.EventType.POLICEMAN_HURTED) {
                 if (isAccident(SimulationData.PROBABILITY_OF_MORTALITY)) {
-                        csvDesc = "Policeman has been killed";
-                        description += " " + csvDesc;
-                    } else {
-                        csvDesc = "Policeman has been hurt";
-                        description += " " + csvDesc;
-                    }
+                    type = Event.EventType.POLICEMAN_KILLED;
+                    csvDesc = "Policeman has been killed";
+                } else {
+                    csvDesc = "Policeman has been hurt";
+                }
+                description += " " + csvDesc;
             }
 
 
