@@ -27,14 +27,14 @@ public class ServerSimulationData {
     public ServerSimulationData() {}
 
     public ServerSimulationData(
-            List<Sector> sectors, Integer[] patrolsPerDistrict,
+            Integer[] patrolsPerDistrict,
             Map map,
             double patrolRadius, Integer ambulancesCount, Integer patrolCount
     ) {
         IMainAgent mainAgent = new MainAgent();
         Point ambulanceBasePosition = new Point(0, 0);
         headQuarter = new HeadQuarter(
-                sectors, ambulancesCount,
+                ambulancesCount,
                 patrolsPerDistrict, map,
                 mainAgent,
                 ambulanceBasePosition,
