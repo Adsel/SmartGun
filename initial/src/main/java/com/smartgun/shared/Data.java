@@ -25,7 +25,7 @@ public class Data {
 
     private static Integer SECTOR_COUNT = 6;
 
-    private static Integer ADDITIONAL_PATROLS = 3;
+    public static Integer ADDITIONAL_PATROLS = 3;
 
     private static Integer[] PATROLS_PER_DISTRICT = {
             3,

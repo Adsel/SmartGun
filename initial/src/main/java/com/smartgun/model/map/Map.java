@@ -12,7 +12,7 @@ public class Map implements IMap {
     public static final String RESET = "\033[0m";
 
     public static final char HOSPITAL_CHARACTER = 'H';
-    public static final char POLICE_CHARACTER = 'P';
+    public static final char POLICE_CHARACTER = 'S';
     public static final char WALL_CHARACTER = '#';
 
     private static final int WALL = 0;
