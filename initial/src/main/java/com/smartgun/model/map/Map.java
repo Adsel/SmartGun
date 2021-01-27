@@ -126,7 +126,7 @@ public class Map implements IMap {
 
     public boolean isWall(int row, int col) {
         if (row < 0 || col < 0 || row > mapOfInt[0].length || col > mapOfInt.length) {
-            return false;
+            return true;
         }
         return mapOfInt[row][col] == WALL;
     }
