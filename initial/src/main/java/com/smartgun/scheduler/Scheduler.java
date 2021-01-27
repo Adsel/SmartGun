@@ -108,7 +108,7 @@ public class Scheduler {
                         "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
                         Data.serverSimulationData.recieveTimeString()
                 ));
-                incident.recieveChoosedPatrol().sendToObserve();
+                incident.backPatrol();
                 System.out.println("ENDED AN INCIDENT");
             }
         }

@@ -60,4 +60,8 @@ public class Incident {
     }
 
     public Patrol recieveChoosedPatrol() { return patrol; }
+
+    public void backPatrol() {
+        this.patrol.sendToObserve();
+    }
 }
