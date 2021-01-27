@@ -34,7 +34,7 @@ public class Scheduler {
     private Integer CERTAINTY_PROBABILITY = 100;
     private FileManager fileManager;
     private boolean sentStartingData = false;
-    private List<CsvRow> csvData;
+    public static List<CsvRow> csvData;
 
     public Scheduler(SimulationLifeService simulationLifeService) {
         this.timestamp = 0;
@@ -42,20 +42,22 @@ public class Scheduler {
         this.simulationLifeService = simulationLifeService;
         this.generator = new Random();
         this.fileManager = new FileManager();
-        this.csvData = new ArrayList<>();
+        Scheduler.csvData = new ArrayList<>();
     }
 
     private void exportManager() {
-        if (!sentStartingData) {
-            // MAYBE IN FUTURE:
-            // TODO: export data about initial probability in Data.data
-            sentStartingData = true;
-        } else if (this.simulationTime != 0 && this.simulationTime % Config.EXPORT_TO_CSV_INTERVAL == 0) {
+//        if (!sentStartingData) {
+//            // MAYBE IN FUTURE:
+//            // TODO: export data about initial probability in Data.data
+//            sentStartingData = true;
+//        } else
+
+        if (this.simulationTime != 0 && this.simulationTime % Config.EXPORT_TO_CSV_INTERVAL == 0) {
             fileManager.exportToCsv(
                     Data.serverSimulationData.recieveTimeString(),
-                    this.csvData
+                    Scheduler.csvData
             );
-            this.csvData = new ArrayList<>();
+            Scheduler.csvData = new ArrayList<>();
         }
     }
 
@@ -68,7 +70,7 @@ public class Scheduler {
             // === CHECKS IF ANY INCIDENTS HAS BEEN OUTDATED ===
             checkIncidents(this.simulationTime);
 
-            if (simulationTime % 20 == 0) {
+            if (simulationTime % 15 == 0) {
                 // === GENERATE EVENTS (LIKE POLICEMAN FIRED, etc.) ===
                 this.generateEvents();
 
@@ -106,7 +108,7 @@ public class Scheduler {
                 String description = "(" + (int)incident.getIncidentLocalization().getX() + "," +
                         + (int)incident.getIncidentLocalization().getY() + ") Ended incident";
                 Data.serverSimulationData.removeIncident(incident);
-                this.csvData.add(new CsvRow(
+                Scheduler.csvData.add(new CsvRow(
                         incident.getIncidentType().name(),
                         description,
                         "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
@@ -290,7 +292,7 @@ public class Scheduler {
         }
 
         simulationLifeService.addIncident(incident);
-        this.csvData.add(new CsvRow(
+        Scheduler.csvData.add(new CsvRow(
                 incident.getIncidentType().name(),
                 description,
                 "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
@@ -374,7 +376,7 @@ public class Scheduler {
                     incident.getIncidentLocalization()
             ));
             Data.serverSimulationData.removeIncident(incident);
-            this.csvData.add(new CsvRow(
+            Scheduler.csvData.add(new CsvRow(
                     type.name(),
                     csvDesc,
                     "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
