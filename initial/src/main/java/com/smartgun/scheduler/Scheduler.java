@@ -409,11 +409,17 @@ public class Scheduler {
     private void shootingTurn(Integer policemanProb, Integer aggressorProb, Incident incident) {
         if (this.randTruth() == FLAG_POLICEMAN_STARTING_FIRE) {
             if (!isFiredSuccessfully(policemanProb, incident, Event.EventType.AGGRESSOR_HURTED)) {
-                isFiredSuccessfully(aggressorProb, incident, Event.EventType.POLICEMAN_HURTED);
+                Scheduler.csvData.add(new Event(incident.getIncidentLocalization(), incident.getSectorId(), "Policeman missed", Event.EventType.POLICEMAN_MISSED_FIRE));
+                if (!isFiredSuccessfully(aggressorProb, incident, Event.EventType.POLICEMAN_HURTED)) {
+                    Scheduler.csvData.add(new Event(incident.getIncidentLocalization(), incident.getSectorId(), "Aggressor missed", Event.EventType.AGGRESSOR_MISSED_FIRE));
+                }
             }
         } else {
             if (!isFiredSuccessfully(policemanProb, incident, Event.EventType.POLICEMAN_HURTED)) {
-                isFiredSuccessfully(aggressorProb, incident, Event.EventType.AGGRESSOR_HURTED);
+                Scheduler.csvData.add(new Event(incident.getIncidentLocalization(), incident.getSectorId(), "Aggressor missed", Event.EventType.AGGRESSOR_MISSED_FIRE));
+                if (isFiredSuccessfully(aggressorProb, incident, Event.EventType.AGGRESSOR_HURTED)) {
+                    Scheduler.csvData.add(new Event(incident.getIncidentLocalization(), incident.getSectorId(), "Policeman missed", Event.EventType.POLICEMAN_MISSED_FIRE));
+                }
             }
         }
     }
