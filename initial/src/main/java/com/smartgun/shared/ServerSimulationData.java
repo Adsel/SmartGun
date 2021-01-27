@@ -32,12 +32,10 @@ public class ServerSimulationData {
             double patrolRadius, Integer ambulancesCount, Integer patrolCount
     ) {
         IMainAgent mainAgent = new MainAgent();
-        Point ambulanceBasePosition = new Point(0, 0);
         headQuarter = new HeadQuarter(
                 ambulancesCount,
                 patrolsPerDistrict, map,
                 mainAgent,
-                ambulanceBasePosition,
                 patrolRadius, patrolCount
         );
         headQuarter.generatePatrols(patrolsPerDistrict, patrolCount);

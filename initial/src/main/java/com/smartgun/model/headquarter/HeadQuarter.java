@@ -35,7 +35,7 @@ public class HeadQuarter implements IHeadQuarter {
     public HeadQuarter(
             Integer ambulancesCount,
             Integer[] patrolsPerDistrict, Map map,
-            IMainAgent mainAgent, Point ambulanceBasePosition,
+            IMainAgent mainAgent,
             double patrolRadius, Integer patrolCount
     ) {
         this.monitoringAgent = new MonitoringAgent();
@@ -43,7 +43,7 @@ public class HeadQuarter implements IHeadQuarter {
         this.ambulancesCount = ambulancesCount;
         this.map = map;
         this.mainAgent = mainAgent;
-        this.ambulanceBasePosition = ambulanceBasePosition;
+        this.ambulanceBasePosition = map.recieveHospitalList().get(0);
         this.patrolRadius = patrolRadius;
         this.generatePatrols(patrolsPerDistrict, patrolCount);
     }
@@ -159,7 +159,7 @@ public class HeadQuarter implements IHeadQuarter {
         for (Sector sector : sectors) {
             Navigation navigation = new Navigation();
             SmartWatch smartWatch = new SmartWatch(
-                    this.generatePatrolPosition(sector, this.map),
+                    ambulanceBasePosition,
                     navigation
             );
 
