@@ -129,7 +129,9 @@ public class Patrol implements IPatrol {
     private void drawNewTarget(){
         Point currentPosition = this.smartWatch.getCoordinates();
         Direction direction = drawAvailableDirection(currentPosition);
-        this.target = findTargetPointForDirection(currentPosition, direction);
+        if (direction != null) {
+            this.target = findTargetPointForDirection(currentPosition, direction);
+        }
     }
 
     private Point findTargetPointForDirection(Point startingPosition, Direction direction){
@@ -243,6 +245,9 @@ public class Patrol implements IPatrol {
     private Direction drawAvailableDirection(Point currentPosition){
         List<Direction> directions = availableDirections(currentPosition);
 
+        if (directions.size() <= 0) {
+            return null;
+        }
         return directions.get(ThreadLocalRandom.current().nextInt(0, directions.size()));
     }
 
