@@ -129,7 +129,9 @@ public class Patrol implements IPatrol {
     private void drawNewTarget(){
         Point currentPosition = this.smartWatch.getCoordinates();
         Direction direction = drawAvailableDirection(currentPosition);
-        this.target = findTargetPointForDirection(currentPosition, direction);
+        if (direction != null) {
+            this.target = findTargetPointForDirection(currentPosition, direction);
+        }
     }
 
     private Point findTargetPointForDirection(Point startingPosition, Direction direction){
@@ -187,7 +189,6 @@ public class Patrol implements IPatrol {
         }
 
         if (destination != null) {
-            //this.goToIntervention(destination);
             System.out.println("GO TO " + destination);
             return destination;
         }
@@ -200,9 +201,9 @@ public class Patrol implements IPatrol {
         System.out.println("OBECNY PUNKT " + currentPoint);
         while (map.isWall(currentPoint.y, currentPoint.x)){
             currentPoint = new Point(currentPoint.x + direction.y, currentPoint.y + direction.x);
-            if(currentPoint.x >= map.recieveNumberOfColumns() ||
+            if(currentPoint.x >= map.recieveNumberOfColumns() - 1 ||
                     currentPoint.x < 0 || currentPoint.y < 0 ||
-                    currentPoint.y >= map.recieveNumbersOfRows()){
+                    currentPoint.y >= map.recieveNumbersOfRows() - 1){
                 return null;
             }
         }
@@ -243,6 +244,9 @@ public class Patrol implements IPatrol {
     private Direction drawAvailableDirection(Point currentPosition){
         List<Direction> directions = availableDirections(currentPosition);
 
+        if (directions.size() <= 0) {
+            return null;
+        }
         return directions.get(ThreadLocalRandom.current().nextInt(0, directions.size()));
     }
 

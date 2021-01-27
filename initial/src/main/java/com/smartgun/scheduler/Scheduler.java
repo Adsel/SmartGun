@@ -59,7 +59,7 @@ public class Scheduler {
         }
     }
 
-    @Scheduled(fixedRateString = "1000", initialDelayString = "0")
+    @Scheduled(fixedRateString = "500", initialDelayString = "0")
     public void lifeCycleTask() {
         if (Data.isUser) {
             // === CHANGING SIMULATION TIME
@@ -68,8 +68,7 @@ public class Scheduler {
             // === CHECKS IF ANY INCIDENTS HAS BEEN OUTDATED ===
             checkIncidents(this.simulationTime);
 
-            // === delay generating events ===
-            if (simulationTime % 15 == 0) {
+            if (simulationTime % 20 == 0) {
                 // === GENERATE EVENTS (LIKE POLICEMAN FIRED, etc.) ===
                 this.generateEvents();
 
@@ -86,6 +85,8 @@ public class Scheduler {
             // == SEND AND SAVE RESULTS ===
             simulationLifeService.sendMessages();
             exportManager();
+
+            Data.serverSimulationData.restartEvents();
         }
     }
 
@@ -102,15 +103,28 @@ public class Scheduler {
         for (int i = 0; i < Data.serverSimulationData.getIncidents().size(); i++) {
             Incident incident = Data.serverSimulationData.getIncidents().get(i);
             if (incident.getEndTime() < currentTime) {
+                String description = "(" + (int)incident.getIncidentLocalization().getX() + "," +
+                        + (int)incident.getIncidentLocalization().getY() + ") Ended incident";
                 Data.serverSimulationData.removeIncident(incident);
                 this.csvData.add(new CsvRow(
                         incident.getIncidentType().name(),
-                        "Ended incident",
+                        description,
                         "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
                         Data.serverSimulationData.recieveTimeString()
                 ));
-                incident.recieveChoosedPatrol().sendToObserve();
-                System.out.println("ENDED AN INCIDENT");
+                incident.backPatrol();
+
+
+                Event.EventType type;
+                if (
+                        incident.getIncidentType() == Incident.IncidentType.INTERVENTION ||
+                        incident.getIncidentType() == Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING
+                ) {
+                    type = Event.EventType.INTERVENTION_FINISHED;
+                } else {
+                    type = Event.EventType.SHOOTING_FINISHED;
+                }
+                Data.serverSimulationData.addEvent(new Event(description, type, incident.getIncidentLocalization()));
             }
         }
     }
@@ -267,19 +281,35 @@ public class Scheduler {
     }
 
     private void addIncident(Incident incident) {
+        String description = "(" + (int)incident.getIncidentLocalization().getX() + "," +
+                + (int)incident.getIncidentLocalization().getY() + ") Started incident";
         Patrol choosed = Data.serverSimulationData.choosePatrolToIntervention(incident.getIncidentLocalization());
         if (choosed != null) {
-            System.out.println("Choosed patrol");
-            choosed.sendToIntervention(incident.getIncidentLocalization());
+            choosed.goToIntervention(incident.getIncidentLocalization());
             incident.setPatrolToIncident(choosed);
         }
 
         simulationLifeService.addIncident(incident);
         this.csvData.add(new CsvRow(
                 incident.getIncidentType().name(),
-                "Started incident",
+                description,
                 "(" + (int) incident.getIncidentLocalization().getX() + ":" + (int) incident.getIncidentLocalization().getY() + ")",
                 Data.serverSimulationData.recieveTimeString()
+        ));
+
+        Event.EventType type;
+        if (
+                incident.getIncidentType() == Incident.IncidentType.INTERVENTION ||
+                incident.getIncidentType() == Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING
+        ) {
+            type = Event.EventType.INTERVENTION_STARTED;
+        } else {
+            type = Event.EventType.SHOOTING_STARTED;
+        }
+        Data.serverSimulationData.addEvent(new Event(
+                description,
+                type,
+                incident.getIncidentLocalization()
         ));
     }
 
@@ -335,6 +365,12 @@ public class Scheduler {
             Data.serverSimulationData.addEvent(new Event(
                     description,
                     type,
+                    incident.getIncidentLocalization()
+            ));
+            Data.serverSimulationData.addEvent(new Event(
+                    "(" + (int)incident.getIncidentLocalization().getX() + "," +
+                            + (int)incident.getIncidentLocalization().getY() + ") Finished shooting",
+                    Event.EventType.SHOOTING_FINISHED,
                     incident.getIncidentLocalization()
             ));
             Data.serverSimulationData.removeIncident(incident);

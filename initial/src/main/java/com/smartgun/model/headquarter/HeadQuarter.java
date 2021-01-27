@@ -138,8 +138,7 @@ public class HeadQuarter implements IHeadQuarter {
             }
         }
 
-        Integer additionalPatrols = patrolsCount - this.patrols.size();
-        List<Sector> sectors = receiveSectorsForAdditionalPatrols(additionalPatrols);
+        List<Sector> sectors = receiveSectorsForAdditionalPatrols(Data.ADDITIONAL_PATROLS);
 
         for (Sector sector : sectors) {
             addPatrolWithEquipment(sector, map.recievePoliceOfficeList().get(0), true);
@@ -184,20 +183,8 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     public void movePatrols() {
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-
         for (Patrol p: this.patrols) {
             p.move();
-            System.out.println("STATE" + p.getState());
         }
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
     }
 }

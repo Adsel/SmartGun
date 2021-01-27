@@ -199,9 +199,7 @@ public class Data {
 
         Data.serverSimulationData = new ServerSimulationData(
                 data.getPatrolsPerDistrict(),
-                map,
-                data.getPatrolRadius(),
-                data.getAmbulancesCount(),
+                map, data.getPatrolRadius(), data.getAmbulancesCount(),
                 data.getPatrolsCount()
         );
 

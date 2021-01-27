@@ -9,7 +9,7 @@ public class SimulationTime {
     public static final int HOURS_IN_DAY = 24;
     public static final int MINUTES_IN_HOUR = 60;
     public static final int SECONDS_IN_MINUTE = 60;
-    public static final int TIME_IN_REALITY_PER_SECOND = 15; // in minutes
+    public static final int TIME_IN_REALITY_PER_SECOND = 1; // in minutes
     private static String DATE_SEPARATOR = "-";
     private static String TIME_SEPARATOR = ":";
 
