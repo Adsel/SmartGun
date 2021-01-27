@@ -12,6 +12,9 @@ import com.smartgun.model.map.ShortestPathBFS;
 import com.smartgun.model.policeman.interfaces.IPatrol;
 
 public class Patrol implements IPatrol {
+    public String getId() {
+        return id;
+    }
 
     private String id;
     // Jeden smartwatch na patrol

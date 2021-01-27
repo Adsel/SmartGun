@@ -1,6 +1,5 @@
 package com.smartgun.scheduler;
 
-import com.smartgun.model.headquarter.Ambulance;
 import com.smartgun.model.incident.Event;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.policeman.Patrol;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Component;
 import com.smartgun.service.SimulationLifeService;
 import com.smartgun.shared.Data;
 import com.smartgun.model.incident.*;
-import java.awt.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -115,11 +114,20 @@ public class Scheduler {
                         incident.getIncidentType() == Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING
                 ) {
                     type = Event.EventType.INTERVENTION_FINISHED;
+
                 } else {
                     type = Event.EventType.SHOOTING_FINISHED;
                 }
                 Data.serverSimulationData.addEvent(new Event(incident.getIncidentLocalization(), incident.getSectorId(),description, type));
-                Scheduler.csvData.add(new Event(incident.getIncidentLocalization(), incident.getSectorId(), "Ended incident", type));
+                Scheduler.csvData.add(new Event(
+                        incident.getIncidentLocalization(),
+                        incident.getSectorId(),
+                        "Ended incident", type));
+                Scheduler.csvData.add(new Event(
+                        incident.getIncidentLocalization(),
+                        incident.getStartTime() - incident.getEndTime(),
+                        "Incident dutration",
+                        Event.EventType.INCIDENT_DURATION));
             } else if (incident.getIncidentType() == Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING) {
                 if (incident.getTurningIntoShootingTime() <= this.simulationTime) {
                     incident.setIncidentType(Incident.IncidentType.SHOOTING);
@@ -290,6 +298,13 @@ public class Scheduler {
         if (choosed != null) {
             choosed.goToIntervention(incident.getIncidentLocalization());
             incident.setPatrolToIncident(choosed);
+            this.csvData.add(new Event(choosed.getCoordinates(),
+                    Integer.parseInt(choosed.getId()),
+                    "Patrol id number: " + choosed.getId() + " was choosed to incident incident in " + incident.getIncidentLocalization(),
+                    Event.EventType.PATROL_WAS_CHOSEN_TO_INTERVENTION
+            ));
+            //    Scheduler.csvData.add(new Event(incident.getIncidentLocalization(), incident.getSectorId(), "Aggressor missed", Event.EventType.AGGRESSOR_MISSED_FIRE));
+            //
         }
 
         simulationLifeService.addIncident(incident);
@@ -351,7 +366,7 @@ public class Scheduler {
             String csvDesc = "";
             String description = "(" + (int)incident.getIncidentLocalization().getX() + "," +
                      + (int)incident.getIncidentLocalization().getY() + ")";
-            if (type == Event.EventType.AGGRESSOR_HURTED) {
+            if (type == Event.EventType.AGGRESSOR_HURT) {
                 if (isAccident(SimulationData.PROBABILITY_OF_MORTALITY)) {
                     type = Event.EventType.POLICEMAN_KILLED;
                     csvDesc = "Aggressor has been killed";
@@ -359,7 +374,7 @@ public class Scheduler {
                     csvDesc = "Aggressor has been hurt";
                 }
                 description += " " + csvDesc;
-            } else if (type == Event.EventType.POLICEMAN_HURTED) {
+            } else if (type == Event.EventType.POLICEMAN_HURT) {
                 if (isAccident(SimulationData.PROBABILITY_OF_MORTALITY)) {
                     type = Event.EventType.POLICEMAN_KILLED;
                     csvDesc = "Policeman has been killed";
@@ -408,19 +423,20 @@ public class Scheduler {
 
     private void shootingTurn(Integer policemanProb, Integer aggressorProb, Incident incident) {
         if (this.randTruth() == FLAG_POLICEMAN_STARTING_FIRE) {
-            if (!isFiredSuccessfully(policemanProb, incident, Event.EventType.AGGRESSOR_HURTED)) {
+            if (!isFiredSuccessfully(policemanProb, incident, Event.EventType.AGGRESSOR_HURT)) {
                 Scheduler.csvData.add(new Event(incident.getIncidentLocalization(), incident.getSectorId(), "Policeman missed", Event.EventType.POLICEMAN_MISSED_FIRE));
-                if (!isFiredSuccessfully(aggressorProb, incident, Event.EventType.POLICEMAN_HURTED)) {
+                if (!isFiredSuccessfully(aggressorProb, incident, Event.EventType.POLICEMAN_HURT)) {
                     Scheduler.csvData.add(new Event(incident.getIncidentLocalization(), incident.getSectorId(), "Aggressor missed", Event.EventType.AGGRESSOR_MISSED_FIRE));
                 }
             }
         } else {
-            if (!isFiredSuccessfully(policemanProb, incident, Event.EventType.POLICEMAN_HURTED)) {
+            if (!isFiredSuccessfully(policemanProb, incident, Event.EventType.POLICEMAN_HURT)) {
                 Scheduler.csvData.add(new Event(incident.getIncidentLocalization(), incident.getSectorId(), "Aggressor missed", Event.EventType.AGGRESSOR_MISSED_FIRE));
-                if (isFiredSuccessfully(aggressorProb, incident, Event.EventType.AGGRESSOR_HURTED)) {
+                if (isFiredSuccessfully(aggressorProb, incident, Event.EventType.AGGRESSOR_HURT)) {
                     Scheduler.csvData.add(new Event(incident.getIncidentLocalization(), incident.getSectorId(), "Policeman missed", Event.EventType.POLICEMAN_MISSED_FIRE));
                 }
             }
         }
+
     }
 }
