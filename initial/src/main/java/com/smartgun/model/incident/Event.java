@@ -14,7 +14,8 @@ public class Event {
     private Integer sectorID;
 
     public enum EventType {
-        MISSED_FIRE,
+        POLICEMAN_MISSED_FIRE,
+        AGGRESSOR_MISSED_FIRE,
         POLICEMAN_HURTED,
         POLICEMAN_KILLED,
         AGGRESSOR_HURTED,
