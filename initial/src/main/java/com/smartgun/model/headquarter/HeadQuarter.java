@@ -191,20 +191,8 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     public void movePatrols() {
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-
         for (Patrol p: this.patrols) {
             p.move();
-            System.out.println("STATE" + p.getState());
         }
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
     }
 }
