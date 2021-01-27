@@ -1,5 +1,6 @@
 package com.smartgun.model.incident;
 
+import com.smartgun.model.map.Sector;
 import com.smartgun.model.policeman.Patrol;
 
 import java.awt.Point;
@@ -12,23 +13,43 @@ public class Incident {
     }
 
     private Point incidentLocalization;
+    private Sector sector;
     private int startTime;
     private int endTime;
     private IncidentType incidentType;
     private int durationTime;
     private Patrol patrol;
+    private boolean willBeShooting;
+    private int turningIntoShootingTime;
 
     public Incident(){}
 
     public Incident(
             int startTime, int durationTime, Point incidentPoint,
-            IncidentType incidentType
+            IncidentType incidentType, Sector sector
     ) {
         this.startTime = startTime;
         this.endTime = startTime + durationTime;
         this.incidentLocalization = incidentPoint;
         this.incidentType = incidentType;
         this.durationTime = durationTime;
+        this.sector = sector;
+        this.willBeShooting = false;
+        turningIntoShootingTime = 0;
+    }
+
+    public Incident(
+            int startTime, int durationTime, Point incidentPoint,
+            IncidentType incidentType, Sector sector, int turningIntoShootingTime
+    ) {
+        this.startTime = startTime;
+        this.endTime = startTime + durationTime;
+        this.incidentLocalization = incidentPoint;
+        this.incidentType = incidentType;
+        this.durationTime = durationTime;
+        this.sector = sector;
+        this.willBeShooting = true;
+        this.turningIntoShootingTime = turningIntoShootingTime;
     }
 
     public Point getIncidentLocalization() {
@@ -63,5 +84,25 @@ public class Incident {
 
     public void backPatrol() {
         this.patrol.sendToObserve();
+    }
+
+    public Integer getSectorId() {
+        return this.sector.getId();
+    }
+
+    public boolean isWillBeShooting() {
+        return willBeShooting;
+    }
+
+    public void setWillBeShooting(boolean willBeShooting) {
+        this.willBeShooting = willBeShooting;
+    }
+
+    public int getTurningIntoShootingTime() {
+        return turningIntoShootingTime;
+    }
+
+    public void setTurningIntoShootingTime(int turningIntoShootingTime) {
+        this.turningIntoShootingTime = turningIntoShootingTime;
     }
 }
