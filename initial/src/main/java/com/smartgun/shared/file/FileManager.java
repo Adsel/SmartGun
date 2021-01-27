@@ -1,5 +1,7 @@
 package com.smartgun.shared.file;
 
+import com.smartgun.model.incident.Event;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -14,23 +16,32 @@ public class FileManager {
         this.delimiter = '\n';
     }
 
-    public void exportToCsv(String filename, List<CsvRow> csvData) {
+    public void exportToCsv(String filename, List<Event> csvData) {
         if (csvData.size() > 0) {
             try (PrintWriter writer = new PrintWriter(FILENAME_PREFIX + filename + ".csv")) {
                 StringBuilder sb = new StringBuilder();
                 addHeader(sb);
-                for (CsvRow data: csvData) {
+                for (Event data: csvData) {
                     System.out.println(data);
+                    sb.append(data.getDate());
+                    sb.append(this.fieldSeparator);
+
                     sb.append(data.getTime());
                     sb.append(this.fieldSeparator);
 
-                    sb.append(data.getName());
+                    sb.append(data.getX());
                     sb.append(this.fieldSeparator);
 
-                    sb.append(data.getDesc());
+                    sb.append(data.getY());
                     sb.append(this.fieldSeparator);
 
-                    sb.append(data.getPoint());
+                    sb.append(data.getSectorID());
+                    sb.append(this.fieldSeparator);
+
+                    sb.append(data.getType());
+                    sb.append(this.fieldSeparator);
+
+                    sb.append(data.getDescription());
                     sb.append(this.fieldSeparator);
 
                     sb.append(this.delimiter);
@@ -43,16 +54,25 @@ public class FileManager {
     }
 
     private void addHeader(StringBuilder sb) {
-        sb.append("Time");
+        sb.append("DATE");
         sb.append(this.fieldSeparator);
 
-        sb.append("Name");
+        sb.append("TIME");
         sb.append(this.fieldSeparator);
 
-        sb.append("Description");
+        sb.append("X");
         sb.append(this.fieldSeparator);
 
-        sb.append("Localization");
+        sb.append("Y");
+        sb.append(this.fieldSeparator);
+
+        sb.append("SECTOR ID");
+        sb.append(this.fieldSeparator);
+
+        sb.append("TYPE");
+        sb.append(this.fieldSeparator);
+
+        sb.append("DESCRIPTION");
         sb.append(this.fieldSeparator);
 
         sb.append(this.delimiter);

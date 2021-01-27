@@ -1,5 +1,6 @@
 package com.smartgun.model.incident;
 
+import com.smartgun.model.map.Sector;
 import com.smartgun.model.policeman.Patrol;
 
 import java.awt.Point;
@@ -12,6 +13,7 @@ public class Incident {
     }
 
     private Point incidentLocalization;
+    private Sector sector;
     private int startTime;
     private int endTime;
     private IncidentType incidentType;
@@ -22,13 +24,14 @@ public class Incident {
 
     public Incident(
             int startTime, int durationTime, Point incidentPoint,
-            IncidentType incidentType
+            IncidentType incidentType, Sector sector
     ) {
         this.startTime = startTime;
         this.endTime = startTime + durationTime;
         this.incidentLocalization = incidentPoint;
         this.incidentType = incidentType;
         this.durationTime = durationTime;
+        this.sector = sector;
     }
 
     public Point getIncidentLocalization() {
@@ -63,5 +66,9 @@ public class Incident {
 
     public void backPatrol() {
         this.patrol.sendToObserve();
+    }
+
+    public Integer getSectorId() {
+        return this.sector.getId();
     }
 }

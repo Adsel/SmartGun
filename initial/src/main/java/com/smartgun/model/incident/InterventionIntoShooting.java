@@ -1,5 +1,7 @@
 package com.smartgun.model.incident;
 
+import com.smartgun.model.map.Sector;
+
 import java.awt.*;
 
 public class InterventionIntoShooting extends Incident {
@@ -7,10 +9,10 @@ public class InterventionIntoShooting extends Incident {
     private int turningToShootingTime;
 
     public InterventionIntoShooting(
-            int startTime, int durationTime, Point incidentPoint, IncidentType incidentType
+            int startTime, int durationTime, Point incidentPoint, IncidentType incidentType, Sector sector
 //            int turningToShootingTime
     ){
-        super(startTime, durationTime, incidentPoint, incidentType);
+        super(startTime, durationTime, incidentPoint, incidentType, sector);
         willBeShooting = checkIfWillBeShooting();
 //        this.turningToShootingTime = turningToShootingTime;
     }

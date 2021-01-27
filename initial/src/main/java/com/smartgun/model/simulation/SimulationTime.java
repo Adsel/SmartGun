@@ -101,4 +101,20 @@ public class SimulationTime {
                 time.recieveMinutesWithPrefix() + TIME_SEPARATOR +
                 time.recieveSecondsWithPrefix();
     }
+
+    public static String receiveDateString() {
+        SimulationTime time = Data.serverSimulationData.getSimulationTime();
+
+        return time.getYear() + DATE_SEPARATOR +
+                time.recieveMonthWithPrefix() + DATE_SEPARATOR +
+                time.recieveDayWithPrefix();
+    }
+
+    public static String receiveTimeString() {
+        SimulationTime time = Data.serverSimulationData.getSimulationTime();
+
+        return time.recieveHourWithPrefix() + TIME_SEPARATOR +
+                time.recieveMinutesWithPrefix() + TIME_SEPARATOR +
+                time.recieveSecondsWithPrefix();
+    }
 }
