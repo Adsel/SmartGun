@@ -68,7 +68,7 @@ public class Scheduler {
             // === CHECKS IF ANY INCIDENTS HAS BEEN OUTDATED ===
             checkIncidents(this.simulationTime);
 
-            if (simulationTime % 10 == 0) {
+            if (simulationTime % 30 == 0) {
                 // === GENERATE EVENTS (LIKE POLICEMAN FIRED, etc.) ===
                 this.generateEvents();
 

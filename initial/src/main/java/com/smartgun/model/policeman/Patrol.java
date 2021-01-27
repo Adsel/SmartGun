@@ -187,7 +187,6 @@ public class Patrol implements IPatrol {
         }
 
         if (destination != null) {
-            //this.goToIntervention(destination);
             System.out.println("GO TO " + destination);
             return destination;
         }
@@ -200,9 +199,9 @@ public class Patrol implements IPatrol {
         System.out.println("OBECNY PUNKT " + currentPoint);
         while (map.isWall(currentPoint.y, currentPoint.x)){
             currentPoint = new Point(currentPoint.x + direction.y, currentPoint.y + direction.x);
-            if(currentPoint.x >= map.recieveNumberOfColumns() ||
+            if(currentPoint.x >= map.recieveNumberOfColumns() - 1 ||
                     currentPoint.x < 0 || currentPoint.y < 0 ||
-                    currentPoint.y >= map.recieveNumbersOfRows()){
+                    currentPoint.y >= map.recieveNumbersOfRows() - 1){
                 return null;
             }
         }
