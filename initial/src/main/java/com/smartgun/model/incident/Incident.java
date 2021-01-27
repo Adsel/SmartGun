@@ -19,6 +19,8 @@ public class Incident {
     private IncidentType incidentType;
     private int durationTime;
     private Patrol patrol;
+    private boolean willBeShooting;
+    private int turningIntoShootingTime;
 
     public Incident(){}
 
@@ -32,6 +34,22 @@ public class Incident {
         this.incidentType = incidentType;
         this.durationTime = durationTime;
         this.sector = sector;
+        this.willBeShooting = false;
+        turningIntoShootingTime = 0;
+    }
+
+    public Incident(
+            int startTime, int durationTime, Point incidentPoint,
+            IncidentType incidentType, Sector sector, int turningIntoShootingTime
+    ) {
+        this.startTime = startTime;
+        this.endTime = startTime + durationTime;
+        this.incidentLocalization = incidentPoint;
+        this.incidentType = incidentType;
+        this.durationTime = durationTime;
+        this.sector = sector;
+        this.willBeShooting = true;
+        this.turningIntoShootingTime = turningIntoShootingTime;
     }
 
     public Point getIncidentLocalization() {
@@ -70,5 +88,21 @@ public class Incident {
 
     public Integer getSectorId() {
         return this.sector.getId();
+    }
+
+    public boolean isWillBeShooting() {
+        return willBeShooting;
+    }
+
+    public void setWillBeShooting(boolean willBeShooting) {
+        this.willBeShooting = willBeShooting;
+    }
+
+    public int getTurningIntoShootingTime() {
+        return turningIntoShootingTime;
+    }
+
+    public void setTurningIntoShootingTime(int turningIntoShootingTime) {
+        this.turningIntoShootingTime = turningIntoShootingTime;
     }
 }

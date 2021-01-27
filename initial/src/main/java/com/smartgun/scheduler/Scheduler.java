@@ -109,7 +109,6 @@ public class Scheduler {
                 Data.serverSimulationData.removeIncident(incident);
                 incident.backPatrol();
 
-
                 Event.EventType type;
                 if (
                         incident.getIncidentType() == Incident.IncidentType.INTERVENTION ||
@@ -121,6 +120,11 @@ public class Scheduler {
                 }
                 Data.serverSimulationData.addEvent(new Event(incident.getIncidentLocalization(), incident.getSectorId(),description, type));
                 Scheduler.csvData.add(new Event(incident.getIncidentLocalization(), incident.getSectorId(), "Ended incident", type));
+            } else if (incident.getIncidentType() == Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING) {
+                if (incident.getTurningIntoShootingTime() <= this.simulationTime) {
+                    incident.setIncidentType(Incident.IncidentType.SHOOTING);
+                    Scheduler.csvData.add(new Event(incident.getIncidentLocalization(), incident.getSectorId(), "Intervention turned into shooting", Event.EventType.INTERVENTION_TURNED_INTO_SHOOTING));
+                }
             }
         }
     }
@@ -180,9 +184,11 @@ public class Scheduler {
                             Data.data.getInterventionDuration()[1]
                     );
 
+                    int goShooting = genDurationTime(2, durationTime - 2);
+
                     Incident incidentIntoShooting = new Incident(
                             this.simulationTime, durationTime, sector.generateIncidentLocalization(),
-                            Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING, sector
+                            Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING, sector, this.simulationTime + goShooting
                     );
 
                     if (checkIfWillBeShooting(
@@ -277,8 +283,9 @@ public class Scheduler {
     }
 
     private void addIncident(Incident incident) {
+        String extraDesc =  incident.getIncidentType() == Incident.IncidentType.SHOOTING ? ") Started shooting" : ") Started incident";
         String description = "(" + (int)incident.getIncidentLocalization().getX() + "," +
-                + (int)incident.getIncidentLocalization().getY() + ") Started incident";
+                + (int)incident.getIncidentLocalization().getY() + extraDesc;
         Patrol choosed = Data.serverSimulationData.choosePatrolToIntervention(incident.getIncidentLocalization());
         if (choosed != null) {
             choosed.goToIntervention(incident.getIncidentLocalization());
