@@ -77,6 +77,7 @@ public class FileManager {
                     sb.append(data.getValue());
                     sb.append(this.fieldSeparator);
 
+                    sb.append(data.getUnit());
                     sb.append(this.delimiter);
                 }
                 writer.write(sb.toString());
@@ -94,6 +95,9 @@ public class FileManager {
         sb.append(this.fieldSeparator);
 
         sb.append("PARAMETER VALUE");
+        sb.append(this.fieldSeparator);
+
+        sb.append("UNIT");
         sb.append(this.fieldSeparator);
 
         sb.append(this.delimiter);
