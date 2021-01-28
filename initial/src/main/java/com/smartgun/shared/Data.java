@@ -230,7 +230,7 @@ public class Data {
             }
         }
 
-        listOfCsvInitRows.add(new CsvInitRow("Day and Night system", "Determines if night has got another params than day", Data.data.getIsDayAndNightSystem() ? 1 : 0 ));
+        listOfCsvInitRows.add(new CsvInitRow("Day and Night system", "Determines if night has got another params than day", data.getIsDayAndNightSystem() ? 1 : 0 ));
 
         Data.serverSimulationData = new ServerSimulationData(
                 data.getPatrolsPerDistrict(),
@@ -241,7 +241,7 @@ public class Data {
         Data.data = data;
 
         FileManager fileManager = new FileManager();
-        fileManager.exportInitToCsv("ExportedInitialData_", listOfCsvInitRows);
+        fileManager.exportInitToCsv("Initial", listOfCsvInitRows);
         Data.isUser = true;
     }
 }
