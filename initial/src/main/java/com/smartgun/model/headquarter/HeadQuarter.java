@@ -176,8 +176,7 @@ public class HeadQuarter implements IHeadQuarter {
                         new Policeman(false),
                         this.map,
                         sector,
-                        isAdditional ? Patrol.State.BASE : Patrol.State.OBSERVE
-                        // TODO WHEN X WILL BE ADDED: X connector;
+                        isAdditional
                 )
         );
     }

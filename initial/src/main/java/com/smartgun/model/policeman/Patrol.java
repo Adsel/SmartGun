@@ -32,12 +32,14 @@ public class Patrol implements IPatrol {
     private Sector sector;
     private Stack<Point> currentPathToDrive;
     private Point lastObservePoint;
+    private boolean isAdditional;
 
     // TODO: posiadać pistolety
     public enum State {
         OBSERVE,
         INTERVENTION,
         BACK_TO_PATROL,
+        BACK_TO_BASE,
         BACKUP,
         BASE
     }
@@ -50,10 +52,8 @@ public class Patrol implements IPatrol {
             Policeman youngerPoliceman,
             Map map,
             Sector sector,
-            State state
-     //      , X connector
+            boolean isAdditional
     ) {
-     //   smartWatch.addConnectior(connector);
         this.id = id;
         this.smartWatch = smartWatch;
         this.navigation = navigation;
@@ -61,8 +61,9 @@ public class Patrol implements IPatrol {
         this.youngerPoliceman = youngerPoliceman;
         this.map = map;
         this.sector = sector;
-        this.state = state;
+        this.state = isAdditional ? Patrol.State.BASE : Patrol.State.OBSERVE;
         this.lastObservePoint = smartWatch.getCoordinates();
+        this.isAdditional = isAdditional;
     }
 
     @Override
@@ -103,9 +104,15 @@ public class Patrol implements IPatrol {
     }
 
     public void sendToObserve(){
-        this.setState(State.OBSERVE);
-        target = lastObservePoint;
-        setUpCurrentPathToDrive(lastObservePoint);
+        if (this.isAdditional) {
+            this.setState(State.BACK_TO_BASE);
+            target = lastObservePoint;
+            setUpCurrentPathToDrive(lastObservePoint);
+        } else {
+            this.setState(State.OBSERVE);
+            target = lastObservePoint;
+            setUpCurrentPathToDrive(lastObservePoint);
+        }
     }
 
     public void move() {
@@ -127,6 +134,10 @@ public class Patrol implements IPatrol {
         if (state == State.OBSERVE){
             lastObservePoint = smartWatch.getCoordinates();
         }
+
+        if (target == null && state == State.BACK_TO_BASE) {
+            this.state = State.BASE;
+        }
     }
 
     private void drawNewTarget(){
@@ -146,6 +157,14 @@ public class Patrol implements IPatrol {
         }
 
         return list.get(list.size() - 1);
+    }
+
+    public boolean isAdditional() {
+        return isAdditional;
+    }
+
+    public void setAdditional(boolean additional) {
+        isAdditional = additional;
     }
 
     public Point sendToIntervention(Point incidentLocalization) {
