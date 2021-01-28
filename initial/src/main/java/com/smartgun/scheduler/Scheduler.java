@@ -217,8 +217,6 @@ public class Scheduler {
                             Data.data.getInterventionDuration()[0],
                             Data.data.getInterventionDuration()[1]
                     );
-                    // TODO:
-                    // GENERATE RANDOM POINT IN CURRENT SECTION
                     addIncident(
                             new Incident(
                                     this.simulationTime, durationTime, sector.generateIncidentLocalization(),
@@ -293,13 +291,12 @@ public class Scheduler {
         if (choosed != null) {
             choosed.goToIntervention(incident.getIncidentLocalization());
             incident.setPatrolToIncident(choosed);
+
             this.csvData.add(new Event(choosed.getCoordinates(),
                     incident.getSectorId(),
-                    "Patrol id number: " + choosed.getId() + " was choosed to incident incident in " + incident.getIncidentLocalization(),
+                    "Patrol id number: " + choosed.getId() + " was choosed to incident in (" +(int) incident.getIncidentLocalization().getX() + " " +  (int) incident.getIncidentLocalization().getY() + ")",
                     Event.EventType.PATROL_WAS_CHOSEN_TO_INTERVENTION
             ));
-            //    Scheduler.csvData.add(new Event(incident.getIncidentLocalization(), incident.getSectorId(), "Aggressor missed", Event.EventType.AGGRESSOR_MISSED_FIRE));
-            //
         }
 
         simulationLifeService.addIncident(incident);
@@ -401,7 +398,7 @@ public class Scheduler {
             Scheduler.csvData.add(new Event(
                     incident.getIncidentLocalization(), incident.getSectorId(),
                     "Finished shooting",
-                    Event.EventType.SHOOTING_FINISHED
+                    Event.EventType.SHOOTING_FINISHED, this.simulationTime - incident.getStartTime()
             ));
             Data.serverSimulationData.removeIncident(incident);
 

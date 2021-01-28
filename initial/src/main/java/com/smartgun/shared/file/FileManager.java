@@ -98,8 +98,6 @@ public class FileManager {
         sb.append(this.fieldSeparator);
 
         sb.append("UNIT");
-        sb.append(this.fieldSeparator);
-
         sb.append(this.delimiter);
     }
 

@@ -40,15 +40,15 @@ public class Data {
     private static Integer RADIUS_UNIT = 1;
 
     private static Integer[] PROBABLITY_OF_INTERVATION = {
-            10,
-            20,
-            40
+            3,
+            5,
+            8
     };
 
     private static Integer[] PROBABLITY_OF_INTERVATION_NIGHT = {
-            15,
-            35,
-            45
+            4,
+            6,
+            10
     };
 
     private static Integer[] INTERVATION_DURATION = {
@@ -56,15 +56,15 @@ public class Data {
             60
     };
     private static Integer[] PROBABLITY_OF_SHOOTING = {
-            5,
-            10,
-            20
+            2,
+            4,
+            6
     };
 
     private static Integer[] PROBABLITY_OF_INTERVATION_TURNING_TO_SHOOTING = {
+            3,
             5,
-            12,
-            35
+            7
     };
 
     private static Integer[] SHOOTING_DURATION = {
@@ -230,7 +230,7 @@ public class Data {
             }
         }
 
-        listOfCsvInitRows.add(new CsvInitRow("Day and Night system", "Determines if night has got another params than day", Data.data.getIsDayAndNightSystem() ? 1 : 0, "TRUE/FALSE" ));
+        listOfCsvInitRows.add(new CsvInitRow("Day and Night system", "Determines if night has got another params than day", data.getIsDayAndNightSystem() ? 1 : 0, "" ));
 
         Data.serverSimulationData = new ServerSimulationData(
                 data.getPatrolsPerDistrict(),
@@ -241,7 +241,7 @@ public class Data {
         Data.data = data;
 
         FileManager fileManager = new FileManager();
-        fileManager.exportInitToCsv("ExportedInitialData_", listOfCsvInitRows);
+        fileManager.exportInitToCsv("Initial_data", listOfCsvInitRows);
         Data.isUser = true;
     }
 }

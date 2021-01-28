@@ -97,9 +97,13 @@ public class Patrol implements IPatrol {
     }
 
     public void goToIntervention(Point point){
-        this.setState(State.INTERVENTION);
-        target = point;
+        //target = point;
         setUpCurrentPathToDrive(sendToIntervention(point));
+
+        if(currentPathToDrive != null && !currentPathToDrive.empty()){
+            this.setState(State.INTERVENTION);
+        }
+
     }
 
     public void sendToObserve(){
@@ -167,7 +171,7 @@ public class Patrol implements IPatrol {
     }
 
     public Point sendToIntervention(Point incidentLocalization) {
-        Point destination = new Point();
+        Point destination = null;
 
         Point left = getFirstAvailablePointInDirection(incidentLocalization, Direction.LEFT);
         Point right = getFirstAvailablePointInDirection(incidentLocalization, Direction.RIGHT);

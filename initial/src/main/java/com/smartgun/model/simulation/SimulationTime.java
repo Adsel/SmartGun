@@ -10,7 +10,8 @@ public class SimulationTime {
     public static final int MINUTES_IN_HOUR = 60;
     public static final int SECONDS_IN_MINUTE = 60;
     public static final int TIME_IN_REALITY_PER_SECOND = 1; // in minutes
-    private static String DATE_SEPARATOR = "-";
+    private static String WORD_SEPARATOR = "-";
+    private static String FIELD_SEPARATOR = "_";
     private static String TIME_SEPARATOR = ":";
 
     private int hours;
@@ -94,19 +95,19 @@ public class SimulationTime {
     public static String recieveTimeString() {
         SimulationTime time = Data.serverSimulationData.getSimulationTime();
 
-        return time.getYear() + DATE_SEPARATOR +
-                time.recieveMonthWithPrefix() + DATE_SEPARATOR +
-                time.recieveDayWithPrefix() + " " +
-                time.recieveHourWithPrefix() + TIME_SEPARATOR +
-                time.recieveMinutesWithPrefix() + TIME_SEPARATOR +
+        return time.getYear() + WORD_SEPARATOR +
+                time.recieveMonthWithPrefix() + WORD_SEPARATOR +
+                time.recieveDayWithPrefix() + FIELD_SEPARATOR +
+                time.recieveHourWithPrefix() + WORD_SEPARATOR +
+                time.recieveMinutesWithPrefix() + WORD_SEPARATOR +
                 time.recieveSecondsWithPrefix();
     }
 
     public static String receiveDateString() {
         SimulationTime time = Data.serverSimulationData.getSimulationTime();
 
-        return time.getYear() + DATE_SEPARATOR +
-                time.recieveMonthWithPrefix() + DATE_SEPARATOR +
+        return time.getYear() + WORD_SEPARATOR +
+                time.recieveMonthWithPrefix() + WORD_SEPARATOR +
                 time.recieveDayWithPrefix();
     }
 
