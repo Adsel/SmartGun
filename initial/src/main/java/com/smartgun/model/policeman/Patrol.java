@@ -12,11 +12,7 @@ import com.smartgun.model.map.ShortestPathBFS;
 import com.smartgun.model.policeman.interfaces.IPatrol;
 
 public class Patrol implements IPatrol {
-    public String getId() {
-        return id;
-    }
-
-    private String id;
+    private Integer id;
     // Jeden smartwatch na patrol
     private SmartWatch smartWatch;
     // Jeden samochód z nawigacją na patrol
@@ -34,7 +30,6 @@ public class Patrol implements IPatrol {
     private Point lastObservePoint;
     private boolean isAdditional;
 
-    // TODO: posiadać pistolety
     public enum State {
         OBSERVE,
         INTERVENTION,
@@ -45,7 +40,7 @@ public class Patrol implements IPatrol {
     }
 
     public Patrol(
-            String id,
+            Integer id,
             SmartWatch smartWatch,
             Navigation navigation,
             Policeman headPoliceman,
@@ -64,6 +59,10 @@ public class Patrol implements IPatrol {
         this.state = isAdditional ? Patrol.State.BASE : Patrol.State.OBSERVE;
         this.lastObservePoint = smartWatch.getCoordinates();
         this.isAdditional = isAdditional;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     @Override

@@ -153,7 +153,7 @@ public class HeadQuarter implements IHeadQuarter {
         );
 
         monitoringAgent.addSmartWatch(smartWatch);
-        addPatrol(UUID.randomUUID().toString(), smartWatch, navigation, sector, isAdditional);
+        addPatrol(smartWatch, navigation, sector, isAdditional);
     }
 
     private List<Sector> receiveSectorsForAdditionalPatrols(int numberOfPatrols){
@@ -166,19 +166,13 @@ public class HeadQuarter implements IHeadQuarter {
     }
 
     @Override
-    public void addPatrol(String id, SmartWatch sw, Navigation nv, Sector sector, boolean isAdditional) {
-        this.patrols.add(
-                new Patrol(
-                        id,
-                        sw,
-                        nv,
-                        new Policeman(true),
-                        new Policeman(false),
-                        this.map,
-                        sector,
-                        isAdditional
-                )
-        );
+    public void addPatrol(SmartWatch sw, Navigation nv, Sector sector, boolean isAdditional) {
+        this.patrols.add(new Patrol(
+                this.patrols.size() + 1, sw, nv,
+                new Policeman(true),
+                new Policeman(false),
+                this.map, sector, isAdditional
+        ));
     }
 
     public void movePatrols() {
