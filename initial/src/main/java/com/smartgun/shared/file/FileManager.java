@@ -68,7 +68,16 @@ public class FileManager {
                 StringBuilder sb = new StringBuilder();
                 addHeaderInit(sb);
                 for (CsvInitRow data: csvData) {
-                    // TODO DOMINIK:
+                    sb.append(data.getName());
+                    sb.append(this.fieldSeparator);
+
+                    sb.append(data.getDesc());
+                    sb.append(this.fieldSeparator);
+
+                    sb.append(data.getValue());
+                    sb.append(this.fieldSeparator);
+
+                    sb.append(this.delimiter);
                 }
                 writer.write(sb.toString());
             } catch (FileNotFoundException e) {
@@ -78,8 +87,16 @@ public class FileManager {
     }
 
     private void addHeaderInit(StringBuilder sb) {
-        // TODO DOMINIK:
-        // TAK JAK W ADDHEADER, ale dla CsvInitRow
+        sb.append("PARAMETER NAME");
+        sb.append(this.fieldSeparator);
+
+        sb.append("DESCRIPTION");
+        sb.append(this.fieldSeparator);
+
+        sb.append("PARAMETER VALUE");
+        sb.append(this.fieldSeparator);
+
+        sb.append(this.delimiter);
     }
 
     private void addHeader(StringBuilder sb) {
