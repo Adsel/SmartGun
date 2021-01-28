@@ -299,7 +299,7 @@ public class Scheduler {
             choosed.goToIntervention(incident.getIncidentLocalization());
             incident.setPatrolToIncident(choosed);
             this.csvData.add(new Event(choosed.getCoordinates(),
-                    Integer.parseInt(choosed.getId()),
+                    incident.getSectorId(),
                     "Patrol id number: " + choosed.getId() + " was choosed to incident incident in " + incident.getIncidentLocalization(),
                     Event.EventType.PATROL_WAS_CHOSEN_TO_INTERVENTION
             ));

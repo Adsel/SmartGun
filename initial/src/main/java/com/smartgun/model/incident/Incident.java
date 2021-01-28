@@ -83,7 +83,9 @@ public class Incident {
     public Patrol recieveChoosedPatrol() { return patrol; }
 
     public void backPatrol() {
-        this.patrol.sendToObserve();
+        if (this.patrol != null) {
+            this.patrol.sendToObserve();
+        }
     }
 
     public Integer getSectorId() {
