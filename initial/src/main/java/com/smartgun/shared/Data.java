@@ -114,15 +114,21 @@ public class Data {
         if (data.getPatrolsCount() < minimumPatrols) {
             data.setPatrolsCount(minimumPatrols);
         }
+        listOfCsvInitRows.add(new CsvInitRow("All patrols count", "Includes addition patrols", minimumPatrols));
+        listOfCsvInitRows.add(new CsvInitRow("Additional patrols count", "Includes addition patrols", ADDITIONAL_PATROLS));
 
         Integer minimumAmbulances = SECTOR_COUNT;
         if (data.getAmbulancesCount() < minimumAmbulances) {
             data.setAmbulancesCount(minimumAmbulances);
         }
+        // listOfCsvInitRows.add(new CsvInitRow("Ambulances count", "", minimumAmbulances));
+
+        listOfCsvInitRows.add(new CsvInitRow("Count of sectors", "", SECTOR_COUNT));
 
         if (data.getPatrolRadius() < RADIUS_UNIT) {
             data.setPatrolRadius(RADIUS_UNIT);
         }
+        // listOfCsvInitRows.add(new CsvInitRow("Range of radius unit", "", RADIUS_UNIT));
 
         // INTERVENTIONS
         Integer[] intervProb = data.getInterventionProbablity();
@@ -132,6 +138,9 @@ public class Data {
             }
         }
         data.setInterventionProbablity(intervProb);
+        listOfCsvInitRows.add(new CsvInitRow("Intervention probability in day", "For dangerous district [RED]", intervProb[0]));
+        listOfCsvInitRows.add(new CsvInitRow("Intervention probability in day", "For medium-dangerous district [YELLOW]", intervProb[1]));
+        listOfCsvInitRows.add(new CsvInitRow("Intervention probability in day", "For safety district [GREEN]", intervProb[2]));
 
         Integer[] intervDur = data.getInterventionDuration();
         for (int i = 0; i < intervDur.length; i++) {
@@ -140,6 +149,8 @@ public class Data {
             }
         }
         data.setInterventionDuration(intervDur);
+        listOfCsvInitRows.add(new CsvInitRow("Minimum intervention duration", "", intervDur[0]));
+        listOfCsvInitRows.add(new CsvInitRow("Maximum intervention duration", "", intervDur[1]));
 
         // SHOOTINGS
         Integer[] shootingProb = data.getShootingProbablity();
@@ -149,6 +160,9 @@ public class Data {
             }
         }
         data.setShootingProbablity(shootingProb);
+        listOfCsvInitRows.add(new CsvInitRow("Shooting probability in day", "For dangerous district [RED]", shootingProb[0]));
+        listOfCsvInitRows.add(new CsvInitRow("Shooting probability in day", "For medium-dangerous district [YELLOW]", shootingProb[1]));
+        listOfCsvInitRows.add(new CsvInitRow("Shooting probability in day", "For safety district [GREEN]", shootingProb[2]));
 
         Integer[] shootingToInterProb = data.getInterventionToShootingProbablity();
         for (int i = 0; i < shootingToInterProb.length; i++) {
@@ -166,14 +180,20 @@ public class Data {
         }
         data.setShootingDuration(shootingDur);
 
+        listOfCsvInitRows.add(new CsvInitRow("Shooting turns into intervention probability in day", "For dangerous district [RED]", shootingProb[0]));
+        listOfCsvInitRows.add(new CsvInitRow("Shooting turns into intervention probability in day", "For medium-dangerous district [YELLOW]", shootingProb[1]));
+        listOfCsvInitRows.add(new CsvInitRow("Shooting turns into intervention probability in day", "For safety district [GREEN]", shootingProb[2]));
+
         // ACCURATE SHOOTS
         if (data.getAccuratePolicemanShootProbablity() == Data.IS_NOT_SETUP) {
             data.setAccuratePolicemanShootProbablity(ACCURATE_POLICEMAN_SHOOT_PROBABLITY_DAY);
         }
+        listOfCsvInitRows.add(new CsvInitRow("Accurate policeman shoot probability in day", "", data.getAccuratePolicemanShootProbablity()));
 
         if (data.getAccurateAggressorShootProbablity() == Data.IS_NOT_SETUP) {
             data.setAccurateAggressorShootProbablity(ACCURATE_AGGRESSOR_SHOOT_PROBABLITY_DAY);
         }
+        listOfCsvInitRows.add(new CsvInitRow("Accurate aggressor shoot probability in day", "", data.getAccurateAggressorShootProbablity()));
 
         //APROACH
         Integer[] failAproach = data.getApproachProbablity();
@@ -184,6 +204,8 @@ public class Data {
         }
         data.setApproachProbablity(failAproach);
 
+        // TODO: Aproach in listOfCsvInitRows
+
         // ALL PARAMS WHICH DEPENDS ON 'DAY AND NIGHT' SYSTEM
         if (data.getIsDayAndNightSystem()) {
             Integer[] intervProbNight = data.getNightInterventionProbablity();
@@ -193,17 +215,22 @@ public class Data {
                 }
             }
             data.setNightInterventionProbablity(intervProbNight);
+            listOfCsvInitRows.add(new CsvInitRow("Intervention probability in night", "For dangerous district [RED]", intervProbNight[0]));
+            listOfCsvInitRows.add(new CsvInitRow("Intervention probability in night", "For medium-dangerous district [YELLOW]", intervProbNight[1]));
+            listOfCsvInitRows.add(new CsvInitRow("Intervention probability in night", "For safety district [GREEN]", intervProbNight[2]));
 
             if (data.getAccurateAggressorShootProbablityNight() == Data.IS_NOT_SETUP) {
                 data.setAccurateAggressorShootProbablityNight(ACCURATE_AGGRESSOR_SHOOT_PROBABLITY_NIGHT);
+                listOfCsvInitRows.add(new CsvInitRow("Accurate aggressor shoot probability in night", "", data.getAccurateAggressorShootProbablityNight()));
             }
 
             if (data.getAccuratePolicemanShootProbablityNight() == Data.IS_NOT_SETUP) {
                 data.setAccuratePolicemanShootProbablityNight(ACCURATE_POLICEMAN_SHOOT_PROBABLITY_NIGHT);
+                listOfCsvInitRows.add(new CsvInitRow("Accurate policeman shoot probability in night", "", data.getAccuratePolicemanShootProbablityNight()));
             }
         }
 
-        System.out.println(map.receiveSectors());
+        listOfCsvInitRows.add(new CsvInitRow("Day and Night system", "Determines if night has got another params than day", Data.data.getIsDayAndNightSystem() ? 1 : 0 ));
 
         Data.serverSimulationData = new ServerSimulationData(
                 data.getPatrolsPerDistrict(),
