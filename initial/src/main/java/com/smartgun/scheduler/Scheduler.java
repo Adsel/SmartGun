@@ -122,12 +122,7 @@ public class Scheduler {
                 Scheduler.csvData.add(new Event(
                         incident.getIncidentLocalization(),
                         incident.getSectorId(),
-                        "Ended incident", type));
-                Scheduler.csvData.add(new Event(
-                        incident.getIncidentLocalization(),
-                        incident.getStartTime() - incident.getEndTime(),
-                        "Incident dutration",
-                        Event.EventType.INCIDENT_DURATION));
+                        "Ended incident", type, incident.getDurationTime()));
             } else if (incident.getIncidentType() == Incident.IncidentType.INTERVENTION_TURNING_INTO_SHOOTING) {
                 if (incident.getTurningIntoShootingTime() <= this.simulationTime) {
                     incident.setIncidentType(Incident.IncidentType.SHOOTING);

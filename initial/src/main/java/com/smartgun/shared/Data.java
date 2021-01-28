@@ -8,8 +8,12 @@ import com.smartgun.model.map.SectorType;
 import com.smartgun.model.policeman.Patrol;
 import com.smartgun.model.simulation.InitialData;
 import com.smartgun.model.simulation.SimulationTime;
+import com.smartgun.shared.file.CsvInitRow;
+import com.smartgun.shared.file.FileManager;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Data {
     // główne zmienne statyczne do zarządzania danymi
@@ -80,6 +84,7 @@ public class Data {
     };
 
     public static void setupData(InitialData data) throws FileNotFoundException {
+        List<CsvInitRow> listOfCsvInitRows = new ArrayList<>();
         // SETTING STARTING DATA
         Map map;
         if (data.getIsRandomMap()) {
@@ -97,6 +102,9 @@ public class Data {
             }
         }
         data.setPatrolsPerDistrict(computedPatrols);
+        listOfCsvInitRows.add(new CsvInitRow("Patrols per district count", "For dangerous district [RED]", computedPatrols[0]));
+        listOfCsvInitRows.add(new CsvInitRow("Patrols per district count", "For medium-dangerous district [YELLOW]", computedPatrols[1]));
+        listOfCsvInitRows.add(new CsvInitRow("Patrols per district count", "For safety district [GREEN]", computedPatrols[2]));
 
         Integer minimumPatrols = ADDITIONAL_PATROLS;
         for (Sector sector: map.receiveSectors()) {
@@ -203,20 +211,10 @@ public class Data {
                 data.getPatrolsCount()
         );
 
-        System.out.println("START");
-        for (Patrol p: serverSimulationData.getPatrols()) {
-            System.out.println(p);
-        }
-        System.out.println("STOP");
         Data.data = data;
+
+        FileManager fileManager = new FileManager();
+        fileManager.exportInitToCsv("ExportedInitialData_", listOfCsvInitRows);
         Data.isUser = true;
-    }
-
-    public static String getDataInCsvFormat() {
-        String resultInCsv = "";
-
-        // MAYBE IN FUTURE ...
-
-        return resultInCsv;
     }
 }

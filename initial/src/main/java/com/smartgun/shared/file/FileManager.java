@@ -10,6 +10,7 @@ public class FileManager {
     private final char fieldSeparator;
     private final char delimiter;
     private final String FILENAME_PREFIX = "ExportedData_";
+    private final String EMPTY_FIELD = " ";
 
     public FileManager() {
         this.fieldSeparator = ',';
@@ -44,6 +45,14 @@ public class FileManager {
                     sb.append(data.getDescription());
                     sb.append(this.fieldSeparator);
 
+                    if (data.getDurationTime() != null) {
+                        sb.append(data.getDurationTime());
+                        sb.append(this.fieldSeparator);
+                    } else {
+                        sb.append(EMPTY_FIELD);
+                        sb.append(this.fieldSeparator);
+                    }
+
                     sb.append(this.delimiter);
                 }
                 writer.write(sb.toString());
@@ -51,6 +60,26 @@ public class FileManager {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    public void exportInitToCsv(String filename, List<CsvInitRow> csvData) {
+        if (csvData.size() > 0) {
+            try (PrintWriter writer = new PrintWriter(FILENAME_PREFIX + filename + ".csv")) {
+                StringBuilder sb = new StringBuilder();
+                addHeaderInit(sb);
+                for (CsvInitRow data: csvData) {
+                    // TODO DOMINIK:
+                }
+                writer.write(sb.toString());
+            } catch (FileNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private void addHeaderInit(StringBuilder sb) {
+        // TODO DOMINIK:
+        // TAK JAK W ADDHEADER, ale dla CsvInitRow
     }
 
     private void addHeader(StringBuilder sb) {
@@ -73,6 +102,9 @@ public class FileManager {
         sb.append(this.fieldSeparator);
 
         sb.append("DESCRIPTION");
+        sb.append(this.fieldSeparator);
+
+        sb.append("DURATION TIME");
         sb.append(this.fieldSeparator);
 
         sb.append(this.delimiter);

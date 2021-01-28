@@ -12,6 +12,7 @@ public class Event {
     private int x;
     private int y;
     private Integer sectorID;
+    private Integer durationTime;
 
     public enum EventType {
         POLICEMAN_MISSED_FIRE,
@@ -41,6 +42,11 @@ public class Event {
         this.x = (int) point.getX();
         this.y = (int) point.getY();
         this.sectorID = sectorID;
+    }
+
+    public Event(Point point, Integer sectorID , String description, EventType type, Integer durationTime) {
+        this(point, sectorID, description, type);
+        this.durationTime = durationTime;
     }
 
 
@@ -99,6 +105,14 @@ public class Event {
 
     public void sectorID(Integer sectorID) {
         this.sectorID = sectorID;
+    }
+
+    public Integer getDurationTime() {
+        return durationTime;
+    }
+
+    public void setDurationTime(Integer durationTime) {
+        this.durationTime = durationTime;
     }
 
     @Override
