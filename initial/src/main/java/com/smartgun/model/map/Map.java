@@ -89,7 +89,7 @@ public class Map implements IMap {
                     this.mapOfInt[y][x] = 0;
                 } else if (this.map[y][x] == POLICE_CHARACTER) {
                     policeOfficeList.add(new Point(x, y));
-                    this.mapOfInt[y][x] = 0;
+                    this.mapOfInt[y][x] = 1;
                 } else {
                     this.mapOfInt[y][x] = 1;
                 }
