@@ -200,6 +200,7 @@ public class Patrol implements IPatrol {
                 ShortestPathBFS.Coordinate.fromPoint(this.smartWatch.getCoordinates()),
                 ShortestPathBFS.Coordinate.fromPoint(availablePoints.get(0))
         );
+        destination = availablePoints.get(0);
 
         for (int i = 1; i < availablePoints.size(); i++) {
             Point comparedPoint = availablePoints.get(i);

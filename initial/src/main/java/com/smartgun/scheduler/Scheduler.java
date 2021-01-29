@@ -289,7 +289,7 @@ public class Scheduler {
                 + (int)incident.getIncidentLocalization().getY() + extraDesc;
         Patrol choosed = Data.serverSimulationData.choosePatrolToIntervention(incident.getIncidentLocalization());
         if (choosed != null) {
-            choosed.goToIntervention(incident.getIncidentLocalization());
+            choosed.goToIntervention(choosed.sendToIntervention(incident.getIncidentLocalization()));
             incident.setPatrolToIncident(choosed);
 
             this.csvData.add(new Event(choosed.getCoordinates(),
@@ -401,7 +401,7 @@ public class Scheduler {
                     Event.EventType.SHOOTING_FINISHED, this.simulationTime - incident.getStartTime()
             ));
             Data.serverSimulationData.removeIncident(incident);
-
+            incident.backPatrol();
 
             return true;
         }
