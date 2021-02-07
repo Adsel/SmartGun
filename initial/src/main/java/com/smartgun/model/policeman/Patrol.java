@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+import com.smartgun.model.incident.Incident;
 import com.smartgun.model.map.Map;
 import com.smartgun.model.map.Sector;
 import com.smartgun.model.map.ShortestPathBFS;
@@ -29,6 +30,7 @@ public class Patrol implements IPatrol {
     private Stack<Point> currentPathToDrive;
     private Point lastObservePoint;
     private boolean isAdditional;
+    private Incident currentIncident;
 
     public enum State {
         OBSERVE,
@@ -59,6 +61,7 @@ public class Patrol implements IPatrol {
         this.state = isAdditional ? Patrol.State.BASE : Patrol.State.OBSERVE;
         this.lastObservePoint = smartWatch.getCoordinates();
         this.isAdditional = isAdditional;
+        this.currentIncident = null;
     }
 
     public Integer getId() {
@@ -128,7 +131,9 @@ public class Patrol implements IPatrol {
         if (this.state != State.BASE) {
             try {
                 smartWatch.setCoordinates(currentPathToDrive.pop());
-
+                if (this.state == State.INTERVENTION && currentPathToDrive.isEmpty()) {
+                    this.informAboutPatrolArrived();
+                }
             } catch (EmptyStackException e) {
                 target = null;
             }
@@ -302,6 +307,12 @@ public class Patrol implements IPatrol {
     public void setState(State state) {
         this.state = state;
     }
-// TODO: CYKLICZNIE POBIERAJ DANE OD SV
-    //public void action
+
+    public void informAboutPatrolArrived() {
+        this.currentIncident.informAboutPatrolArrived();
+    }
+
+    public void setCurrentIncident(Incident currentIncident) {
+        this.currentIncident = currentIncident;
+    }
 }

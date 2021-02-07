@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.smartgun.model.incident.Event.EventType.PATROL_DIDNT_REACH_INCIDENT;
+
 @Component
 public class Scheduler {
     private final SimulationLifeService simulationLifeService;
@@ -105,6 +107,13 @@ public class Scheduler {
             if (incident.getEndTime() < currentTime) {
                 String description = "(" + (int)incident.getIncidentLocalization().getX() + "," +
                         + (int)incident.getIncidentLocalization().getY() + ") Ended incident";
+                if (!incident.isPatrolOnPlace()) {
+                    Scheduler.csvData.add(new Event(
+                            incident.getIncidentLocalization(),
+                            incident.getSectorId(),
+                            "Patrol didn't approach to incident", PATROL_DIDNT_REACH_INCIDENT
+                    ));
+                }
                 Data.serverSimulationData.removeIncident(incident);
                 incident.backPatrol();
 
@@ -292,6 +301,7 @@ public class Scheduler {
             choosed.goToIntervention(choosed.sendToIntervention(incident.getIncidentLocalization()));
             incident.setPatrolToIncident(choosed);
 
+            choosed.setCurrentIncident(incident);
             this.csvData.add(new Event(choosed.getCoordinates(),
                     incident.getSectorId(),
                     "Patrol id number: " + choosed.getId() + " was choosed to incident in (" +(int) incident.getIncidentLocalization().getX() + " " +  (int) incident.getIncidentLocalization().getY() + ")",

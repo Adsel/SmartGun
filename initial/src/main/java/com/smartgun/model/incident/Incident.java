@@ -21,6 +21,7 @@ public class Incident {
     private Patrol patrol;
     private boolean willBeShooting;
     private int turningIntoShootingTime;
+    private boolean isPatrolOnPlace;
 
     public Incident(){}
 
@@ -36,6 +37,7 @@ public class Incident {
         this.sector = sector;
         this.willBeShooting = false;
         turningIntoShootingTime = 0;
+        this.isPatrolOnPlace = false;
     }
 
     public Incident(
@@ -50,6 +52,7 @@ public class Incident {
         this.sector = sector;
         this.willBeShooting = true;
         this.turningIntoShootingTime = turningIntoShootingTime;
+        this.isPatrolOnPlace = false;
     }
 
     public Point getIncidentLocalization() {
@@ -85,6 +88,7 @@ public class Incident {
     public void backPatrol() {
         if (this.patrol != null) {
             this.patrol.sendToObserve();
+            this.patrol.setCurrentIncident(null);
         }
     }
 
@@ -106,5 +110,13 @@ public class Incident {
 
     public void setTurningIntoShootingTime(int turningIntoShootingTime) {
         this.turningIntoShootingTime = turningIntoShootingTime;
+    }
+
+    public void informAboutPatrolArrived() {
+        this.isPatrolOnPlace = true;
+    }
+
+    public boolean isPatrolOnPlace() {
+        return this.isPatrolOnPlace;
     }
 }

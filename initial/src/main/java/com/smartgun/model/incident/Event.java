@@ -28,7 +28,8 @@ public class Event {
         SHOOTING_STARTED,
         INTERVENTION_TURNED_INTO_SHOOTING,
         PATROL_WAS_CHOSEN_TO_INTERVENTION,
-        INCIDENT_DURATION
+        INCIDENT_DURATION,
+        PATROL_DIDNT_REACH_INCIDENT
     }
 
     public Event() {
