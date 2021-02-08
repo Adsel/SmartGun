@@ -22,9 +22,11 @@
 3. Enter your data of interventions. If you'll don't do it, client will set automatically grey numbers as starting data 
 ![alt text](initial/src/main/resources/static/demoUsaageIcons/interventionData.png)
 
-3. Get do the same with each other parameters you want to change and select `Start simulation` green button
+4. Get do the same with each other parameters you want to change and select `Start simulation` green button
 ![alt text](initial/src/main/resources/static/demoUsaageIcons/startSimulation.png)
     - The `Day nad Night system` means at the night probability of intervention is higher. If you uncheck this option, the probability of all incidents will be the same for the duration of the simulation
 
+5.To watch simulation movie just click on the Gun below!
+[![Watch the video](initial/src/main/resources/static/demoUsaageIcons/gun.jpg)](https://youtu.be/PhnEzUZ3DNg)
 # Websocket for Java and Javascript documentation
 https://spring.io/guides/gs/messaging-stomp-websocket/
