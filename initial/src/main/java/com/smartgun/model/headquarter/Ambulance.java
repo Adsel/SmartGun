@@ -1,44 +1,89 @@
 package com.smartgun.model.headquarter;
 
-import com.smartgun.model.policeman.Patrol;
+import java.awt.Point;
+import java.util.*;
 
-import java.awt.*;
-import java.util.Objects;
+import com.smartgun.model.map.Map;
+import com.smartgun.model.map.ShortestPathBFS;
+import com.smartgun.model.policeman.Patrol;
 
 public class Ambulance {
     private int id;
-    private Patrol patrol;
-    private Point point; //lokalizacja ambulansu, domyślnie ustawiana na jeden punkt na mapie, zmienia się po dodaniu patrolu
+    private Point actualPosition;
+    private Point basePosition;
+    private State state;
+    private Stack<Point> currentPathToDrive;
+    private Map map;
 
-    public Ambulance(int id, Patrol patrol, Point point) {
+    public Ambulance(int id, Point basePosition, Map map) {
         this.id = id;
-        this.patrol = patrol;
-        this.point = point;
+        this.actualPosition = basePosition;
+        this.basePosition = basePosition;
+        this.state = State.WAITING;
+        this.map = map;
+        this.currentPathToDrive = new Stack<>();
     }
 
-    public Ambulance(int id, Point point) {
-        this.id = id;
-        this.point = point;
+    public void move() {
+        try {
+            actualPosition.setLocation(currentPathToDrive.pop());
+        } catch (EmptyStackException e){
+
+        }
     }
 
-    public Patrol getPatrol() {
-        return patrol;
+    private void setUpCurrentPathToDrive(Point point){
+        ShortestPathBFS shortestPathBFS = new ShortestPathBFS(this.map);
+        Point ambulanceCurrentPoint = this.getActualPosition();
+
+        ShortestPathBFS.Coordinate source =
+                new ShortestPathBFS
+                        .Coordinate(
+                        ambulanceCurrentPoint.x,
+                        ambulanceCurrentPoint.y);
+
+        ShortestPathBFS.Coordinate destination = new ShortestPathBFS.Coordinate(point.x, point.y);
+
+        List<Point> reversedPath = shortestPathBFS.solve(source,destination);
+        Collections.reverse(reversedPath);
+
+        currentPathToDrive = new Stack<>();
+        currentPathToDrive.addAll(reversedPath);
     }
 
-    public void setPatrol(Patrol patrol) {
-        this.patrol = patrol;
+    public void goToIntervention(Point point){
+        this.setState(State.INTERVENTION);
+        setUpCurrentPathToDrive(point);
+    }
+
+    public void backToBase(){
+        this.setState(State.WAITING);
+        setUpCurrentPathToDrive(basePosition);
+    }
+
+    public void setState(Ambulance.State state) {
+        this.state = state;
+    }
+
+    public State getState(){
+        return this.state;
     }
 
     public int getId() {
         return id;
     }
 
-    public Point getPoint() {
-        return point;
+    public Point getActualPosition() {
+        return actualPosition;
     }
 
-    public void setPoint(Point point) {
-        this.point = point;
+    public void setActualPosition(Point actualPosition) {
+        this.actualPosition = actualPosition;
+    }
+
+    public enum State{
+        WAITING,
+        INTERVENTION
     }
 
     @Override

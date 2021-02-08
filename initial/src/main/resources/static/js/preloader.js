@@ -1,5 +1,13 @@
-$(window).on('load', () => {
-    setTimeout(() => {
-        $("#loader-wrapper").remove();
-    }, 3000);
-});
+const runPreloader = () => {
+    $("#loader-wrapper").css("display", "block");
+
+    // TODO:
+    // CHECK WHEN CANVAS IS LOADED THEN RUN CODE BELOW
+    // LUIGI THE CITY NEEDS YOU
+
+    // CODE BELOW HIDES PRELOADER
+        setTimeout(() => {
+            $("#loader-wrapper").css("display", "none");
+        }, 3000);
+
+}
